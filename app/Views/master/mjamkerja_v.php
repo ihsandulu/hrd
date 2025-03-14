@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="jamkerja_name">Nama Jam Kerja:</label>
                                     <div class="col-sm-10">
-                                        <input autofocus type="text"  class="form-control" id="jamkerja_name" name="jamkerja_name" placeholder="" value="<?= $jamkerja_name; ?>">
+                                        <input autofocus type="text" class="form-control" id="jamkerja_name" name="jamkerja_name" placeholder="" value="<?= $jamkerja_name; ?>">
                                     </div>
                                 </div>
 
@@ -74,12 +74,12 @@
                                         <select onchange="jtipe()" class="form-control" id="jamkerja_type" name="jamkerja_type">
                                             <option value="normal" <?= ($jamkerja_type == "normal") ? "selected" : ""; ?>>Normal</option>
                                             <option value="lembur" <?= ($jamkerja_type == "lembur") ? "selected" : ""; ?>>Lembur</option>
-                                            <option value="libur" <?= ($jamkerja_type == "libur") ? "selected" : ""; ?>>Libur</option>
+                                            <!-- <option value="libur" <?= ($jamkerja_type == "libur") ? "selected" : ""; ?>>Libur</option> -->
                                         </select>
                                     </div>
                                 </div>
 
-                                
+
 
                                 <div class="form-group awalakhir">
                                     <label class="control-label col-sm-2" for="jamkerja_ramadlan">Kategory Ramadlan:</label>
@@ -114,6 +114,7 @@
                                             $(".inominal").val("");
                                         }
                                     }
+
                                     function jtipeawal() {
                                         let a = $("#jamkerja_type").val();
                                         if (a == "libur") {
@@ -138,7 +139,7 @@
                                 <div class="form-group awalakhir">
                                     <label class="control-label col-sm-2" for="jamkerja_awal">Jam Kerja Awal:</label>
                                     <div class="col-sm-10">
-                                        <input type="time"  class="form-control iawalakhir" id="jamkerja_awal" name="jamkerja_awal" placeholder="" value="<?= $jamkerja_awal; ?>">
+                                        <input type="time" class="form-control iawalakhir" id="jamkerja_awal" name="jamkerja_awal" placeholder="" value="<?= $jamkerja_awal; ?>">
                                     </div>
                                 </div>
 
@@ -146,7 +147,7 @@
                                 <div class="form-group awalakhir">
                                     <label class="control-label col-sm-2" for="jamkerja_akhir">Jam Kerja Akhir:</label>
                                     <div class="col-sm-10">
-                                        <input type="time"  class="form-control iawalakhir" id="jamkerja_akhir" name="jamkerja_akhir" placeholder="" value="<?= $jamkerja_akhir; ?>">
+                                        <input type="time" class="form-control iawalakhir" id="jamkerja_akhir" name="jamkerja_akhir" placeholder="" value="<?= $jamkerja_akhir; ?>">
                                     </div>
                                 </div>
 
@@ -154,20 +155,20 @@
                                 <div class="form-group lembur">
                                     <label class="control-label col-sm-2" for="jamkerja_menitawal">Lembur Menit Awal:</label>
                                     <div class="col-sm-10">
-                                        <input type="number"  class="form-control ilembur" id="jamkerja_menitawal" name="jamkerja_menitawal" placeholder="" value="<?= $jamkerja_menitawal; ?>">
+                                        <input type="number" class="form-control ilembur" id="jamkerja_menitawal" name="jamkerja_menitawal" placeholder="" value="<?= $jamkerja_menitawal; ?>">
                                     </div>
                                 </div>
                                 <div class="form-group lembur">
                                     <label class="control-label col-sm-2" for="jamkerja_menitakhir">Lembur Menit Akhir:</label>
                                     <div class="col-sm-10">
-                                        <input type="number"  class="form-control ilembur" id="jamkerja_menitakhir" name="jamkerja_menitakhir" placeholder="" value="<?= $jamkerja_menitakhir; ?>">
+                                        <input type="number" class="form-control ilembur" id="jamkerja_menitakhir" name="jamkerja_menitakhir" placeholder="" value="<?= $jamkerja_menitakhir; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group nominal">
                                     <label class="control-label col-sm-2" for="jamkerja_lnominal">Nominal:</label>
                                     <div class="col-sm-10">
-                                        <input type="text"  class="form-control inominal" id="jamkerja_lnominal" name="jamkerja_lnominal" placeholder="" value="<?= $jamkerja_lnominal; ?>">
+                                        <input type="text" class="form-control inominal" id="jamkerja_lnominal" name="jamkerja_lnominal" placeholder="" value="<?= $jamkerja_lnominal; ?>">
                                     </div>
                                 </div>
 
@@ -193,6 +194,33 @@
                                     </div>
                                 </div> -->
 
+                                <div class="form-group awalakhir">
+                                    <label class="control-label col-sm-2" for="jamkerja_hari">Hari:</label>
+                                    <div class="col-sm-10">
+                                        <select required class="form-control select iawalakhir" id="jamkerja_hari" name="jamkerja_hari[]" multiple>
+                                            <?php
+                                            $hariList = [
+                                                "0" => "Minggu",
+                                                "1" => "Senin",
+                                                "2" => "Selasa",
+                                                "3" => "Rabu",
+                                                "4" => "Kamis",
+                                                "5" => "Jumat",
+                                                "6" => "Sabtu"
+                                            ];
+                                            $jamkerjahari = explode(",", $jamkerja_hari); // Ubah string jadi array
+
+                                            foreach ($hariList as $key => $hari) { ?>
+                                                <option value="<?= $key; ?>" <?= in_array($key, $jamkerjahari) ? "selected" : ""; ?>>
+                                                    <?= $hari; ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
                                 <div class="form-group lembur">
                                     <label class="control-label col-sm-2" for="jamkerja_libur">Hari Libur:</label>
                                     <div class="col-sm-10">
@@ -203,7 +231,7 @@
                                     </div>
                                 </div>
 
-                                
+
 
 
 
@@ -236,6 +264,7 @@
                                         <th>Ramadlan</th>
                                         <th>Type</th>
                                         <th>Jam Kerja</th>
+                                        <th>Hari</th>
                                         <th>Jam Awal</th>
                                         <th>Jam Akhir</th>
                                         <th>Lembur Menit</th>
@@ -256,9 +285,21 @@
                                         ->get();
                                     //echo $this->db->getLastquery();
                                     $no = 1;
-                                    $ramadlan = array("Tidak", "Ya");                                    
+                                    $ramadlan = array("Tidak", "Ya");
                                     $libur = array("Tidak", "Ya");
+                                    $hariList = [
+                                        "0" => "Minggu",
+                                        "1" => "Senin",
+                                        "2" => "Selasa",
+                                        "3" => "Rabu",
+                                        "4" => "Kamis",
+                                        "5" => "Jumat",
+                                        "6" => "Sabtu"
+                                    ];
                                     foreach ($usr->getResult() as $usr) {
+                                        $hari_array = array_filter(explode(",", $usr->jamkerja_hari)); // Menghapus nilai kosong
+                                        $hari = implode(",", array_map(fn($h) => $hariList[$h] ?? "Tidak Diketahui", $hari_array)); // Cegah error jika kunci tidak ada
+
                                     ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
@@ -308,10 +349,11 @@
                                             <td class=""><?= $ramadlan[$usr->jamkerja_ramadlan]; ?></td>
                                             <td class=""><?= ucfirst($usr->jamkerja_type); ?></td>
                                             <td class=""><?= $usr->jamkerja_name; ?></td>
+                                            <td class=""><?= $hari; ?></td>
                                             <td class=""><?= $usr->jamkerja_awal; ?></td>
                                             <td class=""><?= $usr->jamkerja_akhir; ?></td>
                                             <td class=""><?= $usr->jamkerja_menitawal; ?> - <?= $usr->jamkerja_menitakhir; ?></td>
-                                            <td class=""><?= number_format($usr->jamkerja_lnominal,2,",","."); ?></td>                                            
+                                            <td class=""><?= number_format($usr->jamkerja_lnominal, 2, ",", "."); ?></td>
                                             <td class=""><?= $libur[$usr->jamkerja_libur]; ?></td>
                                         </tr>
                                     <?php } ?>

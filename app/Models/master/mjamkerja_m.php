@@ -52,7 +52,7 @@ class mjamkerja_m extends core_m
             foreach ($this->request->getPost() as $e => $f) {
                 if ($e != 'create' && $e != 'jamkerja_id') {
                     $input[$e] = $this->request->getPost($e);
-                    if($e == 'jamkerja_position'){
+                    if($e == 'jamkerja_hari'){
                         $input[$e] = is_array($f) ? implode(",", $f) : $f;
                     }
                 }
@@ -73,7 +73,7 @@ class mjamkerja_m extends core_m
             foreach ($this->request->getPost() as $e => $f) {
                 if ($e != 'change' && $e != 'jamkerja_picture') {
                     $input[$e] = $this->request->getPost($e);
-                    if($e == 'jamkerja_position'){
+                    if($e == 'jamkerja_hari'){
                         $input[$e] = is_array($f) ? implode(",", $f) : $f;
                     }
                 }
