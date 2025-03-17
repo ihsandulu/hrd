@@ -86,21 +86,88 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="absen_type">Type:</label>
                                     <div class="col-sm-10">
-                                        <select required class="form-control select" id="absen_type" name="absen_type">
+                                        <select onchange="pilihtipe()" autofocus required class="form-control select" id="absen_type" name="absen_type">
                                             <option value="" <?= ($absen_type == "") ? "selected" : ""; ?>>Pilih Type</option>
                                             <option value="Masuk" <?= ($absen_type == "Masuk") ? "selected" : ""; ?>>Masuk</option>
                                             <option value="Keluar" <?= ($absen_type == "Keluar") ? "selected" : ""; ?>>Keluar</option>
-                                            <option value="Izin" <?= ($absen_type == "Izin") ? "selected" : ""; ?>>Izin</option>
                                             <option value="Sakit" <?= ($absen_type == "Sakit") ? "selected" : ""; ?>>Sakit</option>
+                                            <option value="Izin" <?= ($absen_type == "Izin") ? "selected" : ""; ?>>Izin</option>
+                                            <option value="Cuti" <?= ($absen_type == "Cuti") ? "selected" : ""; ?>>Cuti</option>
                                             <option value="Alpha" <?= ($absen_type == "Alpha") ? "selected" : ""; ?>>Alpha</option>
                                         </select>
 
                                     </div>
                                 </div>
+                                <script>
+                                    function pilihtipeori() {
+                                        var absen_type = $("#absen_type").val();
+                                        if (absen_type == "Sakit") {
+                                            $(".sakit").show();
+                                        } else {
+                                            $(".sakit").hide();
+                                        }
+                                        if (absen_type == "Cuti") {
+                                            $(".cuti").show();
+                                        } else {
+                                            $(".cuti").hide();
+                                        }
+                                    }
+                                    function pilihtipe() {
+                                        var absen_type = $("#absen_type").val();
+                                        if (absen_type == "Sakit") {
+                                            $(".sakit").show();
+                                        } else {
+                                            $(".sakit").hide();
+                                            $("#absen_skd").val(0);
+                                        }
+                                        if (absen_type == "Cuti") {
+                                            $(".cuti").show();
+                                        } else {
+                                            $(".cuti").hide();
+                                            $("#cuti_id").val(0);
+                                        }
+                                    }
+                                    $(document).ready(function() {
+                                        $(".sakit").hide();
+                                        $(".cuti").hide();
+                                        pilihtipeori();
+                                    });
+                                </script>
+
+                                <div class="form-group sakit">
+                                    <label class="control-label col-sm-2" for="absen_skd">SKD:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="absen_skd" name="absen_skd">
+                                            <option value="0" <?= ($absen_skd == "0") ? "selected" : ""; ?>>Tidak</option>
+                                            <option value="1" <?= ($absen_skd == "1") ? "selected" : ""; ?>>Ya</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group cuti">
+                                    <label class="control-label col-sm-2" for="cuti_id">Cuti:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="cuti_id" name="cuti_id">
+                                            <option value="0" <?= ($cuti_id == "0") ? "selected" : ""; ?>>Pilih Cuti</option>
+                                            <?php $cuti=$this->db->table("cuti")->orderBy("cuti_name","ASC")->get(); ?>
+                                            <?php foreach ($cuti->getResult() as $cuti) { ?>
+                                                <option value="<?= $cuti->cuti_id; ?>" <?= ($cuti_id == $cuti->cuti_id) ? "selected" : ""; ?>><?= $cuti->cuti_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="absen_note">Keterangan:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="absen_note" name="absen_note" placeholder="" value="<?= $absen_note; ?>">
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="absen_datetime">Date Time:</label>
                                     <div class="col-sm-10">
-                                        <input onchange="rdate()" required type="datetime-local" autofocus class="form-control" id="absen_datetime" name="absen_datetime" placeholder="" value="<?= $absen_datetime; ?>">
+                                        <input onchange="rdate()" required type="datetime-local" class="form-control" id="absen_datetime" name="absen_datetime" placeholder="" value="<?= $absen_datetime; ?>">
 
                                         <input type="hidden" id="absen_date" name="absen_date" value="<?= $absen_date; ?>" />
                                         <input type="hidden" id="absen_time" name="absen_time" value="<?= $absen_time; ?>" />
@@ -120,7 +187,7 @@
                                 <!-- <div class="form-group">
                                     <label class="control-label col-sm-2" for="absen_geo">Geolocation:</label>
                                     <div class="col-sm-10">
-                                        <input required type="text" autofocus class="form-control" id="absen_geo" name="absen_geo" placeholder="" value="<?= $absen_geo; ?>">
+                                        <input required type="text"  class="form-control" id="absen_geo" name="absen_geo" placeholder="" value="<?= $absen_geo; ?>">
                                     </div>
                                 </div> -->
                                 <div class="form-group">
