@@ -21,6 +21,7 @@ $routes->add('/mestate', 'master\mestate::index');
 $routes->add('/mdivisi', 'master\mdivisi::index');
 $routes->add('/mdepartemen', 'master\mdepartemen::index');
 $routes->add('/mjamkerja', 'master\mjamkerja::index');
+$routes->add('/mlibur', 'master\mlibur::index');
 $routes->add('/mseksi', 'master\mseksi::index');
 $routes->add('/mblok', 'master\mblok::index');
 $routes->add('/mtph', 'master\mtph::index');
