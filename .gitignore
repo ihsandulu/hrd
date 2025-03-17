@@ -127,4 +127,4 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 #vendor/
-#.env
+.env
