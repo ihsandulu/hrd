@@ -335,7 +335,7 @@
                                         <th>Departemen</th>
                                         <th>Posisi</th>
                                         <th>NIK</th>
-                                        <th>Username</th>
+                                        <!-- <th>Username</th> -->
                                         <th>Name</th>
                                         <th>Alamat</th>
                                         <th>Email</th>
@@ -440,7 +440,7 @@
                                             <td><?= $usr->departemen_name; ?></td>
                                             <td><?= $usr->position_name; ?></td>
                                             <td><?= $usr->user_nik; ?></td>
-                                            <td><?= $usr->user_name; ?></td>
+                                            <!-- <td><?= $usr->user_name; ?></td> -->
                                             <td><?= $usr->user_nama; ?></td>
                                             <td><?= $usr->user_address; ?></td>
                                             <td><?= $usr->user_email; ?></td>
