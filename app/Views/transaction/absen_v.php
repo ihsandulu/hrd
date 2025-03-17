@@ -90,6 +90,9 @@
                                             <option value="" <?= ($absen_type == "") ? "selected" : ""; ?>>Pilih Type</option>
                                             <option value="Masuk" <?= ($absen_type == "Masuk") ? "selected" : ""; ?>>Masuk</option>
                                             <option value="Keluar" <?= ($absen_type == "Keluar") ? "selected" : ""; ?>>Keluar</option>
+                                            <option value="Izin" <?= ($absen_type == "Izin") ? "selected" : ""; ?>>Izin</option>
+                                            <option value="Sakit" <?= ($absen_type == "Sakit") ? "selected" : ""; ?>>Sakit</option>
+                                            <option value="Alpha" <?= ($absen_type == "Alpha") ? "selected" : ""; ?>>Alpha</option>
                                         </select>
 
                                     </div>
@@ -135,11 +138,13 @@
                                             <option value="" <?= ($user_id == "") ? "selected" : ""; ?>>Pilih User</option>
                                             <?php
                                             foreach ($user->getResult() as $user) { ?>
-                                                <option departemen_id="<?= $user->departemen_id; ?>" departemen_name="<?= $user->departemen_name; ?>" user_name="<?= $user->user_nama; ?>" value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_name; ?> - <?= $user->user_nama; ?> (<?= $user->user_nik; ?>)</option>
+                                                <option departemen_id="<?= $user->departemen_id; ?>" departemen_name="<?= $user->departemen_name; ?>" user_name="<?= $user->user_nama; ?>" user_payrolltype="<?= $user->user_payrolltype; ?>" user_lembur="<?= $user->user_lembur; ?>" value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_name; ?> - <?= $user->user_nama; ?> (<?= $user->user_nik; ?>)</option>
                                             <?php } ?>
                                         </select>
                                         <input type="hidden" id="departemen_id" name="departemen_id" value="<?= $departemen_id; ?>" />
                                         <input type="hidden" id="departemen_name" name="departemen_name" value="<?= $departemen_name; ?>" />
+                                        <input type="hidden" id="user_payrolltype" name="user_payrolltype" value="<?= $user_payrolltype; ?>" />
+                                        <input type="hidden" id="user_lembur" name="user_lembur" value="<?= $user_lembur; ?>" />
                                         <input type="hidden" id="user_name" name="user_name" value="<?= $user_name; ?>" />
                                         <script>
                                             function tp() {
@@ -153,7 +158,15 @@
                                                 $("#departemen_name").val(departemen_name);
 
 
-                                                let user_name= $("#user_id").find(':selected').attr('user_name');
+                                                let user_payrolltype = $("#user_id").find(':selected').attr('user_payrolltype');
+                                                $("#user_payrolltype").val(user_payrolltype);
+
+
+                                                let user_lembur = $("#user_id").find(':selected').attr('user_lembur');
+                                                $("#user_lembur").val(user_lembur);
+
+
+                                                let user_name = $("#user_id").find(':selected').attr('user_name');
                                                 $("#user_name").val(user_name);
                                             }
                                         </script>
@@ -182,7 +195,7 @@
                                     <?php
                                     $dari = date("Y-m-d");
                                     $ke = date("Y-m-d");
-                                    $departemen = "";
+                                    $idepartemen = 0;
                                     if (isset($_GET["dari"])) {
                                         $dari = $_GET["dari"];
                                     }
@@ -190,16 +203,21 @@
                                         $ke = $_GET["ke"];
                                     }
                                     if (isset($_GET["departemen"])) {
-                                        $departemen = $_GET["departemen"];
+                                        $idepartemen = $_GET["departemen"];
                                     }
                                     ?>
                                     <div class="col-4 row mb-2">
-                                        <div class="col-3">
-                                            <label class="text-dark">Departemen</label>
+                                        <div class="col-5">
+                                            <label class="text-dark">Departemen : </label>
                                         </div>
-                                        <div class="col-9">
+                                        <div class="col-7">
                                             <select class="form-control" id="Departemen" name="departemen">
-
+                                                <?php
+                                                $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get(); ?>
+                                                <option value="">Pilih Departemen</option>
+                                                <?php foreach ($departemen->getResult() as $departemen) { ?>
+                                                    <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     </div>
@@ -263,8 +281,8 @@
                                         ->table("absen")
                                         ->where("absen_date >=", $dari)
                                         ->where("absen_date <=", $ke);
-                                    if ($departemen > 0) {
-                                        $build->where("departemen_id", $departemen);
+                                    if ($idepartemen > 0) {
+                                        $build->where("departemen_id", $idepartemen);
                                     }
                                     $usr = $build->orderBy("absen_date", "ASC")
                                         ->orderBy("absen_time", "ASC")

@@ -21,7 +21,7 @@ class absen_m extends core_m
             ->getWhere($absend);
         /* echo $this->db->getLastquery();
         die; */
-        $larang = array("log_id", "id", "user_id", "action", "data", "absen_id_dep", "trx_id", "trx_code");
+        $larang = array("log_id", "id", "action", "data", "absen_id_dep", "trx_id", "trx_code");
         if ($us->getNumRows() > 0) {
             foreach ($us->getResult() as $absen) {
                 foreach ($this->db->getFieldNames('absen') as $field) {
