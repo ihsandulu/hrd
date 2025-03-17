@@ -23,6 +23,7 @@ $routes->add('/mdepartemen', 'master\mdepartemen::index');
 $routes->add('/mjamkerja', 'master\mjamkerja::index');
 $routes->add('/mlibur', 'master\mlibur::index');
 $routes->add('/mcuti', 'master\mcuti::index');
+$routes->add('/mtunjangan', 'master\mtunjangan::index');
 $routes->add('/mseksi', 'master\mseksi::index');
 $routes->add('/mblok', 'master\mblok::index');
 $routes->add('/mtph', 'master\mtph::index');
