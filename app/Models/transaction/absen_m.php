@@ -98,7 +98,7 @@ class absen_m extends core_m
             //cek absen
             $cekcok["user_id"] = $input["user_id"];
             $cekcok["absen_date"] = $input["absen_date"];
-            $cek = $this->db->table("absen")->where($cekcok)->get()->getRow();
+            $cek = $this->db->table("absen")->where($cekcok)->get()->getNumRows();
             if ($cek > 0) {
                 $data["message"] = "Insert Data Gagal! Duplikat data.";
             } else {
