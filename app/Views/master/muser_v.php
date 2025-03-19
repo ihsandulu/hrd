@@ -294,7 +294,7 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_lembur">Lembur:</label>
                                     <div class="col-sm-10">
@@ -303,6 +303,43 @@
                                             <option value="1" <?= ($user_lembur == "1") ? "selected" : ""; ?>>Perjam</option>
                                             <option value="2" <?= ($user_lembur == "2") ? "selected" : ""; ?>>Insentif</option>
                                         </select>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_gapok">Gaji Pokok:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_gapok" name="user_gapok" placeholder="" value="<?= $user_gapok; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_gakot">Gaji Kotor:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_gakot" name="user_gakot" placeholder="" value="<?= $user_gakot; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_ttransport">Tunjangan Transport:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_ttransport" name="user_ttransport" placeholder="" value="<?= $user_ttransport; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_thadir">Tunjangan Kehadiran:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_thadir" name="user_thadir" placeholder="" value="<?= $user_thadir; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_tmakan">Tunjangan Makan:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_tmakan" name="user_tmakan" placeholder="" value="<?= $user_tmakan; ?>">
                                     </div>
                                 </div>
 
@@ -355,6 +392,11 @@
                                         <th>Status Tanggungan</th>
                                         <th>Tipe Penggajian</th>
                                         <th>Lembur</th>
+                                        <th>Gapok</th>
+                                        <th>Gakot</th>
+                                        <th>T.Transport</th>
+                                        <th>T.Kehadiran</th>
+                                        <th>T.Makan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -369,9 +411,9 @@
                                         ->get();
                                     //echo $this->db->getLastquery();
                                     $no = 1;
-                                    $aktif = ["Tidak Aktif", "Aktif"]; 
-                                    $lembur = ["Tidak", "Perjam", "Insentif"]; 
-                                    foreach ($usr->getResult() as $usr) {?>
+                                    $aktif = ["Tidak Aktif", "Aktif"];
+                                    $lembur = ["Tidak", "Perjam", "Insentif"];
+                                    foreach ($usr->getResult() as $usr) { ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
@@ -454,12 +496,17 @@
                                             <td><?= $usr->user_norek; ?></td>
                                             <td><?= $usr->user_ibu; ?></td>
                                             <td><?= $usr->user_pendidikan; ?></td>
-                                            <td><?= $usr->user_borndate; ?><</td>
+                                            <td><?= $usr->user_borndate; ?><< /td>
                                             <td><?= $usr->user_borncity; ?></td>
                                             <td><?= $usr->user_gender; ?></td>
                                             <td><?= $usr->user_tanggungan; ?></td>
                                             <td><?= $usr->user_payrolltype; ?></td>
                                             <td><?= $lembur[$usr->user_lembur]; ?></td>
+                                            <td><?= $usr->user_gapok; ?></td>
+                                            <td><?= $usr->user_gakot; ?></td>
+                                            <td><?= $usr->user_ttransport; ?></td>
+                                            <td><?= $usr->user_thadir; ?></td>
+                                            <td><?= $usr->user_tmakan; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
