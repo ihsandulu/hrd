@@ -89,7 +89,6 @@
                                         <select onchange="pilihtipe()" autofocus required class="form-control select" id="absen_type" name="absen_type">
                                             <option value="" <?= ($absen_type == "") ? "selected" : ""; ?>>Pilih Type</option>
                                             <option value="Masuk" <?= ($absen_type == "Masuk") ? "selected" : ""; ?>>Masuk</option>
-                                            <option value="Keluar" <?= ($absen_type == "Keluar") ? "selected" : ""; ?>>Keluar</option>
                                             <option value="Sakit" <?= ($absen_type == "Sakit") ? "selected" : ""; ?>>Sakit</option>
                                             <option value="Izin" <?= ($absen_type == "Izin") ? "selected" : ""; ?>>Izin</option>
                                             <option value="Cuti" <?= ($absen_type == "Cuti") ? "selected" : ""; ?>>Cuti</option>
@@ -111,7 +110,13 @@
                                         } else {
                                             $(".cuti").hide();
                                         }
+                                        if (absen_type == "Masuk") {
+                                            $(".cmasuk").show();
+                                        } else {
+                                            $(".cmasuk").hide();
+                                        }
                                     }
+
                                     function pilihtipe() {
                                         var absen_type = $("#absen_type").val();
                                         if (absen_type == "Sakit") {
@@ -126,70 +131,22 @@
                                             $(".cuti").hide();
                                             $("#cuti_id").val(0);
                                         }
+                                        if (absen_type == "Masuk") {
+                                            $(".cmasuk").show();
+                                        } else {
+                                            $(".cmasuk").hide();
+                                            $(".imasuk").prop("value", "");
+                                        }
                                     }
                                     $(document).ready(function() {
                                         $(".sakit").hide();
                                         $(".cuti").hide();
+                                        $(".cmasuk").hide();
                                         pilihtipeori();
                                     });
                                 </script>
 
-                                <div class="form-group sakit">
-                                    <label class="control-label col-sm-2" for="absen_skd">SKD:</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" id="absen_skd" name="absen_skd">
-                                            <option value="0" <?= ($absen_skd == "0") ? "selected" : ""; ?>>Tidak</option>
-                                            <option value="1" <?= ($absen_skd == "1") ? "selected" : ""; ?>>Ya</option>
-                                        </select>
-                                    </div>
-                                </div>
 
-                                <div class="form-group cuti">
-                                    <label class="control-label col-sm-2" for="cuti_id">Cuti:</label>
-                                    <div class="col-sm-10">
-                                        <select class="form-control" id="cuti_id" name="cuti_id">
-                                            <option value="0" <?= ($cuti_id == "0") ? "selected" : ""; ?>>Pilih Cuti</option>
-                                            <?php $cuti=$this->db->table("cuti")->orderBy("cuti_name","ASC")->get(); ?>
-                                            <?php foreach ($cuti->getResult() as $cuti) { ?>
-                                                <option value="<?= $cuti->cuti_id; ?>" <?= ($cuti_id == $cuti->cuti_id) ? "selected" : ""; ?>><?= $cuti->cuti_name; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="absen_note">Keterangan:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="absen_note" name="absen_note" placeholder="" value="<?= $absen_note; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="absen_datetime">Date Time:</label>
-                                    <div class="col-sm-10">
-                                        <input onchange="rdate()" required type="datetime-local" class="form-control" id="absen_datetime" name="absen_datetime" placeholder="" value="<?= $absen_datetime; ?>">
-
-                                        <input type="hidden" id="absen_date" name="absen_date" value="<?= $absen_date; ?>" />
-                                        <input type="hidden" id="absen_time" name="absen_time" value="<?= $absen_time; ?>" />
-                                        <script>
-                                            function rdate() {
-                                                let datetime = $("#absen_datetime").val();
-                                                // Memisahkan tanggal dan waktu
-                                                var parts = datetime.split(" ");
-                                                var tanggal = parts[0];
-                                                var waktu = parts[1];
-                                                $("#absen_date").val(tanggal);
-                                                $("#absen_time").val(waktu);
-                                            }
-                                        </script>
-                                    </div>
-                                </div>
-                                <!-- <div class="form-group">
-                                    <label class="control-label col-sm-2" for="absen_geo">Geolocation:</label>
-                                    <div class="col-sm-10">
-                                        <input required type="text"  class="form-control" id="absen_geo" name="absen_geo" placeholder="" value="<?= $absen_geo; ?>">
-                                    </div>
-                                </div> -->
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="absen_tp">Name:</label>
                                     <div class="col-sm-10">
@@ -239,6 +196,75 @@
                                         </script>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="absen_date">Date:</label>
+                                    <div class="col-sm-10">
+                                        <input required type="date" class="form-control" id="absen_date" name="absen_date" placeholder="" value="<?= $absen_date; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group sakit">
+                                    <label class="control-label col-sm-2" for="absen_skd">SKD:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="absen_skd" name="absen_skd">
+                                            <option value="0" <?= ($absen_skd == "0") ? "selected" : ""; ?>>Tidak</option>
+                                            <option value="1" <?= ($absen_skd == "1") ? "selected" : ""; ?>>Ya</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group cuti">
+                                    <label class="control-label col-sm-2" for="cuti_id">Cuti:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" id="cuti_id" name="cuti_id">
+                                            <option value="0" <?= ($cuti_id == "0") ? "selected" : ""; ?>>Pilih Cuti</option>
+                                            <?php $cuti = $this->db->table("cuti")->orderBy("cuti_name", "ASC")->get(); ?>
+                                            <?php foreach ($cuti->getResult() as $cuti) { ?>
+                                                <option value="<?= $cuti->cuti_id; ?>" <?= ($cuti_id == $cuti->cuti_id) ? "selected" : ""; ?>><?= $cuti->cuti_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group cmasuk">
+                                    <label class="control-label col-sm-2" for="absen_masuk">Masuk:</label>
+                                    <div class="col-sm-10">
+                                        <input type="datetime-local" class="form-control imasuk" id="absen_masuk" name="absen_masuk" placeholder="" value="<?= $absen_masuk; ?>">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group cmasuk">
+                                    <label class="control-label col-sm-2" for="absen_keluar">Keluar:</label>
+                                    <div class="col-sm-10">
+                                        <input type="datetime-local" class="form-control imasuk" id="absen_keluar" name="absen_keluar" placeholder="" value="<?= $absen_keluar; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="absen_note">Keterangan:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="absen_note" name="absen_note" placeholder="" value="<?= $absen_note; ?>">
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+                                <!-- <div class="form-group">
+                                    <label class="control-label col-sm-2" for="absen_geo">Geolocation:</label>
+                                    <div class="col-sm-10">
+                                        <input required type="text"  class="form-control" id="absen_geo" name="absen_geo" placeholder="" value="<?= $absen_geo; ?>">
+                                    </div>
+                                </div> -->
 
                                 <input type="hidden" name="absen_id" value="<?= $absen_id; ?>" />
                                 <div class="form-group">
@@ -335,11 +361,10 @@
                                         <!-- <th>No.</th> -->
                                         <!-- <th>Picture</th> -->
                                         <th>Date</th>
-                                        <th>Time</th>
                                         <th>Type</th>
-                                        <th>Note</th>
                                         <th>Dept.</th>
                                         <th>Name</th>
+                                        <th>Note</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -352,13 +377,34 @@
                                         $build->where("departemen_id", $idepartemen);
                                     }
                                     $usr = $build->orderBy("absen_date", "ASC")
-                                        ->orderBy("absen_time", "ASC")
                                         ->orderBy("user_name", "ASC")
                                         ->orderBy("absen_geo", "ASC")
                                         ->get();
                                     // echo $this->db->getLastquery();
                                     $no = 1;
-                                    foreach ($usr->getResult() as $usr) { ?>
+                                    foreach ($usr->getResult() as $usr) { 
+                                        if($usr->absen_type=="Masuk"){
+                                            $absen_masuk="<span class=\"text-primary\">Masuk:</span> ".$usr->absen_masuk;
+                                            if($absen_keluar!=""){
+                                                $absen_keluar="<br/><span class=\"text-danger\">Keluar:</span> ".$usr->absen_keluar;
+                                            }else{
+                                                $absen_keluar="";
+                                            }
+                                            $usr->absen_note=$absen_masuk.$absen_keluar;
+                                        }
+                                        if($usr->absen_type=="Sakit"){   
+                                            if($usr->absen_skd==1){$skd="SKD : Ya. ";}else{$skd="SKD : Tidak. ";}                                        
+                                            $usr->absen_note=$skd."Ket: ".$usr->absen_note;
+                                        }
+                                        if($usr->absen_type=="Cuti"){   
+                                            $cuti=$this->db->table("cuti")->where("cuti_id",$usr->cuti_id)->get(); 
+                                            $gugur="";  
+                                            foreach($cuti->getResult() as $cuti){
+                                                $gugur=$cuti->cuti_name.". ";
+                                            }                                     
+                                            $usr->absen_note=$gugur."Ket: ".$usr->absen_note;
+                                        }
+                                        ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
@@ -406,11 +452,10 @@
                                             <!-- <td><?= $no++; ?></td> -->
                                             <!-- <td><i class="fa fa-camera tunjuk" onclick="tampilgambar('<?= $usr->absen_id; ?>');"></i></td> -->
                                             <td><?= $usr->absen_date; ?></td>
-                                            <td><?= $usr->absen_time; ?></td>
                                             <td><?= $usr->absen_type; ?></td>
-                                            <td><?= $usr->absen_note; ?></td>
                                             <td><?= $usr->departemen_name; ?></td>
                                             <td><?= $usr->user_name; ?></td>
+                                            <td><?= $usr->absen_note; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

@@ -36,19 +36,19 @@ class absen_m extends core_m
             }
         }
 
-        
+
 
         //delete
-        if ($this->request->getPost("delete") == "OK") { 
-            $absen_id = $this->request->getPost("absen_id");              
+        if ($this->request->getPost("delete") == "OK") {
+            $absen_id = $this->request->getPost("absen_id");
             $this->db
-            ->table("absen")
-            ->delete(array("absen_id" =>  $absen_id));
+                ->table("absen")
+                ->delete(array("absen_id" =>  $absen_id));
             $data["message"] = "Delete Success";
         }
 
-         //submit
-         if ($this->request->getPost("submit") == "OK") {
+        //submit
+        if ($this->request->getPost("submit") == "OK") {
             $inpututama = $this->request->getPost("datakartu");
             $bintang = explode("*", $inpututama);
 
@@ -60,7 +60,7 @@ class absen_m extends core_m
                 $input[$data[0]] = $data[1];
             }
             $builder = $this->db->table('absen');
-            $builder->insert($input);            
+            $builder->insert($input);
             /* echo $this->db->getLastQuery();
             die; */
             $absen_id = $this->db->insertID();
@@ -75,12 +75,12 @@ class absen_m extends core_m
                     $inputpanen[$data[0]] = $data[1];
                 }
                 $builder = $this->db->table('panen');
-                $builder->insert($inputpanen);            
+                $builder->insert($inputpanen);
                 /* echo $this->db->getLastQuery();
                 die; */
                 $panen_id = $this->db->insertID();
             }
-            
+
 
 
 
@@ -95,23 +95,22 @@ class absen_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
-            $absen_datetime=$input["absen_datetime"];
-            $date=substr($absen_datetime,0,10);
-            $time=substr($absen_datetime,12,5);
-            $input["absen_date"] = $date;
-            $input["absen_time"] = $time;
-            // echo $input["absen_time"];die;
-            $input["user_id"] = session()->get("user_id");
-            $builder = $this->db->table('absen');
-            $builder->insert($input);
-            /* echo $this->db->getLastQuery();
+            //cek absen
+            $cekcok["user_id"] = $input["user_id"];
+            $cekcok["absen_date"] = $input["absen_date"];
+            $cek = $this->db->table("absen")->where($cekcok)->get()->getRow();
+            if ($cek > 0) {
+                $data["message"] = "Insert Data Gagal! Duplikat data.";
+            } else {
+                $builder = $this->db->table('absen');
+                $builder->insert($input);
+                /* echo $this->db->getLastQuery();
             die; */
-            $absen_id = $this->db->insertID();
-
-            $data["message"] = "Insert Data Success";
+                $absen_id = $this->db->insertID();
+                $data["message"] = "Insert Data Success";
+            }
         }
-        //echo $_POST["create"];die;
-        
+
         //update
         if ($this->request->getPost("change") == "OK") {
             foreach ($this->request->getPost() as $e => $f) {
@@ -119,11 +118,6 @@ class absen_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
-            $absen_datetime=$input["absen_datetime"];
-            $date=substr($absen_datetime,0,10);
-            $time=substr($absen_datetime,12,5);
-            $input["absen_date"] = $date;
-            $input["absen_time"] = $time;
             $this->db->table('absen')->update($input, array("absen_id" => $this->request->getPost("absen_id")));
             $data["message"] = "Update Success";
             // echo $this->db->getLastQuery();die;
