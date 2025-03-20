@@ -24,7 +24,7 @@
                                         <button class="btn btn-warning btn-block btn-lg" value="OK" style="">Back</button>
                                     </h1>
                                 </form>
-                            <?php } ?>                            
+                            <?php } ?>
                         <?php } ?>
                     </div>
 
@@ -77,12 +77,19 @@
                                     </div>
                                 </div>
 
-<div class="form-group">
-    <label class="control-label col-sm-12" for="identity_tunjanganlain">Prosentase Tunjangan Lain-lain:<br/>Diambil dari Total Gaji (%)</label>
-    <div class="col-offset-sm-2 col-sm-10">
-        <input type="text" autofocus class="form-control" id="identity_tunjanganlain" name="identity_tunjanganlain" placeholder="" value="<?= $identity_tunjanganlain; ?>">
-    </div>
-</div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-12" for="identity_tunjanganlain">Prosentase Tunjangan Lain-lain:<br />Diambil dari Total Gaji (%)</label>
+                                    <div class="col-offset-sm-2 col-sm-10">
+                                        <input type="text" autofocus class="form-control" id="identity_tunjanganlain" name="identity_tunjanganlain" placeholder="" value="<?= $identity_tunjanganlain; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-12" for="identity_persengapok">Prosentase Gapok:<br />Diambil dari Total Gaji - T.Lain-lain</label>
+                                    <div class="col-offset-sm-2 col-sm-10">
+                                        <input type="text" autofocus class="form-control" id="identity_persengapok" name="identity_persengapok" placeholder="" value="<?= $identity_persengapok; ?>">
+                                    </div>
+                                </div>
 
                                 <!-- <div class="form-group">
                                     <label class="control-label col-sm-2" for="identity_about">About:</label>
@@ -95,25 +102,29 @@
                                     <label class="control-label col-sm-12" for="identity_logo">Logo: (Max 134 X 134)</label>
                                     <div class="col-sm-12">
                                         <input type="file" autofocus class="form-control" id="identity_logo" name="identity_logo" placeholder="" value="<?= $identity_logo; ?>">
-                                        <?php if($identity_logo!=""){$user_image="images/identity_logo/".$identity_logo;}else{$user_image="images/identity_logo/no_image.png";}?>
-                                          <img id="identity_logo_image" width="100" height="100" src="<?=base_url($user_image);?>"/>
-                                          <script>
+                                        <?php if ($identity_logo != "") {
+                                            $user_image = "images/identity_logo/" . $identity_logo;
+                                        } else {
+                                            $user_image = "images/identity_logo/no_image.png";
+                                        } ?>
+                                        <img id="identity_logo_image" width="100" height="100" src="<?= base_url($user_image); ?>" />
+                                        <script>
                                             function readURL(input) {
                                                 if (input.files && input.files[0]) {
                                                     var reader = new FileReader();
-                                        
-                                                    reader.onload = function (e) {
+
+                                                    reader.onload = function(e) {
                                                         $('#identity_logo_image').attr('src', e.target.result);
                                                     }
-                                        
+
                                                     reader.readAsDataURL(input.files[0]);
                                                 }
                                             }
-                                        
-                                            $("#identity_logo").change(function () {
+
+                                            $("#identity_logo").change(function() {
                                                 readURL(this);
                                             });
-                                          </script>
+                                        </script>
                                     </div>
                                 </div>
 
@@ -157,25 +168,25 @@
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
-                                                    <?php 
+                                                    <?php
                                                     if (
                                                         (
-                                                            isset(session()->get("position_administrator")[0][0]) 
+                                                            isset(session()->get("position_administrator")[0][0])
                                                             && (
-                                                                session()->get("position_administrator") == "1" 
+                                                                session()->get("position_administrator") == "1"
                                                                 || session()->get("position_administrator") == "2"
                                                             )
                                                         ) ||
                                                         (
-                                                            isset(session()->get("halaman")['28']['act_update']) 
+                                                            isset(session()->get("halaman")['28']['act_update'])
                                                             && session()->get("halaman")['28']['act_update'] == "1"
                                                         )
                                                     ) { ?>
-                                                    <form method="post" class="btn-action" style="">
-                                                        <button class="btn btn-sm btn-warning " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
-                                                        <input type="hidden" name="identity_id" value="<?= $usr->identity_id; ?>" />
-                                                    </form>
-                                                    <?php }?>  
+                                                        <form method="post" class="btn-action" style="">
+                                                            <button class="btn btn-sm btn-warning " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
+                                                            <input type="hidden" name="identity_id" value="<?= $usr->identity_id; ?>" />
+                                                        </form>
+                                                    <?php } ?>
                                                 </td>
                                             <?php } ?>
                                             <td><?= $usr->identity_name; ?></td>
