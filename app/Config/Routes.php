@@ -20,6 +20,7 @@ $routes->add('/midentity', 'master\midentity::index');
 $routes->add('/mdepartemen', 'master\mdepartemen::index');
 $routes->add('/mjamkerja', 'master\mjamkerja::index');
 $routes->add('/mlibur', 'master\mlibur::index');
+$routes->add('/mramadlan', 'master\mramadlan::index');
 $routes->add('/mcuti', 'master\mcuti::index');
 $routes->add('/mtunjangan', 'master\mtunjangan::index');
 $routes->add('/mbpjs', 'master\mbpjs::index');
