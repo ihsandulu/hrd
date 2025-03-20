@@ -317,10 +317,11 @@
 
                                 <script>
                                     function tlain() {
+                                        let identity_tunjanganlain = "<?= session()->get("identity_tunjanganlain"); ?>";
                                         let user_payrolltype = $("#user_payrolltype").val();
                                         if (user_payrolltype == "bulanan") {
                                             let user_gakot = $("#user_gakot").val();
-                                            let tlainlain = user_gakot * 25 / 100;
+                                            let tlainlain = user_gakot * identity_tunjanganlain / 100;
                                             // alert("<?= base_url("api/tlain"); ?>?tlainlain="+tlainlain);
                                             $.get("<?= base_url("api/tlain"); ?>", {
                                                     tlainlain: tlainlain
@@ -331,7 +332,7 @@
                                                     $("#user_tmakan").val(data.makan);
                                                 });
 
-                                            let user_gapok = tlainlain * (25 / 100);
+                                            let user_gapok = (user_gakot-tlainlain) * (identity_persengapok / 100);
                                             $("#user_gapok").val(user_gapok);
                                             let user_tjabatan = user_gakot - (tlainlain + user_gapok);
                                             $("#user_tjabatan").val(user_tjabatan);
