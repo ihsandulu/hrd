@@ -102,6 +102,52 @@ class absen_m extends core_m
             if ($cek > 0) {
                 $data["message"] = "Insert Data Gagal! Duplikat data.";
             } else {
+
+                //cari jml jam kerja
+                if ($input["absen_keluar"] != "") {
+                    $masuk = new \DateTime($input["absen_masuk"]);
+                    $keluar = new \DateTime($input["absen_keluar"]);
+                    $diff = $masuk->diff($keluar);
+                    $jml_jam = $diff->h + ($diff->i / 60);
+                    $input["absen_kerjajam"] = $jml_jam;
+
+                    /* //apakah ramadlan
+                    $arramadlan = $this->db->table("ramadlan")->where("SUBSTR(ramadlan_date,1,4)", date("Y"))->get()->getResultArray();
+                    if (in_array($input["absen_date"], $arramadlan)) {
+                        $ramadlan = 1;
+                    } else {
+                        $ramadlan = 0;
+                    }
+
+                    //cek jam kerja hari itu
+                    $hariAbsen = date("w", strtotime($input["absen_date"]));
+                    $wkerja["jamkerja_type"] = "normal";
+                    $wkerja["jamkerja_ramadlan"] = $ramadlan;
+                    $jamkerja = $this->db->table("jamkerja")
+                        ->where($wkerja)
+                        ->where("FIND_IN_SET($hariAbsen, jamkerja_hari) > 0")
+                        ->get();
+                        $lembur=0;
+                    foreach ($jamkerja->getResult() as $jamkerja) {
+                        $masuk = new \DateTime($jamkerja->jamkerja_awal);
+                        $keluar = new \DateTime($jamkerja->jamkerja_akhir);
+                        $diff = $masuk->diff($keluar);
+                        $jjam = $diff->h + ($diff->i / 60);                        
+                        $lembur = $jml_jam-$jjam;
+                    }
+                    $input["absen_lemburjam"] = $lembur; */
+                }
+
+                //ambil lembur
+                $wlembur["lembur_date"] = $input["absen_date"];
+                $wlembur["user_id"] = $input["user_id"];
+                $lembur = $this->db->table("lembur")->where()->get();
+                $lemburjam = 0;
+                foreach ($lembur->getResult() as $lembur) {
+                    $lemburjam += $lembur->lembur_jam;
+                }
+                $input["absen_lemburjam"] = $lemburjam;
+
                 $builder = $this->db->table('absen');
                 $builder->insert($input);
                 /* echo $this->db->getLastQuery();
@@ -118,6 +164,51 @@ class absen_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
+            //cari jml jam kerja
+            if ($input["absen_keluar"] != "") {
+                $masuk = new \DateTime($input["absen_masuk"]);
+                $keluar = new \DateTime($input["absen_keluar"]);
+                $diff = $masuk->diff($keluar);
+                $jml_jam = $diff->h + ($diff->i / 60);
+                $input["absen_kerjajam"] = $jml_jam;
+
+                /* //apakah ramadlan
+                $arramadlan = $this->db->table("ramadlan")->where("SUBSTR(ramadlan_date,1,4)", date("Y"))->get()->getResultArray();
+                if (in_array($input["absen_date"], $arramadlan)) {
+                    $ramadlan = 1;
+                } else {
+                    $ramadlan = 0;
+                }
+
+                //cek jam kerja hari itu
+                $hariAbsen = date("w", strtotime($input["absen_date"]));
+                $wkerja["jamkerja_type"] = "normal";
+                $wkerja["jamkerja_ramadlan"] = $ramadlan;
+                $jamkerja = $this->db->table("jamkerja")
+                    ->where($wkerja)
+                    ->where("FIND_IN_SET($hariAbsen, jamkerja_hari) > 0")
+                    ->get();
+                    $lembur=0;
+                foreach ($jamkerja->getResult() as $jamkerja) {
+                    $masuk = new \DateTime($jamkerja->jamkerja_awal);
+                    $keluar = new \DateTime($jamkerja->jamkerja_akhir);
+                    $diff = $masuk->diff($keluar);
+                    $jjam = $diff->h + ($diff->i / 60);                        
+                    $lembur = $jml_jam-$jjam;
+                }
+                $input["absen_lemburjam"] = $lembur; */
+            }
+
+            //ambil lembur
+            $wlembur["lembur_date"] = $input["absen_date"];
+            $wlembur["user_id"] = $input["user_id"];
+            $lembur = $this->db->table("lembur")->where($wlembur)->get();
+            $lemburjam = 0;
+            foreach ($lembur->getResult() as $lembur) {
+                $lemburjam += $lembur->lembur_jam;
+            }
+            $input["absen_lemburjam"] = $lemburjam;
+
             $this->db->table('absen')->update($input, array("absen_id" => $this->request->getPost("absen_id")));
             $data["message"] = "Update Success";
             // echo $this->db->getLastQuery();die;

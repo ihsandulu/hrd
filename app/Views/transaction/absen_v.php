@@ -385,12 +385,19 @@
                                     foreach ($usr->getResult() as $usr) { 
                                         if($usr->absen_type=="Masuk"){
                                             $absen_masuk="<span class=\"text-primary\">Masuk:</span> ".$usr->absen_masuk;
+                                            $absen_keluar=$usr->absen_keluar;
                                             if($absen_keluar!=""){
                                                 $absen_keluar="<br/><span class=\"text-danger\">Keluar:</span> ".$usr->absen_keluar;
                                             }else{
                                                 $absen_keluar="";
+                                            } 
+                                            $absen_lemburjam=$usr->absen_lemburjam;
+                                            if($absen_lemburjam!=""){
+                                                $absen_lemburjam="<br/><span class=\"text-danger\">Lembur:</span> ".$usr->absen_lemburjam." Jam";
+                                            }else{
+                                                $absen_lemburjam="";
                                             }
-                                            $usr->absen_note=$absen_masuk.$absen_keluar;
+                                            $usr->absen_note=$absen_masuk.$absen_keluar.$absen_lemburjam;
                                         }
                                         if($usr->absen_type=="Sakit"){   
                                             if($usr->absen_skd==1){$skd="SKD : Ya. ";}else{$skd="SKD : Tidak. ";}                                        
