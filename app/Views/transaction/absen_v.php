@@ -300,10 +300,10 @@
                                     }
                                     ?>
                                     <div class="col-4 row mb-2">
-                                        <div class="col-5">
-                                            <label class="text-dark">Departemen : </label>
+                                        <div class="col-3">
+                                            <label class="text-dark">Dept. : </label>
                                         </div>
-                                        <div class="col-7">
+                                        <div class="col-9">
                                             <select class="form-control" id="Departemen" name="departemen">
                                                 <?php
                                                 $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get(); ?>
