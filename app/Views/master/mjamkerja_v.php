@@ -151,17 +151,22 @@
                                     </div>
                                 </div>
 
-                                
 
-                                <div class="form-group awalakhir">
+
+                                <!-- <div class="form-group awalakhir">
                                     <label class="control-label col-sm-2" for="jamkerja_istirahat">Istirahat (jam):</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control iawalakhir" id="jamkerja_istirahat" name="jamkerja_istirahat" placeholder="" value="<?= $jamkerja_istirahat; ?>">
                                     </div>
-                                </div>
-
+                                </div> -->
 
                                 <div class="form-group lembur">
+                                    <label class="control-label col-sm-2" for="jamkerja_lemburjam">Lembur (Jam):</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control ilembur" id="jamkerja_lemburjam" name="jamkerja_lemburjam" placeholder="" value="<?= $jamkerja_lemburjam; ?>">
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group lembur">
                                     <label class="control-label col-sm-2" for="jamkerja_menitawal">Lembur Menit Awal:</label>
                                     <div class="col-sm-10">
                                         <input type="number" class="form-control ilembur" id="jamkerja_menitawal" name="jamkerja_menitawal" placeholder="" value="<?= $jamkerja_menitawal; ?>">
@@ -172,7 +177,7 @@
                                     <div class="col-sm-10">
                                         <input type="number" class="form-control ilembur" id="jamkerja_menitakhir" name="jamkerja_menitakhir" placeholder="" value="<?= $jamkerja_menitakhir; ?>">
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group nominal">
                                     <label class="control-label col-sm-2" for="jamkerja_lnominal">Nominal:</label>
@@ -276,9 +281,9 @@
                                         <th>Hari</th>
                                         <th>Jam Awal</th>
                                         <th>Jam Akhir</th>
-                                        <th>Istirahat (jam)</th>
-                                        <th>Lembur Menit</th>
-                                        <!-- <th>lembur</th> -->
+                                        <!-- <th>Istirahat (jam)</th> -->
+                                        <!--<th>Lembur Menit</th> -->
+                                        <th>Lembur (Jam)</th>
                                         <th>Nominal</th>
                                         <th>Lembur Hari Libur</th>
                                     </tr>
@@ -362,8 +367,10 @@
                                             <td class=""><?= $hari; ?></td>
                                             <td class=""><?= $usr->jamkerja_awal; ?></td>
                                             <td class=""><?= $usr->jamkerja_akhir; ?></td>
-                                            <td class=""><?= $usr->jamkerja_istirahat; ?></td>
-                                            <td class=""><?= $usr->jamkerja_menitawal; ?> - <?= $usr->jamkerja_menitakhir; ?></td>
+                                            <!-- <td class=""><?= $usr->jamkerja_istirahat; ?></td> -->
+                                            <!-- 
+                                            <td class=""><?= $usr->jamkerja_menitawal; ?> - <?= $usr->jamkerja_menitakhir; ?></td> -->
+                                            <td class=""><?= $usr->jamkerja_lemburjam; ?></td>
                                             <td class=""><?= number_format($usr->jamkerja_lnominal, 2, ",", "."); ?></td>
                                             <td class=""><?= $libur[$usr->jamkerja_libur]; ?></td>
                                         </tr>
