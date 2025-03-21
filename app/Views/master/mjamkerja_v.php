@@ -160,10 +160,22 @@
                                     </div>
                                 </div> -->
 
-                                <div class="form-group lembur">
+                                <!-- <div class="form-group lembur">
                                     <label class="control-label col-sm-2" for="jamkerja_lemburjam">Lembur (Jam):</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control ilembur" id="jamkerja_lemburjam" name="jamkerja_lemburjam" placeholder="" value="<?= $jamkerja_lemburjam; ?>">
+                                    </div>
+                                </div> -->
+                                <div class="form-group lembur">
+                                    <label class="control-label col-sm-2" for="jamkerja_ottype">Kategory OT:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control ilembur" id="jamkerja_ottype" name="jamkerja_ottype">
+                                            <option value="" <?= ($jamkerja_ottype == "") ? "selected" : ""; ?>>Pilih OT</option>
+                                            <option value="OT1" <?= ($jamkerja_ottype == "OT1") ? "selected" : ""; ?>>OT1</option>
+                                            <option value="OT2" <?= ($jamkerja_ottype == "OT2") ? "selected" : ""; ?>>OT2</option>
+                                            <option value="OT3" <?= ($jamkerja_ottype == "OT3") ? "selected" : ""; ?>>OT3</option>
+                                            <option value="OT4" <?= ($jamkerja_ottype == "OT4") ? "selected" : ""; ?>>OT4</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <!-- <div class="form-group lembur">
@@ -179,12 +191,25 @@
                                     </div>
                                 </div> -->
 
-                                <div class="form-group nominal">
+                                <div class="form-group lembur">
+                                    <label class="control-label col-sm-2" for="jamkerja_otawal">Lembur Jam Awal:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control ilembur" id="jamkerja_otawal" name="jamkerja_otawal" placeholder="" value="<?= $jamkerja_otawal; ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group lembur">
+                                    <label class="control-label col-sm-2" for="jamkerja_otakhir">Lembur Jam Akhir:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control ilembur" id="jamkerja_otakhir" name="jamkerja_otakhir" placeholder="" value="<?= $jamkerja_otakhir; ?>">
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-group nominal">
                                     <label class="control-label col-sm-2" for="jamkerja_lnominal">Nominal:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control inominal" id="jamkerja_lnominal" name="jamkerja_lnominal" placeholder="" value="<?= $jamkerja_lnominal; ?>">
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <!-- <div class="form-group">
                                     <label class="control-label col-sm-2" for="jamkerja_position">Jabatan:</label>
@@ -235,7 +260,7 @@
 
 
 
-                                <div class="form-group lembur">
+                                <!-- <div class="form-group lembur">
                                     <label class="control-label col-sm-2" for="jamkerja_libur">Hari Libur:</label>
                                     <div class="col-sm-10">
                                         <select onchange="jtipe()" class="form-control ilembur" id="jamkerja_libur" name="jamkerja_libur">
@@ -243,7 +268,7 @@
                                             <option value="1" <?= ($jamkerja_libur == "1") ? "selected" : ""; ?>>Ya</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
 
 
@@ -275,17 +300,19 @@
                                             <th>Action</th>
                                         <?php } ?>
                                         <!-- <th>No.</th> -->
-                                        <th>Ramadlan</th>
+                                        <!-- <th>Ramadlan</th> -->
                                         <th>Type</th>
-                                        <th>Jam Kerja</th>
-                                        <th>Hari</th>
-                                        <th>Jam Awal</th>
-                                        <th>Jam Akhir</th>
+                                        <th>Nama Jam Kerja</th>
+                                        <!-- <th>Hari</th> -->
+                                        <!-- <th>Jam Awal</th> -->
+                                        <!-- <th>Jam Akhir</th> -->
                                         <!-- <th>Istirahat (jam)</th> -->
                                         <!--<th>Lembur Menit</th> -->
-                                        <th>Lembur (Jam)</th>
-                                        <th>Nominal</th>
-                                        <th>Lembur Hari Libur</th>
+                                        <!-- <th>Lembur (Jam)</th> -->
+                                        <!-- <th>Type Lembur</th> -->
+                                        <!-- <th>Nominal</th> -->
+                                        <!-- <th>Lembur Hari Libur</th> -->
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -361,18 +388,36 @@
                                                 </td>
                                             <?php } ?>
                                             <!-- <td><?= $no++; ?></td> -->
-                                            <td class=""><?= $ramadlan[$usr->jamkerja_ramadlan]; ?></td>
+                                            <!-- <td class=""><?= $ramadlan[$usr->jamkerja_ramadlan]; ?></td> -->
                                             <td class=""><?= ucfirst($usr->jamkerja_type); ?></td>
                                             <td class=""><?= $usr->jamkerja_name; ?></td>
-                                            <td class=""><?= $hari; ?></td>
-                                            <td class=""><?= $usr->jamkerja_awal; ?></td>
-                                            <td class=""><?= $usr->jamkerja_akhir; ?></td>
+                                            <!-- <td class=""><?= $hari; ?></td> -->
+                                            <!-- <td class=""><?= $usr->jamkerja_awal; ?></td> -->
+                                            <!-- <td class=""><?= $usr->jamkerja_akhir; ?></td> -->
                                             <!-- <td class=""><?= $usr->jamkerja_istirahat; ?></td> -->
                                             <!-- 
                                             <td class=""><?= $usr->jamkerja_menitawal; ?> - <?= $usr->jamkerja_menitakhir; ?></td> -->
-                                            <td class=""><?= $usr->jamkerja_lemburjam; ?></td>
-                                            <td class=""><?= number_format($usr->jamkerja_lnominal, 2, ",", "."); ?></td>
-                                            <td class=""><?= $libur[$usr->jamkerja_libur]; ?></td>
+                                            <!-- <td class=""><?= $usr->jamkerja_lemburjam; ?></td> -->
+                                            <!-- <td class=""><?= $usr->jamkerja_otawal; ?> - <?= $usr->jamkerja_otakhir; ?></td>  -->
+                                            <!-- <td class=""><?= $usr->jamkerja_ottype; ?></td> -->
+                                            <!-- <td class=""><?= number_format($usr->jamkerja_lnominal, 2, ",", "."); ?></td> -->
+                                            <!-- <td class=""><?= $libur[$usr->jamkerja_libur]; ?></td> -->
+                                            <td class="">
+                                                <?php
+                                                if($usr->jamkerja_type=="normal"){?>
+                                                    <?= $hari; ?>
+                                                    <?php if($usr->jamkerja_ramadlan==1){?>
+                                                        <span class="text-success"> (Ramadlan)</span>
+                                                        <?php }?>
+                                                    <br />
+                                                    <?= $usr->jamkerja_awal; ?> - <?= $usr->jamkerja_akhir; ?>
+                                                <?php }?>
+                                                <?php
+                                                if($usr->jamkerja_type=="lembur"){?>
+                                                    Tipe Lembur : <?= $usr->jamkerja_ottype; ?><br />
+                                                    Rentang Jam : <?= $usr->jamkerja_otawal; ?> - <?= $usr->jamkerja_otakhir; ?>
+                                                <?php }?>
+                                            </td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
