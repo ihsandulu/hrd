@@ -318,6 +318,7 @@
                                 <script>
                                     function tlain() {
                                         let identity_tunjanganlain = "<?= session()->get("identity_tunjanganlain"); ?>";
+                                        let identity_persengapok = "<?= session()->get("identity_persengapok"); ?>";
                                         let user_payrolltype = $("#user_payrolltype").val();
                                         if (user_payrolltype == "bulanan") {
                                             let user_gakot = $("#user_gakot").val();
@@ -332,7 +333,8 @@
                                                     $("#user_tmakan").val(data.makan);
                                                 });
 
-                                            let user_gapok = (user_gakot-tlainlain) * (identity_persengapok / 100);
+
+                                            let user_gapok = (user_gakot - tlainlain) * (identity_persengapok / 100);
                                             $("#user_gapok").val(user_gapok);
                                             let user_tjabatan = user_gakot - (tlainlain + user_gapok);
                                             $("#user_tjabatan").val(user_tjabatan);
@@ -374,6 +376,13 @@
                                     <label class="control-label col-sm-2" for="user_tjabatan">Tunjangan Jabatan:</label>
                                     <div class="col-sm-10">
                                         <input type="number" class="form-control" id="user_tjabatan" name="user_tjabatan" placeholder="" value="<?= $user_tjabatan; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_insentif">Insentif:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_insentif" name="user_insentif" placeholder="" value="<?= $user_insentif; ?>">
                                     </div>
                                 </div>
 
@@ -432,6 +441,7 @@
                                         <th>T.Kehadiran</th>
                                         <th>T.Makan</th>
                                         <th>T.Jabatan</th>
+                                        <th>Insentif</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -543,6 +553,7 @@
                                             <td><?= $usr->user_thadir; ?></td>
                                             <td><?= $usr->user_tmakan; ?></td>
                                             <td><?= $usr->user_tjabatan; ?></td>
+                                            <td><?= $usr->user_insentif; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
