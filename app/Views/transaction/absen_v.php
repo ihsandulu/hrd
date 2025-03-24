@@ -162,7 +162,7 @@
                                             <option value="" <?= ($user_id == "") ? "selected" : ""; ?>>Pilih User</option>
                                             <?php
                                             foreach ($user->getResult() as $user) { ?>
-                                                <option departemen_id="<?= $user->departemen_id; ?>" departemen_name="<?= $user->departemen_name; ?>" user_name="<?= $user->user_nama; ?>" user_payrolltype="<?= $user->user_payrolltype; ?>" user_lembur="<?= $user->user_lembur; ?>" value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_name; ?> - <?= $user->user_nama; ?> (<?= $user->user_nik; ?>)</option>
+                                                <option departemen_id="<?= $user->departemen_id; ?>" departemen_name="<?= $user->departemen_name; ?>" user_name="<?= $user->user_nama; ?>" user_payrolltype="<?= $user->user_payrolltype; ?>" user_lembur="<?= $user->user_lembur; ?>" value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_nama; ?> - <?= $user->departemen_name; ?> (<?= $user->user_nik; ?>)</option>
                                             <?php } ?>
                                         </select>
                                         <input type="hidden" id="departemen_id" name="departemen_id" value="<?= $departemen_id; ?>" />
