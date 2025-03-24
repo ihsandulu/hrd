@@ -132,12 +132,17 @@ class absen_m extends core_m
                     $liburk = 1;
                 }
 
-
-                //harga lembur            
                 $user = $this->db->table("user")->where("user_id", $input["user_id"])->get()->getRow();
                 $gapok = $user->user_gapok ?? null;
                 $userlembur = $user->user_lembur ?? null;
                 $insentif = $user->user_insentif ?? null;
+                $user_payrolltype = $user->user_payrolltype ?? null;
+                $user_ttransport = $user->user_ttransport ?? null;
+                $user_thadir = $user->user_thadir ?? null;
+                $user_tmakan = $user->user_tmakan ?? null;
+                $user_gakot = $user->user_gakot ?? null;
+
+                //harga lembur            
                 if ($userlembur == "1") {
                     $wkerja["jamkerja_type"] = "lembur";
                     $jamkerja = $this->db->table("jamkerja")->where($wkerja)->get();
@@ -212,6 +217,49 @@ class absen_m extends core_m
                 } else if ($userlembur == "2") {
                     $input["absen_insentif"] = $insentif;
                 }
+
+                //Sakit
+                if ($input["absen_type"] == "Sakit") {
+                    if ($user_payrolltype == "harian") {
+                        if ($input["absen_skd"] == 1) {
+                            //ga dipotong
+                        } else {
+                            $input["absen_alpha"] = 1;
+                            $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                        }
+                    } else {
+                        if ($input["absen_skd"] == 1) {
+                            $input["absen_ttransport"] = $user_ttransport / 30;
+                            $input["absen_thadir"] = $user_thadir / 30;
+                            $input["absen_tmakan"] = $user_tmakan / 30;
+                        } else {
+                            $input["absen_alpha"] = 1;
+                            $input["absen_alphanominal"] = $user_gakot / 30;
+                        }
+                    }
+                }
+
+                //Sakit, Izin, Alpha, Cuti
+                if ($user_payrolltype == "harian") {
+                    //sakit
+                    if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                        //ada SKD ga dipotong
+                    } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
+                        //Sakit, izin dan alpha
+                        $input["absen_alpha"] = 1;
+                        $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                    }
+                } else {
+                    if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                        $input["absen_ttransport"] = $user_ttransport / 30;
+                        $input["absen_thadir"] = $user_thadir / 30;
+                        $input["absen_tmakan"] = $user_tmakan / 30;
+                    } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
+                        $input["absen_alpha"] = 1;
+                        $input["absen_alphanominal"] = $user_gakot / 30;
+                    }
+                }
+
 
                 $builder = $this->db->table('absen');
                 $builder->insert($input);
