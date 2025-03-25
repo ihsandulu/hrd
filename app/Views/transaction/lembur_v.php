@@ -67,9 +67,9 @@
                                         <select class="form-control select" id="user_id" name="user_id">
                                             <option value="0" <?= ($user_id == "0") ? "selected" : ""; ?>>Pilih User</option>
                                             <?php $user = $this->db->table("user")
-                                            ->join("position","position.position_id=user.position_id","left")
-                                            ->join("departemen","departemen.departemen_id=user.departemen_id","left")
-                                            ->orderBy("user_nama", "ASC")->get();
+                                                ->join("position", "position.position_id=user.position_id", "left")
+                                                ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
+                                                ->orderBy("user_nama", "ASC")->get();
                                             foreach ($user->getResult() as $user) { ?>
                                                 <option value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_nama; ?> - <?= $user->position_name; ?> <?= $user->departemen_name; ?></option>
                                             <?php } ?>
@@ -85,19 +85,16 @@
                                 </div>
 
                                 <div class="form-group ">
-                                    <label class="control-label col-sm-2" for="lembur_type">Type:</label>
+                                    <label class="control-label col-sm-2" for="inventaris_id">Inventaris:</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control select" id="lembur_type" name="lembur_type">
-                                            <option value="Awal" <?= ($lembur_type == "Awal") ? "selected" : ""; ?>>Awal</option>
-                                            <option value="Akhir" <?= ($lembur_type == "Akhir") ? "selected" : ""; ?>>Akhir</option>
+                                        <select class="form-control select" id="inventaris_id" name="inventaris_id">
+                                            <option value="" <?= ($inventaris_id == "") ? "selected" : ""; ?>>Pilih Inventaris</option>
+                                            <?php
+                                            $inventaris = $this->db->table("inventaris")->orderBy("inventaris_name")->get();
+                                            foreach ($inventaris->getResult() as $inventaris) { ?>
+                                                <option value="<?= $inventaris->inventaris_id; ?>" <?= ($inventaris_id == $inventaris->inventaris_id) ? "selected" : ""; ?>><?= $inventaris->inventaris_name; ?></option>
+                                            <?php } ?>
                                         </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-2" for="lembur_jam">Jml Jam:</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control " id="lembur_jam" name="lembur_jam" placeholder="" value="<?= $lembur_jam; ?>">
                                     </div>
                                 </div>
 
@@ -105,7 +102,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <button type="submit" id="submit" class="btn btn-primary col-md-5" <?= $namabutton; ?> value="OK">Submit</button>
-                                        <a class="btn btn-warning col-md-offset-1 col-md-5" href="<?= base_url("mlembur"); ?>">Back</a>
+                                        <a class="btn btn-warning col-md-offset-1 col-md-5" href="<?= base_url("lembur"); ?>">Back</a>
                                     </div>
                                 </div>
                             </form>
@@ -172,17 +169,17 @@
                                         <!-- <th>No.</th> -->
                                         <th>Tanggal</th>
                                         <th>User</th>
-                                        <th>Type</th>
-                                        <th>Jml Jam</th>
+                                        <th>Inventaris</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $usr = $this->db
                                         ->table("lembur")
-                                        ->join("user","user.user_id=lembur.user_id","left")
-                                        ->join("position","position.position_id=user.position_id","left")
-                                        ->join("departemen","departemen.departemen_id=user.departemen_id","left")
+                                        ->join("inventaris", "inventaris.inventaris_id=lembur.inventaris_id", "left")
+                                        ->join("user", "user.user_id=lembur.user_id", "left")
+                                        ->join("position", "position.position_id=user.position_id", "left")
+                                        ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
                                         ->where("lembur_date >=", $dari)
                                         ->where("lembur_date <=", $ke)
                                         ->orderBy("lembur_date DESC")
@@ -240,8 +237,7 @@
                                             <!-- <td><?= $no++; ?></td> -->
                                             <td class=""><?= $usr->lembur_date; ?></td>
                                             <td class=""><?= $usr->user_nama; ?> - <?= $usr->position_name; ?> <?= $usr->departemen_name; ?></td>
-                                            <td class=""><?= $usr->lembur_type; ?></td>
-                                            <td class=""><?= $usr->lembur_jam; ?></td>
+                                            <td class=""><?= $usr->inventaris_name; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -255,7 +251,7 @@
 </div>
 <script>
     $('.select').select2();
-    var title = "Master Lembur";
+    var title = "Lembur";
     $("title").text(title);
     $(".card-title").text(title);
     $("#page-title").text(title);
