@@ -333,6 +333,25 @@
                         </li>
                     <?php } ?>
 
+                    <?php
+                    if (
+                        (
+                            isset(session()->get("position_id")[0][0])
+                            && (
+                                session()->get("position_id") == "1"
+                                || session()->get("position_id") == "2"
+                            )
+                        ) ||
+                        (
+                            isset(session()->get("halaman")['93']['act_read'])
+                            && session()->get("halaman")['93']['act_read'] == "1"
+                        )
+                    ) { ?>
+                        <li>
+                            <a class="  " href="<?= base_url("inventarist"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Pot. Inventaris</span></a>
+                        </li>
+                    <?php } ?>
+
 
                 <?php } ?>
 
