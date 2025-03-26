@@ -25,6 +25,7 @@ $routes->add('/mcuti', 'master\mcuti::index');
 $routes->add('/mtunjangan', 'master\mtunjangan::index');
 $routes->add('/mbpjs', 'master\mbpjs::index');
 $routes->add('/minventaris', 'master\minventaris::index');
+$routes->add('/mter', 'master\mter::index');
 $routes->add('/synchron', 'transaction\synchron::index');
 $routes->add('/absen', 'transaction\absen::index');
 $routes->add('/gaji', 'transaction\gaji::index');
