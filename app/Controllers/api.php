@@ -387,4 +387,21 @@ class api extends BaseController
         }
         return $this->response->setJSON($tunjanganData);
     }
+
+    public function tanggunganjenis()
+    {
+        $input["tanggungan_id"] = $this->request->getGet("tanggungan_id");
+        $ter_jenis = $this->db->table("tanggungan")->where($input)->get()->getRow()->tanggungan_ter;
+        $gakot = $this->request->getGet("gakot");
+        $ter = $this->db->table("ter")
+        ->where("ter_jenis",$ter_jenis)
+        ->where("ter_gakotawal <=",$gakot)
+        ->where("ter_gakotakhir >=",$gakot)
+        ->get();
+        $pph = 0;
+        foreach ($ter->getResult() as $ter) {
+            $pph = $ter->ter_persen/100*$gakot;
+        }
+        echo $pph;
+    }
 }

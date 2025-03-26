@@ -274,15 +274,31 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_tanggungan">Status Tanggungan:</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control" id="user_tanggungan" name="user_tanggungan">
-                                            <option value="TK" <?= ($user_tanggungan == "TK") ? "selected" : ""; ?>>TK</option>
-                                            <option value="K" <?= ($user_tanggungan == "K") ? "selected" : ""; ?>>K</option>
-                                            <option value="K/1" <?= ($user_tanggungan == "K/1") ? "selected" : ""; ?>>K/1</option>
-                                            <option value="K/2" <?= ($user_tanggungan == "K/2") ? "selected" : ""; ?>>K/2</option>
-                                            <option value="K/3" <?= ($user_tanggungan == "K/3") ? "selected" : ""; ?>>K/3</option>
+                                        <select onchange="pph()" class="form-control" id="user_tanggungan" name="user_tanggungan">
+                                            <option value="" <?= ($user_tanggungan == "") ? "selected" : ""; ?>>Pilih Status</option>
+                                            <?php $tanggungan = $this->db->table("tanggungan")->get();
+                                            foreach ($tanggungan->getResult() as $tanggungan) { ?>
+                                                <option value="<?= $tanggungan->tanggungan_id; ?>" data-ter="<?= $tanggungan->tanggungan_ter; ?>" <?= ($user_tanggungan == $tanggungan->tanggungan_id) ? "selected" : ""; ?>><?= $tanggungan->tanggungan_jenis; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
+
+                                <script>
+                                    function pph() {
+                                        let ter = $("#user_tanggungan option:selected").attr("data-ter");
+                                        $("#user_tanggunganjenis").val(ter);
+                                    }
+                                </script>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_tanggunganjenis">Jenis Tanggungan:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="user_tanggunganjenis" name="user_tanggunganjenis" placeholder="" value="<?= $user_tanggunganjenis; ?>">
+                                    </div>
+                                </div>
+
+
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_payrolltype">Tipe Penggajian:</label>
@@ -386,7 +402,6 @@
                                     </div>
                                 </div>
 
-
                                 <input type="hidden" name="user_id" value="<?= $user_id; ?>" />
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
@@ -442,6 +457,7 @@
                                         <th>T.Makan</th>
                                         <th>T.Jabatan</th>
                                         <th>Insentif</th>
+                                        <th>PPH21</th>
                                     </tr>
                                 </thead>
                                 <tbody>
