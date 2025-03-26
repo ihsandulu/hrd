@@ -84,6 +84,13 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group ">
+                                    <label class="control-label col-sm-2" for="bpjs_discount">Diskon (%):</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control " id="bpjs_discount" name="bpjs_discount" placeholder="" value="<?= $bpjs_discount; ?>">
+                                    </div>
+                                </div>
+
                                 <input type="hidden" name="bpjs_id" value="<?= $bpjs_id; ?>" />
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
@@ -113,6 +120,7 @@
                                         <th>Nama BPJS</th>
                                         <th>Prosentase Pekerja (%)</th>
                                         <th>Prosentase Perusahaan (%)</th>
+                                        <th>Diskon (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -174,6 +182,7 @@
                                             <td class=""><?= $usr->bpjs_name; ?></td>
                                             <td class=""><?= $usr->bpjs_pekerja; ?></td>
                                             <td class=""><?= $usr->bpjs_perusahaan; ?></td>
+                                            <td class=""><?= $usr->bpjs_discount; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
