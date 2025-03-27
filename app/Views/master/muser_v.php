@@ -334,7 +334,7 @@
                                 <script>
                                     function tlain() {
                                         let identity_tunjanganlain = "<?= session()->get("identity_tunjanganlain"); ?>";
-                                        let identity_persengapok = "<?= session()->get("identity_persengapok"); ?>";
+                                        let identity_persentjabatan = "<?= session()->get("identity_persentjabatan"); ?>";
                                         let user_payrolltype = $("#user_payrolltype").val();
                                         if (user_payrolltype == "bulanan") {
                                             let user_gakot = $("#user_gakot").val();
@@ -350,10 +350,11 @@
                                                 });
 
 
-                                            let user_gapok = (user_gakot - tlainlain) * (identity_persengapok / 100);
-                                            $("#user_gapok").val(user_gapok);
-                                            let user_tjabatan = user_gakot - (tlainlain + user_gapok);
+                                            let user_tjabatan = (user_gakot - tlainlain) * (identity_persentjabatan / 100);
+                                            // alert(identity_persentjabatan);
                                             $("#user_tjabatan").val(user_tjabatan);
+                                            let user_gapok = user_gakot - (tlainlain + user_tjabatan);
+                                            $("#user_gapok").val(user_gapok);
                                         }
                                     }
                                 </script>
