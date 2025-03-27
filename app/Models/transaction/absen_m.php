@@ -292,9 +292,9 @@ class absen_m extends core_m
                 $input["absen_pulangcepatmenit"] = $pulangcepatmenit;
 
                 //uangmakan -- pendapatan lain-lain
-            if ($liburk == 1 && $lemburjam > 0) {
-                $input["absen_lain"] = $identity->identity_uanggantimakan;
-            }
+                if ($liburk == 1 && $lemburjam > 0) {
+                    $input["absen_lain"] = $identity->identity_uanggantimakan;
+                }
 
 
                 $builder = $this->db->table('absen');

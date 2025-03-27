@@ -196,6 +196,7 @@ class gaji_m extends core_m
                 SUM(absen_ot4jam)AS gaji_ot4jam, 
                 SUM(absen_ot4nominal)AS gaji_ot4nominal, 
                 SUM(absen_alphanominal)AS gaji_alphanominal, 
+                SUM(absen_lain)AS gaji_lain, 
                 user.position_id as position_id, 
                 user.departemen_id as departemen_id 
                 FROM absen 
@@ -329,20 +330,16 @@ class gaji_m extends core_m
 
                     $input["gaji_pph21"] = $pph21;
 
-
-
-
-
-
-
                     $input["gaji_date"] = date("Y-m-d");
                     $input["gaji_dari"] =  $this->request->getGet("dari");
                     $input["gaji_ke"] =  $this->request->getGet("ke");
 
                     //pulang cepat
-                    $input["gaji_pcepat"] = $absen->pulangcepat;
+                    $input["gaji_pulangcepat"] = $absen->pulangcepat;
 
-                    $input["gaji_lain"] = 0;
+                    //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramalan maka diganti dengan uang 8rb
+                    $input["gaji_lain"] = $absen->gaji_lain;
+
                     $input["gaji_plain"] = 0;
 
                     $input["gaji_lainketerangan"] = $absen->gaji_lainketerangan;
