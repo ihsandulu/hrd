@@ -124,6 +124,7 @@ class absen_m extends core_m
                 }
                 $input["absen_lemburjam"] = $lemburjam;
                 // print_r($input);die;
+
                 //libur tidak
                 $wlibur["libur_date"] = $input["absen_date"];
                 $libur = $this->db->table("libur")->where($wlibur)->get();
@@ -131,6 +132,8 @@ class absen_m extends core_m
                 foreach ($libur->getResult() as $libur) {
                     $liburk = 1;
                 }
+
+                //catatan: untuk lembur pada hari biasa dan libur pada dasarnya perhitungannya sama walapun perhitungan OT1 berbeda di hari libur namun ketika hari libur tidak mungkin lembur hanya OT 1 saja.
 
                 $user = $this->db->table("user")->where("user_id", $input["user_id"])->get()->getRow();
                 $gapok = $user->user_gapok ?? null;
@@ -260,6 +263,34 @@ class absen_m extends core_m
                     }
                 }
 
+                //pulangcepat
+                //ramdlan bukan
+                $cramadlan = $this->db->table("ramadlan")->where("ramadlan_date", $input["absen_date"])->get()->getRow();
+                $ramadlan = 0;
+                if ($cramadlan) {
+                    $ramadlan = 1;
+                }
+                //sekarang hari apa
+                $hari = date('w', strtotime($input["absen_date"]));
+                // echo $hari;die;
+                $wpkerja["jamkerja_type"] = "normal";
+                $wpkerja["jamkerja_ramadlan"] = $ramadlan;
+                $jamkerja = $this->db->table("jamkerja")
+                ->where($wpkerja)
+                ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
+                ->get();
+                $pulangcepat = 0;
+                $pulangcepatmenit = 0;
+                foreach ($jamkerja->getResult() as $jamkerja) {
+                    if($input["absen_keluar"] < $jamkerja->jamkerja_akhir && $input["absen_keluar"] != ""){
+                        $pulangcepat = 1;
+                        $pulangcepatmenit = (strtotime($input["absen_keluar"]) - strtotime($jamkerja->jamkerja_akhir)) / 60;
+
+                    }
+                    $input["absen_pulangcepat"] = $pulangcepat;
+                    $input["absen_pulangcepatmenit"] = $pulangcepatmenit;
+                }
+
 
                 $builder = $this->db->table('absen');
                 $builder->insert($input);
@@ -386,6 +417,76 @@ class absen_m extends core_m
             } else if ($userlembur == "2") {
                 $input["absen_insentif"] = $insentif;
             }
+
+            //Sakit
+            if ($input["absen_type"] == "Sakit") {
+                if ($user_payrolltype == "harian") {
+                    if ($input["absen_skd"] == 1) {
+                        //ga dipotong
+                    } else {
+                        $input["absen_alpha"] = 1;
+                        $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                    }
+                } else {
+                    if ($input["absen_skd"] == 1) {
+                        $input["absen_ttransport"] = $user_ttransport / 30;
+                        $input["absen_thadir"] = $user_thadir / 30;
+                        $input["absen_tmakan"] = $user_tmakan / 30;
+                    } else {
+                        $input["absen_alpha"] = 1;
+                        $input["absen_alphanominal"] = $user_gakot / 30;
+                    }
+                }
+            }
+
+            //Sakit, Izin, Alpha, Cuti
+            if ($user_payrolltype == "harian") {
+                //sakit
+                if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                    //ada SKD ga dipotong
+                } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
+                    //Sakit, izin dan alpha
+                    $input["absen_alpha"] = 1;
+                    $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                }
+            } else {
+                if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                    $input["absen_ttransport"] = $user_ttransport / 30;
+                    $input["absen_thadir"] = $user_thadir / 30;
+                    $input["absen_tmakan"] = $user_tmakan / 30;
+                } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
+                    $input["absen_alpha"] = 1;
+                    $input["absen_alphanominal"] = $user_gakot / 30;
+                }
+            }
+
+            //pulangcepat
+                //ramdlan bukan
+                $cramadlan = $this->db->table("ramadlan")->where("ramadlan_date", $input["absen_date"])->get()->getRow();
+                $ramadlan = 0;
+                if ($cramadlan) {
+                    $ramadlan = 1;
+                }
+                //sekarang hari apa
+                $hari = date('w', strtotime($input["absen_date"]));
+                // echo $hari;die;
+                $wpkerja["jamkerja_type"] = "normal";
+                $wpkerja["jamkerja_ramadlan"] = $ramadlan;
+                $jamkerja = $this->db->table("jamkerja")
+                ->where($wpkerja)
+                ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
+                ->get();
+                $pulangcepat = 0;
+                $pulangcepatmenit = 0;
+                foreach ($jamkerja->getResult() as $jamkerja) {
+                    if($input["absen_keluar"] < $jamkerja->jamkerja_akhir && $input["absen_keluar"] != ""){
+                        $pulangcepat = 1;
+                        $pulangcepatmenit = (strtotime($input["absen_keluar"]) - strtotime($jamkerja->jamkerja_akhir)) / 60;
+
+                    }
+                    $input["absen_pulangcepat"] = $pulangcepat;
+                    $input["absen_pulangcepatmenit"] = $pulangcepatmenit;
+                }
 
 
             $this->db->table('absen')->update($input, array("absen_id" => $this->request->getPost("absen_id")));
