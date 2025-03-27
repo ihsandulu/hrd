@@ -98,6 +98,13 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="control-label col-sm-12" for="identity_uanggantimakan">Uang Pengganti Makan Lembur Romadlon</label>
+                                    <div class="col-offset-sm-2 col-sm-10">
+                                        <input type="number" autofocus class="form-control" id="identity_uanggantimakan" name="identity_uanggantimakan" placeholder="" value="<?= $identity_uanggantimakan; ?>">
+                                    </div>
+                                </div>
+
                                 <!-- <div class="form-group">
                                     <label class="control-label col-sm-2" for="identity_about">About:</label>
                                     <div class="col-sm-10">
