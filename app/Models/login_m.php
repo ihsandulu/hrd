@@ -67,7 +67,7 @@ class login_m extends core_m
                         $this->session->set("identity_company", $identity->identity_company);
                         $this->session->set("identity_about", $identity->identity_about);
                         $this->session->set("identity_tunjanganlain", $identity->identity_tunjanganlain);
-                        $this->session->set("identity_persengapok", $identity->identity_persengapok);
+                        $this->session->set("identity_persentjabatan", $identity->identity_persentjabatan);
                         $this->session->set("identity_jkerjarata2", $identity->identity_jkerjarata2);
                         
 
