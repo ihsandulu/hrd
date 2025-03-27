@@ -85,9 +85,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-sm-12" for="identity_persengapok">Prosentase Gapok:<br />Diambil dari Total Gaji - T.Lain-lain</label>
+                                    <label class="control-label col-sm-12" for="identity_persentjabatan">Prosentase T.Jabatan:<br />Diambil dari Total Gaji - T.Lain-lain</label>
                                     <div class="col-offset-sm-2 col-sm-10">
-                                        <input type="text" autofocus class="form-control" id="identity_persengapok" name="identity_persengapok" placeholder="" value="<?= $identity_persengapok; ?>">
+                                        <input type="text" autofocus class="form-control" id="identity_persentjabatan" name="identity_persentjabatan" placeholder="" value="<?= $identity_persentjabatan; ?>">
                                     </div>
                                 </div>
 
