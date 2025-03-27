@@ -218,7 +218,7 @@ class gaji_m extends core_m
                     $input["departemen_id"] = $absen->departemen_id;
                     $input["departemen_name"] = $absen->departemen_name;
                     $input["user_id"] = $absen->user_id;
-                    $input["user_name"] = $absen->user_name;
+                    $input["user_name"] = $absen->user_nama;
                     $input["user_masuk"] = $absen->user_masuk;
 
 

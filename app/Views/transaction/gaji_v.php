@@ -375,25 +375,27 @@
                                         <th>Posisi</th>
                                         <th>Nama</th>
                                         <th>Absensi</th>
+                                        <th>Tgl Masuk</th>
                                         <th>Gapok</th>
                                         <th>T.Jabatan</th>
                                         <th>T.Transport</th>
-                                        <th>T.gaji_tahunhadiran</th>
+                                        <th>T.Kehadiran</th>
                                         <th>T.Makan</th>
                                         <th>OT1</th>
                                         <th>OT2</th>
                                         <th>OT3</th>
                                         <th>OT4</th>
+                                        <th>Pendapatan Lain-lain</th>
                                         <th>Gaji Kotor</th>
                                         <th>P.Absen</th>
                                         <th>P.Inventaris</th>
-                                        <th>BPJS gaji_tahuns</th>
+                                        <th>BPJS Kesehatan</th>
                                         <th>BPJS JHT</th>
                                         <th>BPJS Pensiun</th>
                                         <th>PPH21</th>
                                         <th>P.Lain</th>
                                         <th>P.Total</th>
-                                        <th>Gaji total</th>
+                                        <th>Gaji Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -462,33 +464,28 @@
                                             <td><?= $usr->departemen_name; ?></td>
                                             <td><?= $usr->position_name; ?></td>
                                             <td><?= $usr->user_name; ?></td>
-                                            <td><?= $usr->gaji_pokok; ?></td>
-                                            <td><?= $usr->user_name; ?> (<?= $usr->user_nik; ?>)</td>
-
-                                            <td><?= $usr->gaji_print; ?></td>
-                                            <td><?= $usr->departemen_name; ?></td>
-                                            <td><?= $usr->position_name; ?></td>
-                                            <td><?= $usr->user_name; ?></td>
+                                            <td><?= $usr->user_masuk; ?></td>
                                             <td>H:<?= $usr->gaji_hadir; ?>|C:<?= $usr->gaji_cuti; ?>|S:<?= $usr->gaji_sakit; ?>|I:<?= $usr->gaji_izin; ?>|A: <?= $usr->gaji_alpha; ?></td>
-                                            <td><?= $usr->gaji_pokok; ?></td>
-                                            <td><?= $usr->gaji_tjabatan; ?></td>
-                                            <td><?= $usr->gaji_ttransport; ?></td>
-                                            <td><?= $usr->gaji_tkehadiran; ?></td>
-                                            <td><?= $usr->gaji_tmakan; ?></td>
-                                            <td><?= $usr->gaji_ot1nominal; ?></td>
-                                            <td><?= $usr->gaji_ot2nominal; ?></td>
-                                            <td><?= $usr->gaji_ot3nominal; ?></td>
-                                            <td><?= $usr->gaji_ot4nominal; ?></td>
-                                            <td><?= $usr->gaji_kotor; ?></td>
-                                            <td><?= $usr->gaji_alphanominal; ?></td>
-                                            <td><?= $usr->gaji_inventaris; ?></td>
-                                            <td><?= $usr->gaji_bpjskesehatan; ?></td>
-                                            <td><?= $usr->gaji_bpjsjht; ?></td>
-                                            <td><?= $usr->gaji_bpjspensiun; ?></td>
-                                            <td><?= $usr->gaji_pph21; ?></td>
-                                            <td><?= $usr->gaji_plain; ?></td>
-                                            <td><?= $usr->gaji_potongantotal; ?></td>
-                                            <td><?= $usr->gaji_total; ?></td>
+                                            <td><?= number_format($usr->gaji_pokok,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_tjabatan,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_ttransport,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_tkehadiran,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_tmakan,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot1nominal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot2nominal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot3nominal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot4nominal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_lain,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_kotor,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_alphanominal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_inventaris,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_bpjskesehatan,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_bpjsjht,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_bpjspensiun,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_pph21,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_plain,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_potongantotal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_total,0,",","."); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
