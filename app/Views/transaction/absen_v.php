@@ -462,7 +462,12 @@
                                             <td><?= $usr->absen_type; ?></td>
                                             <td><?= $usr->departemen_name; ?></td>
                                             <td><?= $usr->user_name; ?></td>
-                                            <td><?= $usr->absen_note; ?></td>
+                                            <td>
+                                                <?= $usr->absen_note; ?>
+                                                <?php if($usr->absen_pulangcepat>0){
+                                                    echo "<br/>(Pulang Cepat: <span class=\"text-danger\">".$usr->absen_pulangcepatmenit." Menit</span>)";
+                                                } ?>
+                                            </td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
