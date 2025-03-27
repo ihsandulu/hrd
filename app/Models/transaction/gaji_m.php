@@ -98,7 +98,7 @@ class gaji_m extends core_m
             //potongan inventaris
             $inventarist = $this->db
                 ->table("inventarist")
-                ->select("SUM(inventarist_potongan)AS potongan")
+                ->select("*,SUM(inventarist_potongan)AS potongan")
                 ->where("inventarist_date >=", $dari)
                 ->where("inventarist_date <=", $ke)
                 ->groupBy("user_id")->get();
@@ -198,6 +198,7 @@ class gaji_m extends core_m
                 SUM(absen_alphanominal)AS gaji_alphanominal, 
                 SUM(absen_lain)AS gaji_lain, 
                 user.position_id as position_id, 
+                absen.user_id as user_id, 
                 user.departemen_id as departemen_id 
                 FROM absen 
                 LEFT JOIN user ON user.user_id=absen.user_id 
@@ -272,7 +273,12 @@ class gaji_m extends core_m
                     $input["gaji_kotor"] = $gajikotor;
 
                     $input["gaji_alphanominal"] = $absen->gaji_alphanominal;
-                    $input["gaji_inventaris"] = $arinventarist[$absen->user_id];
+                    if(isset($arinventarist[$absen->user_id])){
+                        $gaji_inventaris = $arinventarist[$absen->user_id];
+                    }else{
+                        $gaji_inventaris = 0;
+                    }
+                    $input["gaji_inventaris"] = $gaji_inventaris;
 
                     $input["gaji_serikatburuh"] = 0;
 
@@ -322,7 +328,7 @@ class gaji_m extends core_m
                         ->where("ter_gakotawal <=", $input["gaji_kotor"])
                         ->where("ter_gakotakhir >", $input["gaji_kotor"])
                         ->get();
-                    $$pph21 = 0;
+                    $pph21 = 0;
                     foreach ($ter->getResult() as $ter) {
                         $persen = $ter->ter_persen;
                         $pph21 = $input["gaji_kotor"] * $persen / 100;
@@ -340,14 +346,13 @@ class gaji_m extends core_m
                     //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramalan maka diganti dengan uang 8rb
                     $input["gaji_lain"] = $absen->gaji_lain;
 
+                    //potongan lain-lain
                     $input["gaji_plain"] = 0;
 
-                    $input["gaji_lainketerangan"] = $absen->gaji_lainketerangan;
-
-                    $gaji_potongantotal = $input["gaji_alphanominal"] + $input["gaji_inventaris"] + $input["gaji_serikatburuh"] + $input["gaji_bpjskesehatan"] + $input["gaji_bpjsjht"] + $input["gaji_bpjsjkk"] + $input["gaji_bpjsjkm"] + $input["gaji_bpjspensiun"] + $input["gaji_pph21"] + $input["gaji_lain"] + $input["gaji_plain"];
+                    $gaji_potongantotal = $input["gaji_alphanominal"] + $input["gaji_inventaris"] + $input["gaji_serikatburuh"] + $input["gaji_bpjskesehatan"] + $input["gaji_bpjsjht"] + $input["gaji_bpjspensiun"] + $input["gaji_pph21"] + $input["gaji_plain"];
                     $input["gaji_potongantotal"] = $gaji_potongantotal;
 
-                    $gaji_total = $input["gaji_kotor"] + $input["gaji_insentive1"] + $input["gaji_insentive2"] + $input["gaji_ot1nominal"] + $input["gaji_ot2nominal"] + $input["gaji_ot3nominal"] + $input["gaji_ot4nominal"] + $input["gaji_ttransport"] + $input["gaji_tkehadiran"] + $input["gaji_tmakan"] + $input["gaji_tjabatan"] - $input["gaji_alphanominal"] - $input["gaji_inventaris"] - $input["gaji_serikatburuh"] - $input["gaji_bpjskesehatan"] - $input["gaji_bpjsjht"] - $input["gaji_bpjsjkk"] - $input["gaji_bpjsjkm"] - $input["gaji_bpjspensiun"] - $input["gaji_pph21"] - $input["gaji_lain"] - $input["gaji_plain"];
+                    $gaji_total = $input["gaji_kotor"] - $input["gaji_potongantotal"];
 
                     $input["gaji_total"] = $gaji_total;
 
