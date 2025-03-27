@@ -169,7 +169,8 @@ class absen_m extends core_m
                             // $arcek[$no]["akhirot"] = $akhirot;
 
                             $tipeotnya = $jamkerja->jamkerja_ottype;
-                            $identity_jkerjarata2 = $this->db->table("identity")->get()->getRow()->identity_jkerjarata2;
+                            $identity = $this->db->table("identity")->get()->getRow();
+                            $identity_jkerjarata2 = $identity->identity_jkerjarata2;
 
 
                             if ($jamkerja->jamkerja_ottype == "OT1" && $jamkerja->jamkerja_ottype == $tipeotnya) {
@@ -282,13 +283,18 @@ class absen_m extends core_m
                 $pulangcepat = 0;
                 $pulangcepatmenit = 0;
                 foreach ($jamkerja->getResult() as $jamkerja) {
-                    if ($input["absen_keluar"] < $jamkerja->jamkerja_akhir && $input["absen_keluar"] != "") {
+                    $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
+                    if ($pulangcepatmenit > 0) {
                         $pulangcepat = 1;
-                        $pulangcepatmenit = (strtotime($input["absen_keluar"]) - strtotime($jamkerja->jamkerja_akhir)) / 60;
                     }
-                    $input["absen_pulangcepat"] = $pulangcepat;
-                    $input["absen_pulangcepatmenit"] = $pulangcepatmenit;
                 }
+                $input["absen_pulangcepat"] = $pulangcepat;
+                $input["absen_pulangcepatmenit"] = $pulangcepatmenit;
+
+                //uangmakan -- pendapatan lain-lain
+            if ($liburk == 1 && $lemburjam > 0) {
+                $input["absen_lain"] = $identity->identity_uanggantimakan;
+            }
 
 
                 $builder = $this->db->table('absen');
@@ -376,7 +382,8 @@ class absen_m extends core_m
                         // $arcek[$no]["akhirot"] = $akhirot;
 
                         $tipeotnya = $jamkerja->jamkerja_ottype;
-                        $identity_jkerjarata2 = $this->db->table("identity")->get()->getRow()->identity_jkerjarata2;
+                        $identity = $this->db->table("identity")->get()->getRow();
+                        $identity_jkerjarata2 = $identity->identity_jkerjarata2;
 
 
                         if ($jamkerja->jamkerja_ottype == "OT1" && $jamkerja->jamkerja_ottype == $tipeotnya) {
@@ -486,19 +493,23 @@ class absen_m extends core_m
                 ->where($wpkerja)
                 ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
                 ->get();
-                // echo $this->db->getLastQuery();die;
+            // echo $this->db->getLastQuery();die;
             $pulangcepat = 0;
             $pulangcepatmenit = 0;
             foreach ($jamkerja->getResult() as $jamkerja) {
-                $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"]) ) / 60;
-                if ($pulangcepatmenit>0) {
-                    $pulangcepat = 1;                   
+                $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
+                if ($pulangcepatmenit > 0) {
+                    $pulangcepat = 1;
                 }
             }
             $input["absen_pulangcepat"] = $pulangcepat;
             $input["absen_pulangcepatmenit"] = $pulangcepatmenit;
-            // echo $input["absen_keluar"]." < ".$jamkerja->jamkerja_akhir;die;
-            // echo $input["absen_pulangcepatmenit"];die;
+
+
+            //uangmakan -- pendapatan lain-lain
+            if ($liburk == 1 && $lemburjam > 0) {
+                $input["absen_lain"] = $identity->identity_uanggantimakan;
+            }
 
 
             $this->db->table('absen')->update($input, array("absen_id" => $this->request->getPost("absen_id")));
