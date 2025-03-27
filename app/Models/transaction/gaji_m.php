@@ -89,9 +89,9 @@ class gaji_m extends core_m
         }
 
         //generate
-        if ($this->request->getGet("generate") == "OK") {
-            $dari = $this->request->getGet("dari");
-            $ke = $this->request->getGet("ke");
+        if ($this->request->getPost("generate") == "OK") {
+            $dari = $this->request->getPost("dari");
+            $ke = $this->request->getPost("ke");
 
 
 
@@ -119,8 +119,8 @@ class gaji_m extends core_m
 
 
             //departemen
-            if ($this->request->getGet("departemen_id") != "") {
-                $departemen_id = $this->request->getGet("departemen_id");
+            if ($this->request->getPost("departemen_id") != "") {
+                $departemen_id = $this->request->getPost("departemen_id");
                 $departemen = " departemen_id = " . $departemen_id;
                 $anddep = " AND";
             } else {
@@ -129,8 +129,8 @@ class gaji_m extends core_m
             }
 
             //position
-            if ($this->request->getGet("position_id") != "") {
-                $position_id = $this->request->getGet("position_id");
+            if ($this->request->getPost("position_id") != "") {
+                $position_id = $this->request->getPost("position_id");
                 $position = $anddep . " position_id = " . $position_id;
                 $andpos = " AND";
             } else {
@@ -139,8 +139,8 @@ class gaji_m extends core_m
             }
 
             //user
-            if ($this->request->getGet("user_id") != "") {
-                $user_id = $this->request->getGet("user_id");
+            if ($this->request->getPost("user_id") != "") {
+                $user_id = $this->request->getPost("user_id");
                 $user = $andpos . " user_id = " . $user_id;
                 $anduser = " AND";
             } else {
@@ -149,16 +149,16 @@ class gaji_m extends core_m
             }
 
             //tahun
-            if ($this->request->getGet("gaji_tahun") != "") {
-                $gaji_tahun = $this->request->getGet("gaji_tahun");
+            if ($this->request->getPost("gaji_tahun") != "") {
+                $gaji_tahun = $this->request->getPost("gaji_tahun");
                 $tahun = $gaji_tahun;
             } else {
                 $tahun = date("Y");
             }
 
             //bulan
-            if ($this->request->getGet("gaji_bulan") != "") {
-                // $gaji_bulan = $this->request->getGet("gaji_bulan");
+            if ($this->request->getPost("gaji_bulan") != "") {
+                // $gaji_bulan = $this->request->getPost("gaji_bulan");
                 // $bulan = $anduser . " SUBSTR(absen_date, 1, 7) = '" . $tahun . "-" . $gaji_bulan . "'";
 
 
@@ -210,8 +210,8 @@ class gaji_m extends core_m
                 $absen = $this->db->query($sql);
                 // echo $this->db->getLastQuery();die;
                 foreach ($absen->getResult() as $absen) {
-                    $input["gaji_bulan"] = $this->request->getGet("gaji_bulan");
-                    $input["gaji_tahun"] = $this->request->getGet("gaji_tahun");
+                    $input["gaji_bulan"] = $this->request->getPost("gaji_bulan");
+                    $input["gaji_tahun"] = $this->request->getPost("gaji_tahun");
                     $input["user_nik"] = $absen->user_nik;
                     $input["position_id"] = $absen->position_id;
                     $input["position_name"] = $absen->position_name;
@@ -337,8 +337,8 @@ class gaji_m extends core_m
                     $input["gaji_pph21"] = $pph21;
 
                     $input["gaji_date"] = date("Y-m-d");
-                    $input["gaji_dari"] =  $this->request->getGet("dari");
-                    $input["gaji_ke"] =  $this->request->getGet("ke");
+                    $input["gaji_dari"] =  $this->request->getPost("dari");
+                    $input["gaji_ke"] =  $this->request->getPost("ke");
 
                     //pulang cepat
                     $input["gaji_pulangcepat"] = $absen->pulangcepat;
@@ -356,7 +356,7 @@ class gaji_m extends core_m
 
                     $input["gaji_total"] = $gaji_total;
 
-                    $input["gaji_print"] = $this->request->getGet("gaji_print");
+                    $input["gaji_print"] = $this->request->getPost("gaji_print");
 
                     $builder = $this->db->table('gaji');
                     $builder->insert($input);

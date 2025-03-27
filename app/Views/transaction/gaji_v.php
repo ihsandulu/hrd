@@ -102,7 +102,7 @@
                             </div>
                         <?php } ?>
                         <div class="alert alert-dark">
-                            <form>
+                            <form method="post">
                                 <div class="row">
                                     <?php
                                     $gaji_bulan = date("Y-m-d");
@@ -126,7 +126,7 @@
                                     if (isset($_GET["user_id"])) {
                                         $user_id = $_GET["user_id"];
                                     }
-                                    if (isset($_GET["gaji_print"])&&$_GET["gaji_print"]!="") {
+                                    if (isset($_GET["gaji_print"]) && $_GET["gaji_print"] != "") {
                                         $gaji_print = $_GET["gaji_print"];
                                     }
                                     // echo $gaji_print;
@@ -217,15 +217,15 @@
                                         <div class="col-4">
                                             <label class="text-dark">Priode :</label>
                                         </div>
-                                        <?php 
-                                        if(isset($_GET["dari"])){
+                                        <?php
+                                        if (isset($_GET["dari"])) {
                                             $dari = $_GET["dari"];
-                                        }else{
+                                        } else {
                                             $dari = date("Y-m-01");
                                         }
-                                        if(isset($_GET["ke"])){
+                                        if (isset($_GET["ke"])) {
                                             $ke = $_GET["ke"];
-                                        }else{
+                                        } else {
                                             $ke = date("Y-m-t");
                                         }
                                         ?>
@@ -253,8 +253,8 @@
                             <form>
                                 <div class="row">
                                     <?php
-                                    $gaji_bulan = date("Y-m-d");
-                                    $gaji_tahun = date("Y-m-d");
+                                    $gaji_bulan = date("m");
+                                    $gaji_tahun = date("Y");
                                     $departemen_id = 0;
                                     $position_id = 0;
                                     $user_id = 0;
@@ -400,12 +400,12 @@
                                     <?php
                                     $build = $this->db
                                         ->table("gaji")
-                                        ->where("gaji_print >=", $gaji_bulan)
-                                        ->where("gaji_print <=", $gaji_tahun);
+                                        ->where("SUBSTR(gaji_print,1,7)", $gaji_tahun . "-" . $gaji_bulan);
                                     if ($departemen_id > 0) {
                                         $build->where("departemen_id", $departemen_id);
                                     }
                                     $usr = $build->orderBy("gaji_print", "ASC")
+                                        ->orderBy("departemen_name", "ASC")
                                         ->orderBy("position_name", "ASC")
                                         ->orderBy("user_name", "ASC")
                                         ->get();
@@ -473,16 +473,16 @@
                                             <td><?= $usr->gaji_pokok; ?></td>
                                             <td><?= $usr->gaji_tjabatan; ?></td>
                                             <td><?= $usr->gaji_ttransport; ?></td>
-                                            <td><?= $usr->gaji_tgaji_tahunhadiran; ?></td>
+                                            <td><?= $usr->gaji_tkehadiran; ?></td>
                                             <td><?= $usr->gaji_tmakan; ?></td>
-                                            <td><?= $usr->gaji_lembur1; ?></td>
-                                            <td><?= $usr->gaji_lembur2; ?></td>
-                                            <td><?= $usr->gaji_lembur3; ?></td>
-                                            <td><?= $usr->gaji_lembur4; ?></td>
+                                            <td><?= $usr->gaji_ot1nominal; ?></td>
+                                            <td><?= $usr->gaji_ot2nominal; ?></td>
+                                            <td><?= $usr->gaji_ot3nominal; ?></td>
+                                            <td><?= $usr->gaji_ot4nominal; ?></td>
                                             <td><?= $usr->gaji_kotor; ?></td>
-                                            <td><?= $usr->gaji_pabsen; ?></td>
+                                            <td><?= $usr->gaji_alphanominal; ?></td>
                                             <td><?= $usr->gaji_inventaris; ?></td>
-                                            <td><?= $usr->gaji_bpjsgaji_tahunsehatan; ?></td>
+                                            <td><?= $usr->gaji_bpjskesehatan; ?></td>
                                             <td><?= $usr->gaji_bpjsjht; ?></td>
                                             <td><?= $usr->gaji_bpjspensiun; ?></td>
                                             <td><?= $usr->gaji_pph21; ?></td>
