@@ -134,6 +134,8 @@ class absen_m extends core_m
                 foreach ($libur->getResult() as $libur) {
                     $liburk = 1;
                 }
+                
+                $input["absen_harilibur"] = $liburk;
 
                 //catatan: untuk lembur pada hari biasa dan libur pada dasarnya perhitungannya sama walapun perhitungan OT1 berbeda di hari libur namun ketika hari libur tidak mungkin lembur hanya OT 1 saja.
 
@@ -348,6 +350,7 @@ class absen_m extends core_m
             foreach ($libur->getResult() as $libur) {
                 $liburk = 1;
             }
+            $input["absen_harilibur"] = $liburk;
 
             //catatan: untuk lembur pada hari biasa dan libur pada dasarnya perhitungannya sama walapun perhitungan OT1 berbeda di hari libur namun ketika hari libur tidak mungkin lembur hanya OT 1 saja.
 
