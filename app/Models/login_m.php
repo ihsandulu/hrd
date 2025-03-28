@@ -69,6 +69,7 @@ class login_m extends core_m
                         $this->session->set("identity_tunjanganlain", $identity->identity_tunjanganlain);
                         $this->session->set("identity_persentjabatan", $identity->identity_persentjabatan);
                         $this->session->set("identity_jkerjarata2", $identity->identity_jkerjarata2);
+                        $this->session->set("identity_uanggantimakan", $identity->identity_uanggantimakan);
                         
 
                         //tambahkan modul di sini                         
