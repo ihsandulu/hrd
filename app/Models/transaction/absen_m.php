@@ -126,8 +126,10 @@ class absen_m extends core_m
                 // print_r($input);die;
 
                 //libur tidak
-                $wlibur["libur_date"] = $input["absen_date"];
-                $libur = $this->db->table("libur")->where($wlibur)->get();
+                $libur = $this->db->table("libur")
+                    ->where("libur_date", $input["absen_date"])
+                    ->orWhere("libur_hari", date("w", strtotime($input["absen_date"])))
+                    ->get();
                 $liburk = 0;
                 foreach ($libur->getResult() as $libur) {
                     $liburk = 1;
@@ -145,6 +147,8 @@ class absen_m extends core_m
                 $user_tmakan = $user->user_tmakan ?? null;
                 $user_gakot = $user->user_gakot ?? null;
 
+                $identity = $this->db->table("identity")->get()->getRow();
+
                 //harga lembur            
                 if ($userlembur == "1") {
                     $wkerja["jamkerja_type"] = "lembur";
@@ -160,6 +164,7 @@ class absen_m extends core_m
                     $tipeotnya = "";
                     $arcek = array();
                     $no = 1;
+                    
                     foreach ($jamkerja->getResult() as $jamkerja) {
                         $awalot = $jamkerja->jamkerja_otawal;
                         $akhirot = $jamkerja->jamkerja_otakhir;
@@ -169,7 +174,6 @@ class absen_m extends core_m
                             // $arcek[$no]["akhirot"] = $akhirot;
 
                             $tipeotnya = $jamkerja->jamkerja_ottype;
-                            $identity = $this->db->table("identity")->get()->getRow();
                             $identity_jkerjarata2 = $identity->identity_jkerjarata2;
 
 
@@ -334,9 +338,12 @@ class absen_m extends core_m
             }
             $input["absen_lemburjam"] = $lemburjam;
             // print_r($input);die;
+
             //libur tidak
-            $wlibur["libur_date"] = $input["absen_date"];
-            $libur = $this->db->table("libur")->where($wlibur)->get();
+            $libur = $this->db->table("libur")
+                ->where("libur_date", $input["absen_date"])
+                ->orWhere("libur_hari", date("w", strtotime($input["absen_date"])))
+                ->get();
             $liburk = 0;
             foreach ($libur->getResult() as $libur) {
                 $liburk = 1;
@@ -353,6 +360,8 @@ class absen_m extends core_m
             $user_thadir = $user->user_thadir ?? null;
             $user_tmakan = $user->user_tmakan ?? null;
             $user_gakot = $user->user_gakot ?? null;
+
+            $identity = $this->db->table("identity")->get()->getRow();
 
             //harga lembur            
             $user = $this->db->table("user")->where("user_id", $input["user_id"])->get()->getRow();
@@ -382,7 +391,6 @@ class absen_m extends core_m
                         // $arcek[$no]["akhirot"] = $akhirot;
 
                         $tipeotnya = $jamkerja->jamkerja_ottype;
-                        $identity = $this->db->table("identity")->get()->getRow();
                         $identity_jkerjarata2 = $identity->identity_jkerjarata2;
 
 
@@ -510,7 +518,7 @@ class absen_m extends core_m
             if ($liburk == 1 && $lemburjam > 0) {
                 $input["absen_lain"] = $identity->identity_uanggantimakan;
             }
-
+            
 
             $this->db->table('absen')->update($input, array("absen_id" => $this->request->getPost("absen_id")));
             $data["message"] = "Update Success";
