@@ -464,7 +464,7 @@
                                             <td><?= $usr->user_name; ?></td>
                                             <td>
                                                 <?= $usr->absen_note; ?>
-                                                <?php if($usr->absen_pulangcepat>0){
+                                                <?php if($usr->absen_pulangcepat>0 && $usr->absen_type=="Masuk"){
                                                     echo "<br/>(Pulang Cepat: <span class=\"text-danger\">".$usr->absen_pulangcepatmenit." Menit</span>)";
                                                 } ?>
                                             </td>
