@@ -134,7 +134,7 @@ class absen_m extends core_m
                 foreach ($libur->getResult() as $libur) {
                     $liburk = 1;
                 }
-                
+
                 $input["absen_harilibur"] = $liburk;
 
                 //catatan: untuk lembur pada hari biasa dan libur pada dasarnya perhitungannya sama walapun perhitungan OT1 berbeda di hari libur namun ketika hari libur tidak mungkin lembur hanya OT 1 saja.
@@ -166,7 +166,7 @@ class absen_m extends core_m
                     $tipeotnya = "";
                     $arcek = array();
                     $no = 1;
-                    
+
                     foreach ($jamkerja->getResult() as $jamkerja) {
                         $awalot = $jamkerja->jamkerja_otawal;
                         $akhirot = $jamkerja->jamkerja_otakhir;
@@ -228,7 +228,7 @@ class absen_m extends core_m
                     $input["absen_insentif"] = $insentif;
                 }
 
-                //Sakit
+                /* //Sakit
                 if ($input["absen_type"] == "Sakit") {
                     if ($user_payrolltype == "harian") {
                         if ($input["absen_skd"] == 1) {
@@ -239,34 +239,48 @@ class absen_m extends core_m
                         }
                     } else {
                         if ($input["absen_skd"] == 1) {
-                            $input["absen_ttransport"] = $user_ttransport / 30;
-                            $input["absen_thadir"] = $user_thadir / 30;
-                            $input["absen_tmakan"] = $user_tmakan / 30;
+                            $input["absen_ptransport"] = $user_ttransport / 30;
+                            $input["absen_phadir"] = $user_thadir / 30;
+                            $input["absen_pmakan"] = $user_tmakan / 30;
                         } else {
                             $input["absen_alpha"] = 1;
                             $input["absen_alphanominal"] = $user_gakot / 30;
                         }
                     }
-                }
+                } */
 
                 //Sakit, Izin, Alpha, Cuti
                 if ($user_payrolltype == "harian") {
                     //sakit
-                    if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                    if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti") || ($input["absen_type"] == "Normal")) {
                         //ada SKD ga dipotong
+                        $input["absen_alpha"] = 0;
+                        $input["absen_alphanominal"] = 0;
                     } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                         //Sakit, izin dan alpha
                         $input["absen_alpha"] = 1;
                         $input["absen_alphanominal"] = ($gapok / 30) * 1;
                     }
                 } else {
+                    if ($input["absen_type"] == "Normal") {
+                        $input["absen_alpha"] = 0;
+                        $input["absen_alphanominal"] = 0;
+                        $input["absen_ptransport"] = 0;
+                        $input["absen_phadir"] = 0;
+                        $input["absen_pmakan"] = 0;
+                    } else
                     if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
-                        $input["absen_ttransport"] = $user_ttransport / 30;
-                        $input["absen_thadir"] = $user_thadir / 30;
-                        $input["absen_tmakan"] = $user_tmakan / 30;
+                        $input["absen_ptransport"] = $user_ttransport / 30;
+                        $input["absen_phadir"] = $user_thadir / 30;
+                        $input["absen_pmakan"] = $user_tmakan / 30;
+                        $input["absen_alpha"] = 0;
+                        $input["absen_alphanominal"] = 0;
                     } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                         $input["absen_alpha"] = 1;
                         $input["absen_alphanominal"] = $user_gakot / 30;
+                        $input["absen_ptransport"] = 0;
+                        $input["absen_phadir"] = 0;
+                        $input["absen_pmakan"] = 0;
                     }
                 }
 
@@ -277,21 +291,27 @@ class absen_m extends core_m
                 if ($cramadlan) {
                     $ramadlan = 1;
                 }
+
                 //sekarang hari apa
                 $hari = date('w', strtotime($input["absen_date"]));
                 // echo $hari;die;
-                $wpkerja["jamkerja_type"] = "normal";
-                $wpkerja["jamkerja_ramadlan"] = $ramadlan;
-                $jamkerja = $this->db->table("jamkerja")
-                    ->where($wpkerja)
-                    ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
-                    ->get();
+
+                //pulang cepat
                 $pulangcepat = 0;
                 $pulangcepatmenit = 0;
-                foreach ($jamkerja->getResult() as $jamkerja) {
-                    $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
-                    if ($pulangcepatmenit > 0) {
-                        $pulangcepat = 1;
+                if ($input["absen_type"] == "Normal") {
+                    $wpkerja["jamkerja_type"] = "normal";
+                    $wpkerja["jamkerja_ramadlan"] = $ramadlan;
+                    $jamkerja = $this->db->table("jamkerja")
+                        ->where($wpkerja)
+                        ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
+                        ->get();
+                    // echo $this->db->getLastQuery();die;
+                    foreach ($jamkerja->getResult() as $jamkerja) {
+                        $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
+                        if ($pulangcepatmenit > 0) {
+                            $pulangcepat = 1;
+                        }
                     }
                 }
                 $input["absen_pulangcepat"] = $pulangcepat;
@@ -446,7 +466,7 @@ class absen_m extends core_m
                 $input["absen_insentif"] = $insentif;
             }
 
-            //Sakit
+            /* //Sakit
             if ($input["absen_type"] == "Sakit") {
                 if ($user_payrolltype == "harian") {
                     if ($input["absen_skd"] == 1) {
@@ -457,34 +477,48 @@ class absen_m extends core_m
                     }
                 } else {
                     if ($input["absen_skd"] == 1) {
-                        $input["absen_ttransport"] = $user_ttransport / 30;
-                        $input["absen_thadir"] = $user_thadir / 30;
-                        $input["absen_tmakan"] = $user_tmakan / 30;
+                        $input["absen_ptransport"] = $user_ttransport / 30;
+                        $input["absen_phadir"] = $user_thadir / 30;
+                        $input["absen_pmakan"] = $user_tmakan / 30;
                     } else {
                         $input["absen_alpha"] = 1;
                         $input["absen_alphanominal"] = $user_gakot / 30;
                     }
                 }
             }
-
+ */
             //Sakit, Izin, Alpha, Cuti
             if ($user_payrolltype == "harian") {
                 //sakit
-                if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti") || ($input["absen_type"] == "Normal")) {
                     //ada SKD ga dipotong
+                    $input["absen_alpha"] = 0;
+                    $input["absen_alphanominal"] = 0;
                 } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                     //Sakit, izin dan alpha
                     $input["absen_alpha"] = 1;
                     $input["absen_alphanominal"] = ($gapok / 30) * 1;
                 }
             } else {
+                if ($input["absen_type"] == "Normal") {
+                    $input["absen_alpha"] = 0;
+                    $input["absen_alphanominal"] = 0;
+                    $input["absen_ptransport"] = 0;
+                    $input["absen_phadir"] = 0;
+                    $input["absen_pmakan"] = 0;
+                } else
                 if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
-                    $input["absen_ttransport"] = $user_ttransport / 30;
-                    $input["absen_thadir"] = $user_thadir / 30;
-                    $input["absen_tmakan"] = $user_tmakan / 30;
+                    $input["absen_ptransport"] = $user_ttransport / 30;
+                    $input["absen_phadir"] = $user_thadir / 30;
+                    $input["absen_pmakan"] = $user_tmakan / 30;
+                    $input["absen_alpha"] = 0;
+                    $input["absen_alphanominal"] = 0;
                 } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                     $input["absen_alpha"] = 1;
                     $input["absen_alphanominal"] = $user_gakot / 30;
+                    $input["absen_ptransport"] = 0;
+                    $input["absen_phadir"] = 0;
+                    $input["absen_pmakan"] = 0;
                 }
             }
 
@@ -495,22 +529,27 @@ class absen_m extends core_m
             if ($cramadlan) {
                 $ramadlan = 1;
             }
+
             //sekarang hari apa
             $hari = date('w', strtotime($input["absen_date"]));
             // echo $hari;die;
-            $wpkerja["jamkerja_type"] = "normal";
-            $wpkerja["jamkerja_ramadlan"] = $ramadlan;
-            $jamkerja = $this->db->table("jamkerja")
-                ->where($wpkerja)
-                ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
-                ->get();
-            // echo $this->db->getLastQuery();die;
+
+            //pulang cepat
             $pulangcepat = 0;
             $pulangcepatmenit = 0;
-            foreach ($jamkerja->getResult() as $jamkerja) {
-                $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
-                if ($pulangcepatmenit > 0) {
-                    $pulangcepat = 1;
+            if ($input["absen_type"] == "Normal") {
+                $wpkerja["jamkerja_type"] = "normal";
+                $wpkerja["jamkerja_ramadlan"] = $ramadlan;
+                $jamkerja = $this->db->table("jamkerja")
+                    ->where($wpkerja)
+                    ->where("FIND_IN_SET($hari,jamkerja_hari) >", 0)
+                    ->get();
+                // echo $this->db->getLastQuery();die;
+                foreach ($jamkerja->getResult() as $jamkerja) {
+                    $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
+                    if ($pulangcepatmenit > 0) {
+                        $pulangcepat = 1;
+                    }
                 }
             }
             $input["absen_pulangcepat"] = $pulangcepat;
@@ -521,7 +560,7 @@ class absen_m extends core_m
             if ($liburk == 1 && $lemburjam > 0) {
                 $input["absen_lain"] = $identity->identity_uanggantimakan;
             }
-            
+
 
             $this->db->table('absen')->update($input, array("absen_id" => $this->request->getPost("absen_id")));
             $data["message"] = "Update Success";
