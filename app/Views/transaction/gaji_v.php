@@ -105,29 +105,29 @@
                             <form method="post">
                                 <div class="row">
                                     <?php
-                                    $gaji_bulan = date("Y-m-d");
-                                    $gaji_tahun = date("Y-m-d");
+                                    $gaji_bulan = date("m");
+                                    $gaji_tahun = date("Y");
                                     $departemen_id = 0;
                                     $position_id = 0;
                                     $user_id = 0;
                                     $gaji_print = date("Y-m-05");
-                                    if (isset($_GET["gaji_bulan"])) {
-                                        $gaji_bulan = $_GET["gaji_bulan"];
+                                    if (isset($_POST["gaji_bulan"])) {
+                                        $gaji_bulan = $_POST["gaji_bulan"];
                                     }
-                                    if (isset($_GET["gaji_tahun"])) {
-                                        $gaji_tahun = $_GET["gaji_tahun"];
+                                    if (isset($_POST["gaji_tahun"])) {
+                                        $gaji_tahun = $_POST["gaji_tahun"];
                                     }
-                                    if (isset($_GET["departemen_id"])) {
-                                        $departemen_id = $_GET["departemen_id"];
+                                    if (isset($_POST["departemen_id"])) {
+                                        $departemen_id = $_POST["departemen_id"];
                                     }
-                                    if (isset($_GET["position_id"])) {
-                                        $position_id = $_GET["position_id"];
+                                    if (isset($_POST["position_id"])) {
+                                        $position_id = $_POST["position_id"];
                                     }
-                                    if (isset($_GET["user_id"])) {
-                                        $user_id = $_GET["user_id"];
+                                    if (isset($_POST["user_id"])) {
+                                        $user_id = $_POST["user_id"];
                                     }
-                                    if (isset($_GET["gaji_print"]) && $_GET["gaji_print"] != "") {
-                                        $gaji_print = $_GET["gaji_print"];
+                                    if (isset($_POST["gaji_print"]) && $_POST["gaji_print"] != "") {
+                                        $gaji_print = $_POST["gaji_print"];
                                     }
                                     // echo $gaji_print;
                                     ?>
@@ -251,6 +251,33 @@
                         </div>
                         <div class="alert alert-dark">
                             <form>
+                            <?php
+                                    $gaji_bulan = date("m");
+                                    $gaji_tahun = date("Y");
+                                    $departemen_id = 0;
+                                    $position_id = 0;
+                                    $user_id = 0;
+                                    $gaji_print = date("Y-m-05");
+                                    if (isset($_GET["gaji_bulan"])) {
+                                        $gaji_bulan = $_GET["gaji_bulan"];
+                                    }
+                                    if (isset($_GET["gaji_tahun"])) {
+                                        $gaji_tahun = $_GET["gaji_tahun"];
+                                    }
+                                    if (isset($_GET["departemen_id"])) {
+                                        $departemen_id = $_GET["departemen_id"];
+                                    }
+                                    if (isset($_GET["position_id"])) {
+                                        $position_id = $_GET["position_id"];
+                                    }
+                                    if (isset($_GET["user_id"])) {
+                                        $user_id = $_GET["user_id"];
+                                    }
+                                    if (isset($_GET["gaji_print"]) && $_GET["gaji_print"] != "") {
+                                        $gaji_print = $_GET["gaji_print"];
+                                    }
+                                    // echo $gaji_print;
+                                    ?>
                                 <div class="row">
                                     <?php
                                     $gaji_bulan = date("m");
