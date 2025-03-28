@@ -202,6 +202,9 @@ class gaji_m extends core_m
                 SUM(absen_ot4jam)AS gaji_ot4jam, 
                 SUM(absen_ot4nominal)AS gaji_ot4nominal, 
                 SUM(absen_alphanominal)AS gaji_alphanominal, 
+                SUM(absen_ptransport)AS gaji_ptransportasi, 
+                SUM(absen_phadir)AS gaji_pkehadiran, 
+                SUM(absen_pmakan)AS gaji_pmakan, 
                 SUM(absen_lain)AS gaji_lain, 
                 user.position_id as position_id, 
                 absen.user_id as user_id, 
@@ -279,6 +282,10 @@ class gaji_m extends core_m
                     $input["gaji_kotor"] = $gajikotor;
 
                     $input["gaji_alphanominal"] = $absen->gaji_alphanominal;
+                    $input["gaji_ptransportasi"] = $absen->gaji_ptransportasi;
+                    $input["gaji_pkehadiran"] = $absen->gaji_pkehadiran;
+                    $input["gaji_pmakan"] = $absen->gaji_pmakan;
+
                     if(isset($arinventarist[$absen->user_id])){
                         $gaji_inventaris = $arinventarist[$absen->user_id];
                     }else{
