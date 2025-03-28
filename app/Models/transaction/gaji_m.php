@@ -93,6 +93,12 @@ class gaji_m extends core_m
             $dari = $this->request->getPost("dari");
             $ke = $this->request->getPost("ke");
 
+            //delete periode tertentu
+            $this->db
+                ->table("gaji")
+                ->where("gaji_date >=", $dari)
+                ->where("gaji_date <=", $ke)
+                ->delete();
 
 
             //potongan inventaris
