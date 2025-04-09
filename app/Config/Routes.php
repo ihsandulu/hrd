@@ -34,3 +34,4 @@ $routes->add('/inventarist', 'transaction\inventarist::index');
 $routes->add('/mapk', 'master\mapk::index');
 $routes->add('/mpositionandroid', 'master\mpositionandroid::index');
 $routes->add('/rabsend', 'report\rabsend::index');
+$routes->add('/gajiprint', 'transaction\gajiprint::index');
