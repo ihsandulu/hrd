@@ -122,6 +122,17 @@
 
 
 
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_etag">ETAG:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="user_etag" name="user_etag" placeholder="" value="<?= $user_etag; ?>">
+
+                                    </div>
+                                </div>
+
+
+
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_password">Password:</label>
                                     <div class="col-sm-10">
@@ -431,6 +442,7 @@
                                         <th>Departemen</th>
                                         <th>Posisi</th>
                                         <th>NIK</th>
+                                        <th>ETAG</th>
                                         <!-- <th>Username</th> -->
                                         <th>Name</th>
                                         <th>Alamat</th>
@@ -544,6 +556,7 @@
                                             <td><?= $usr->departemen_name; ?></td>
                                             <td><?= $usr->position_name; ?></td>
                                             <td><?= $usr->user_nik; ?></td>
+                                            <td><?= $usr->user_etag; ?></td>
                                             <!-- <td><?= $usr->user_name; ?></td> -->
                                             <td><?= $usr->user_nama; ?></td>
                                             <td><?= $usr->user_address; ?></td>
