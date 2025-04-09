@@ -415,6 +415,9 @@
                                         <th>Pendapatan Lain-lain</th>
                                         <th>Gaji Kotor</th>
                                         <th>P.Absen</th>
+                                        <th>P.Trans</th>
+                                        <th>P.Hadir</th>
+                                        <th>P.Makan</th>
                                         <th>P.Inventaris</th>
                                         <th>BPJS Kesehatan</th>
                                         <th>BPJS JHT</th>
@@ -444,6 +447,25 @@
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
+                                                    <?php
+                                                    if (
+                                                        (
+                                                            isset(session()->get("position_administrator")[0][0])
+                                                            && (
+                                                                session()->get("position_administrator") == "1"
+                                                                || session()->get("position_administrator") == "2"
+                                                            )
+                                                        ) ||
+                                                        (
+                                                            isset(session()->get("halaman")['50']['act_update'])
+                                                            && session()->get("halaman")['50']['act_update'] == "1"
+                                                        )
+                                                    ) { ?>
+                                                        <form method="get" target="_blank" action="<?=base_url("gajiprint");?>" class="btn-action" style="">
+                                                            <button class="btn btn-sm btn-info " name="print" value="OK"><span class="fa fa-print" style="color:white;"></span> </button>
+                                                            <input type="hidden" name="gaji_id" value="<?= $usr->gaji_id; ?>" />
+                                                        </form>
+                                                    <?php } ?>
                                                     <?php
                                                     if (
                                                         (
@@ -505,6 +527,9 @@
                                             <td><?= number_format($usr->gaji_lain,0,",","."); ?></td>
                                             <td><?= number_format($usr->gaji_kotor,0,",","."); ?></td>
                                             <td><?= number_format($usr->gaji_alphanominal,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_ptransportasi,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_pkehadiran,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_pmakan,0,",","."); ?></td>
                                             <td><?= number_format($usr->gaji_inventaris,0,",","."); ?></td>
                                             <td><?= number_format($usr->gaji_bpjskesehatan,0,",","."); ?></td>
                                             <td><?= number_format($usr->gaji_bpjsjht,0,",","."); ?></td>
