@@ -404,4 +404,38 @@ class api extends BaseController
         }
         echo $pph;
     }
+
+    public function inputabsen()
+    {
+        $etag = $this->request->getGet("etag");
+        $edate = $this->request->getGet("edate");
+        $edate = substr($edate, 0, 4) . '-' . substr($edate, 4, 2) . '-' . substr($edate, 6, 2);
+
+        $etime = $this->request->getGet("etime");
+        $etime = substr($etime, 0, 2) . ':' . substr($etime, 2, 2) . ':' . substr($etime, 4, 2);
+
+        $datetime = $edate . ' ' . $etime;
+
+        if($etime > "12:00:00"){
+            $input["absen_type"] = "Keluar";
+            $input["absen_keluar"] = $datetime;
+        }else{  
+            $input["absen_type"] = "Masuk";
+            $input["absen_masuk"] = $datetime;
+        }
+        
+        
+        $input["user_etag"] = $etag;
+        $input["absen_date"] = $edate;
+        $this->db->table('absen')->insert($input);
+        // echo $this->db->getLastQuery();
+        
+        return $this->response->setJSON(['status' => 'success']);
+    }
+
+    public function tarikabsen()
+    {
+        shell_exec('TarikAbsen.exe 20250408');
+
+    }
 }
