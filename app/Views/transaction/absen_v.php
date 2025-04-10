@@ -57,7 +57,7 @@
                 <div class="card-body">
                     <div class="row">
                         <?php if (!isset($_GET['user_id']) && !isset($_POST['new']) && !isset($_POST['edit'])) {
-                            $coltitle = "col-md-8";
+                            $coltitle = "col-md-10";
                         } else {
                             $coltitle = "col-md-8";
                         } ?>
@@ -90,20 +90,7 @@
                                     isset(session()->get("halaman")['50']['act_create'])
                                     && session()->get("halaman")['50']['act_create'] == "1"
                                 )
-                            ) { ?>
-                                <form method="post" class="col-md-2">
-                                    <h1 class="page-header col-md-12">
-                                        <button type="button" class="btn btn-success btn-block btn-lg" onclick="tarikabsen()">Absen</button>
-                                        <script>
-                                            function tarikabsen() {
-                                                $.get("<?= base_url("api/tarikabsen"); ?>", {
-                                                        id: 0
-                                                    })
-                                                    .done(function(data) {});
-                                            }
-                                        </script>
-                                    </h1>
-                                </form>
+                            ) { ?>                                
                                 <form method="post" class="col-md-2">
                                     <h1 class="page-header col-md-12">
                                         <button name="new" class="btn btn-info btn-block btn-lg" value="OK" style="">New</button>

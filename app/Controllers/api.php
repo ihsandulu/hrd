@@ -415,7 +415,7 @@ class api extends BaseController
         $etime = substr($etime, 0, 2) . ':' . substr($etime, 2, 2) . ':' . substr($etime, 4, 2);
 
         $cetime = \DateTime::createFromFormat('H:i:s', $etime);
-        $etime=$cetime->format('H:i:s');
+        $etime = $cetime->format('H:i:s');
         $datetime = $edate . ' ' . $etime;
 
         $user = $this->db->table("user")
@@ -445,7 +445,7 @@ class api extends BaseController
             $input["absen_type"] = "Masuk";
             $input["absen_masuk"] = $datetime;
         }
-    //    echo $etime;die;
+        //    echo $etime;die;
 
         $input["user_etag"] = $etag;
         $input["absen_date"] = $edate;
@@ -692,8 +692,8 @@ die; */
             return;
         }
 
-        $command = 'start "" "' . $basePath . '"';
-        pclose(popen($command, 'r'));
+        $command = 'cmd /c start "" "' . $basePath . '"';
+        shell_exec($command);
 
         echo "Aplikasi dijalankan.";
     }
