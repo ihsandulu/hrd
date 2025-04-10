@@ -95,6 +95,7 @@ class absen_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
+            // print_r($input);die;
             //cek absen
             $cekcok["user_id"] = $input["user_id"];
             $cekcok["absen_date"] = $input["absen_date"];
@@ -227,27 +228,6 @@ class absen_m extends core_m
                 } else if ($userlembur == "2") {
                     $input["absen_insentif"] = $insentif;
                 }
-
-                /* //Sakit
-                if ($input["absen_type"] == "Sakit") {
-                    if ($user_payrolltype == "harian") {
-                        if ($input["absen_skd"] == 1) {
-                            //ga dipotong
-                        } else {
-                            $input["absen_alpha"] = 1;
-                            $input["absen_alphanominal"] = ($gapok / 30) * 1;
-                        }
-                    } else {
-                        if ($input["absen_skd"] == 1) {
-                            $input["absen_ptransport"] = $user_ttransport / 30;
-                            $input["absen_phadir"] = $user_thadir / 30;
-                            $input["absen_pmakan"] = $user_tmakan / 30;
-                        } else {
-                            $input["absen_alpha"] = 1;
-                            $input["absen_alphanominal"] = $user_gakot / 30;
-                        }
-                    }
-                } */
 
                 //Sakit, Izin, Alpha, Cuti
                 if ($user_payrolltype == "harian") {

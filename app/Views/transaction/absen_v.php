@@ -1,12 +1,12 @@
 <?php echo $this->include("template/header_v"); ?>
 <style>
-    .modal-content {
+    #modal-content {
         background-color: transparent;
         /* Membuat latar belakang modal menjadi transparan */
         border: none;
     }
 
-    .modal-body {
+    #modal-body {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -14,14 +14,42 @@
         /* Mengatur tinggi modal menjadi 80% tinggi layar */
     }
 
-    .modal-body .gambar {
+    #modal-body .gambar {
         max-height: 100%;
         /* Membuat gambar tidak melebihi tinggi modal */
         width: auto;
         height: auto;
     }
-</style>
 
+    #preloader {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        /* width: 100%;
+        height: 100%; */
+        background-color: transparent;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #007bff;
+        border-top: 4px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 <div class='container-fluid'>
     <div class='row'>
         <div class='col-12'>
@@ -29,7 +57,7 @@
                 <div class="card-body">
                     <div class="row">
                         <?php if (!isset($_GET['user_id']) && !isset($_POST['new']) && !isset($_POST['edit'])) {
-                            $coltitle = "col-md-10";
+                            $coltitle = "col-md-8";
                         } else {
                             $coltitle = "col-md-8";
                         } ?>
@@ -46,6 +74,9 @@
                                     </h1>
                                 </form>
                             <?php } ?>
+
+
+
                             <?php
                             if (
                                 (
@@ -60,6 +91,19 @@
                                     && session()->get("halaman")['50']['act_create'] == "1"
                                 )
                             ) { ?>
+                                <form method="post" class="col-md-2">
+                                    <h1 class="page-header col-md-12">
+                                        <button type="button" class="btn btn-success btn-block btn-lg" onclick="tarikabsen()">Absen</button>
+                                        <script>
+                                            function tarikabsen() {
+                                                $.get("<?= base_url("api/tarikabsen"); ?>", {
+                                                        id: 0
+                                                    })
+                                                    .done(function(data) {});
+                                            }
+                                        </script>
+                                    </h1>
+                                </form>
                                 <form method="post" class="col-md-2">
                                     <h1 class="page-header col-md-12">
                                         <button name="new" class="btn btn-info btn-block btn-lg" value="OK" style="">New</button>
@@ -386,36 +430,40 @@
                                         ->get();
                                     // echo $this->db->getLastquery();
                                     $no = 1;
-                                    foreach ($usr->getResult() as $usr) { 
-                                        if($usr->absen_type=="Masuk"){
-                                            $absen_masuk="<span class=\"text-primary\">Masuk:</span> ".$usr->absen_masuk;
-                                            $absen_keluar=$usr->absen_keluar;
-                                            if($absen_keluar!=""){
-                                                $absen_keluar="<br/><span class=\"text-danger\">Keluar:</span> ".$usr->absen_keluar;
-                                            }else{
-                                                $absen_keluar="";
-                                            } 
-                                            $absen_lemburjam=$usr->absen_lemburjam;
-                                            if($absen_lemburjam!=""){
-                                                $absen_lemburjam="<br/><span class=\"text-danger\">Lembur:</span> ".$usr->absen_lemburjam." Jam";
-                                            }else{
-                                                $absen_lemburjam="";
+                                    foreach ($usr->getResult() as $usr) {
+                                        if ($usr->absen_type == "Masuk") {
+                                            $absen_masuk = "<span class=\"text-primary\">Masuk:</span> " . $usr->absen_masuk;
+                                            $absen_keluar = $usr->absen_keluar;
+                                            if ($absen_keluar != "") {
+                                                $absen_keluar = "<br/><span class=\"text-danger\">Keluar:</span> " . $usr->absen_keluar;
+                                            } else {
+                                                $absen_keluar = "";
                                             }
-                                            $usr->absen_note=$absen_masuk.$absen_keluar.$absen_lemburjam;
+                                            $absen_lemburjam = $usr->absen_lemburjam;
+                                            if ($absen_lemburjam != "") {
+                                                $absen_lemburjam = "<br/><span class=\"text-danger\">Lembur:</span> " . $usr->absen_lemburjam . " Jam";
+                                            } else {
+                                                $absen_lemburjam = "";
+                                            }
+                                            $usr->absen_note = $absen_masuk . $absen_keluar . $absen_lemburjam;
                                         }
-                                        if($usr->absen_type=="Sakit"){   
-                                            if($usr->absen_skd==1){$skd="SKD : Ya. ";}else{$skd="SKD : Tidak. ";}                                        
-                                            $usr->absen_note=$skd."Ket: ".$usr->absen_note;
+                                        if ($usr->absen_type == "Sakit") {
+                                            if ($usr->absen_skd == 1) {
+                                                $skd = "SKD : Ya. ";
+                                            } else {
+                                                $skd = "SKD : Tidak. ";
+                                            }
+                                            $usr->absen_note = $skd . "Ket: " . $usr->absen_note;
                                         }
-                                        if($usr->absen_type=="Cuti"){   
-                                            $cuti=$this->db->table("cuti")->where("cuti_id",$usr->cuti_id)->get(); 
-                                            $gugur="";  
-                                            foreach($cuti->getResult() as $cuti){
-                                                $gugur=$cuti->cuti_name.". ";
-                                            }                                     
-                                            $usr->absen_note=$gugur."Ket: ".$usr->absen_note;
+                                        if ($usr->absen_type == "Cuti") {
+                                            $cuti = $this->db->table("cuti")->where("cuti_id", $usr->cuti_id)->get();
+                                            $gugur = "";
+                                            foreach ($cuti->getResult() as $cuti) {
+                                                $gugur = $cuti->cuti_name . ". ";
+                                            }
+                                            $usr->absen_note = $gugur . "Ket: " . $usr->absen_note;
                                         }
-                                        ?>
+                                    ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
@@ -468,8 +516,8 @@
                                             <td><?= $usr->user_name; ?></td>
                                             <td>
                                                 <?= $usr->absen_note; ?>
-                                                <?php if($usr->absen_pulangcepat>0 && $usr->absen_type=="Masuk"){
-                                                    echo "<br/>(Pulang Cepat: <span class=\"text-danger\">".$usr->absen_pulangcepatmenit." Menit</span>)";
+                                                <?php if ($usr->absen_pulangcepat > 0 && $usr->absen_type == "Masuk") {
+                                                    echo "<br/>(Pulang Cepat: <span class=\"text-danger\">" . $usr->absen_pulangcepatmenit . " Menit</span>)";
                                                 } ?>
                                             </td>
                                         </tr>
@@ -496,8 +544,8 @@
                             <!-- Picture -->
                             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
+                                    <div class="modal-content" id="modal-content">
+                                        <div class="modal-body" id="modal-body">
                                             <img id="gambarabsen" src="<?= base_url("images/picture.png"); ?>" class="gambar" style="width:100%; height:auto;" />
                                         </div>
                                         <div class="modal-footer">
