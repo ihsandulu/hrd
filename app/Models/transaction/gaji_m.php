@@ -219,6 +219,7 @@ class gaji_m extends core_m
                 $absen = $this->db->query($sql);
                 // echo $this->db->getLastQuery();die;
                 foreach ($absen->getResult() as $absen) {
+                    $input["user_payrolltype"] = $absen->user_payrolltype;
                     $input["gaji_bulan"] = $this->request->getPost("gaji_bulan");
                     $input["gaji_tahun"] = $this->request->getPost("gaji_tahun");
                     $input["user_nik"] = $absen->user_nik;
