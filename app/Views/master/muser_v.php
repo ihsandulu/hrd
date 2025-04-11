@@ -182,7 +182,7 @@
                                 </div>
 
 
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_bpjstk">BPJS TK:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="user_bpjstk" name="user_bpjstk" placeholder="" value="<?= $user_bpjstk; ?>">
@@ -194,7 +194,7 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="user_bpjskesehatan" name="user_bpjskesehatan" placeholder="" value="<?= $user_bpjskesehatan; ?>">
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_address">Alamat:</label>
@@ -450,8 +450,8 @@
                                         <th>Whatsapp</th>
                                         <th>NPWP</th>
                                         <th>Status</th>
-                                        <th>BPJS TK</th>
-                                        <th>BPJS Kesehatan</th>
+                                        <!-- <th>BPJS TK</th>
+                                        <th>BPJS Kesehatan</th> -->
                                         <th>Kartu Keluarga</th>
                                         <th>Bank</th>
                                         <th>No Rek:</th>
@@ -470,7 +470,6 @@
                                         <th>T.Makan</th>
                                         <th>T.Jabatan</th>
                                         <th>Insentif</th>
-                                        <th>PPH21</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -564,8 +563,8 @@
                                             <td><?= $usr->user_wa; ?></td>
                                             <td><?= $usr->user_npwp; ?></td>
                                             <td><?= $aktif[$usr->user_status]; ?></td>
-                                            <td><?= $usr->user_bpjstk; ?></td>
-                                            <td><?= $usr->user_bpjskesehatan; ?></td>
+                                            <!-- <td><?= $usr->user_bpjstk; ?></td>
+                                            <td><?= $usr->user_bpjskesehatan; ?></td> -->
                                             <td><?= $usr->user_kk; ?></td>
                                             <td><?= $usr->user_bank; ?></td>
                                             <td><?= $usr->user_norek; ?></td>
