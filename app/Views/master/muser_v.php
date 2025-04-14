@@ -457,7 +457,7 @@
                                         <th>No Rek:</th>
                                         <th>Nama Ibu</th>
                                         <th>Pendidikan</th>
-                                        <th>Tgl Lahir</th>
+                                        <th>TglLahir</th>
                                         <th>Tempat Lahir</th>
                                         <th>L/P</th>
                                         <th>Status Tanggungan</th>
@@ -570,7 +570,7 @@
                                             <td><?= $usr->user_norek; ?></td>
                                             <td><?= $usr->user_ibu; ?></td>
                                             <td><?= $usr->user_pendidikan; ?></td>
-                                            <td><?= $usr->user_borndate; ?><< /td>
+                                            <td><?= $usr->user_borndate; ?></td>
                                             <td><?= $usr->user_borncity; ?></td>
                                             <td><?= $usr->user_gender; ?></td>
                                             <td><?= $usr->user_tanggungan; ?></td>
@@ -601,6 +601,17 @@
     $(".card-title").text(title);
     $("#page-title").text(title);
     $("#page-title-link").text(title);
+    $('#myTable22').DataTable({
+        columnDefs: [{
+                width: "400px",
+                targets: 17
+            }, // Kolom pertama
+            {
+                width: "400px",
+                targets: 16
+            } // Kolom kedua
+        ]
+    });
 </script>
 
 <?php echo  $this->include("template/footer_v"); ?>
