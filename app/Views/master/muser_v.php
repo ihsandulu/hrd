@@ -38,11 +38,11 @@
                         <div class="">
                             <?php if (isset($_POST['edit'])) {
                                 $user_namabutton = 'name="change"';
-                                $judul = "Update User";
+                                $judul = "Update Karyawan";
                                 $ketuser_password = "Kosongkan jika tidak ingin merubah user_password!";
                             } else {
                                 $user_namabutton = 'name="create"';
-                                $judul = "Tambah User";
+                                $judul = "Tambah Karyawan";
                                 $ketuser_password = "Jangan dikosongkan!";
                             } ?>
                             <div class="lead">
@@ -596,7 +596,7 @@
 </div>
 <script>
     $('.select').select2();
-    var title = "Master User";
+    var title = "Master Karyawan";
     $("title").text(title);
     $(".card-title").text(title);
     $("#page-title").text(title);
