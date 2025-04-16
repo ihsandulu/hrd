@@ -1,5 +1,7 @@
 <?php echo $this->include("template/header_v"); ?>
-
+<style>
+th, td{padding: 5px !important;}
+</style>
 <div class='container-fluid'>
     <div class='row'>
         <div class='col-12'>
@@ -162,6 +164,14 @@
                                     <label class="control-label col-sm-2" for="user_email">Email:</label>
                                     <div class="col-sm-10">
                                         <input type="email" class="form-control" id="user_email" name="user_email" placeholder="" value="<?= $user_email; ?>">
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_cuti">Sisa Cuti:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="user_cuti" name="user_cuti" placeholder="" value="<?= $user_cuti; ?>">
 
                                     </div>
                                 </div>
@@ -436,7 +446,7 @@
                                 <thead class="">
                                     <tr>
                                         <?php if (!isset($_GET["report"])) { ?>
-                                            <th>Action</th>
+                                            <th>&nbsp;&nbsp;&nbsp;Action&nbsp;&nbsp;&nbsp;</th>
                                         <?php } ?>
                                         <th>No.</th>
                                         <th>Departemen</th>
@@ -447,6 +457,7 @@
                                         <th>Name</th>
                                         <th>Alamat</th>
                                         <th>Email</th>
+                                        <th>Sisa Cuti</th>
                                         <th>Whatsapp</th>
                                         <th>NPWP</th>
                                         <th>Status</th>
@@ -457,7 +468,7 @@
                                         <th>No Rek:</th>
                                         <th>Nama Ibu</th>
                                         <th>Pendidikan</th>
-                                        <th>TglLahir</th>
+                                        <th>&nbsp;&nbsp;&nbsp;Tgl&nbsp;Lahir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         <th>Tempat Lahir</th>
                                         <th>L/P</th>
                                         <th>Status Tanggungan</th>
@@ -560,6 +571,7 @@
                                             <td><?= $usr->user_nama; ?></td>
                                             <td><?= $usr->user_address; ?></td>
                                             <td><?= $usr->user_email; ?></td>
+                                            <td><?= $usr->user_cuti; ?></td>
                                             <td><?= $usr->user_wa; ?></td>
                                             <td><?= $usr->user_npwp; ?></td>
                                             <td><?= $aktif[$usr->user_status]; ?></td>
