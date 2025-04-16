@@ -10,132 +10,113 @@ class lembur_m extends core_m
     {
         $data = array();
         $data["message"] = "";
-        //cek lembur
-        if ($this->request->getVar("lembur_id")) {
-            $lemburd["lembur_id"] = $this->request->getVar("lembur_id");
-        } else {
-            $lemburd["lembur_id"] = -1;
-        }
-        $us = $this->db
-            ->table("lembur")
-            ->join("user","user.user_id=lembur.user_id","left")
-            ->join("position","position.position_id=user.position_id","left")
-            ->join("departemen","departemen.departemen_id=user.departemen_id","left")
-            ->getWhere($lemburd);
-        /* echo $this->db->getLastquery();
-        die; */
-        $larang = array("log_id", "id", "action", "data", "lembur_id_dep", "trx_id", "trx_code");
-        if ($us->getNumRows() > 0) {
-            foreach ($us->getResult() as $lembur) {
-                foreach ($this->db->getFieldNames('lembur') as $field) {
-                    if (!in_array($field, $larang)) {
-                        $data[$field] = $lembur->$field;
-                    }
-                }
-                foreach ($this->db->getFieldNames('user') as $field) {
-                    if (!in_array($field, $larang)) {
-                        $data[$field] = $lembur->$field;
-                    }
-                }
-                foreach ($this->db->getFieldNames('position') as $field) {
-                    if (!in_array($field, $larang)) {
-                        $data[$field] = $lembur->$field;
-                    }
-                }
-                foreach ($this->db->getFieldNames('departemen') as $field) {
-                    if (!in_array($field, $larang)) {
-                        $data[$field] = $lembur->$field;
-                    }
-                }
-            }
-        } else {
-            foreach ($this->db->getFieldNames('lembur') as $field) {
-                $data[$field] = "";
-            }
-            foreach ($this->db->getFieldNames('user') as $field) {
-                $data[$field] = "";
-            }
-            foreach ($this->db->getFieldNames('position') as $field) {
-                $data[$field] = "";
-            }
-            foreach ($this->db->getFieldNames('departemen') as $field) {
-                $data[$field] = "";
-            }
-        }
 
 
 
-        //delete
+
         if ($this->request->getPost("delete") == "OK") {
-            $lembur_id =   $this->request->getPost("lembur_id");
-            $this->db
-                ->table("lembur")
-                ->delete(array("lembur_id" =>  $lembur_id));
-            $data["message"] = "Delete Success";
-        }
-
-        //generate
-        if ($this->request->getPost("generate") == "OK") {
+            $departemen_id = $this->request->getPost("departemen_id");
+            $position_id = $this->request->getPost("position_id");
             $dari = $this->request->getPost("dari");
             $ke = $this->request->getPost("ke");
 
-            $builder = $this->db->table('lembur');
+            // Step 1: Ambil semua user_id yang sesuai
+            $userQuery = $this->db->table('user');
 
-            // Ubah string tanggal menjadi format DateTime
-            $start = new \DateTime($dari);
-            $end = new \DateTime($ke);
-
-            // Loop dari tanggal awal ke tanggal akhir
-            while ($start <= $end) {
-                $input = [
-                    'lembur_date' => $start->format('Y-m-d') // Format YYYY-MM-DD
-                ];
-                $builder->insert($input);
-
-                // Tambahkan 1 hari
-                $start->modify('+1 day');
+            if (!empty($departemen_id)) {
+                $userQuery->where('departemen_id', $departemen_id);
             }
 
-            $lembur_id = $this->db->insertID();
+            if (!empty($position_id)) {
+                $userQuery->where('position_id', $position_id);
+            }
 
-            $data["message"] = "Insert Data Success";
+            $users = $userQuery->get()->getResultArray();
+            $user_ids = array_column($users, 'user_id');
+
+            // Step 2: Hapus dari lembur berdasarkan user_id dan tanggal
+            if (!empty($user_ids)) {
+                $this->db->table('lembur')
+                    ->whereIn('user_id', $user_ids)
+                    ->where('lembur_date >=', $dari)
+                    ->where('lembur_date <=', $ke)
+                    ->delete();
+
+                $data['message'] = 'Delete Success';
+            } else {
+                $data['message'] = 'Tidak ada user yang cocok dengan filter tersebut.';
+            }
         }
 
-        //insert
+
+
         if ($this->request->getPost("create") == "OK") {
-            foreach ($this->request->getPost() as $e => $f) {
-                if ($e != 'create' && $e != 'lembur_id') {
-                    $input[$e] = $this->request->getPost($e);
-                    if ($e == 'lembur_hari') {
-                        $input[$e] = is_array($f) ? implode(",", $f) : $f;
-                    }
+            $user_ids = $this->request->getPost('user_id');
+            $lembur_date = $this->request->getPost('lembur_date');
+            $lembur_jam = $this->request->getPost('lembur_jam');
+            $lembur_type = $this->request->getPost('lembur_type');
+
+
+
+
+            if ($user_ids) {
+                //cari sisa hutang
+                $user = $this->db->table("user")
+                    ->whereIn("user_id", $user_ids)
+                    ->get();
+                $cutiuser = array();
+                foreach ($user->getResult() as $row) {
+                    $cutiuser[$row->user_id] = $row->user_cuti;
                 }
+                // echo "<pre>";print_r($cutiuser);die;
+
+                foreach ($user_ids as $uid) {
+                    // Gunakan ON DUPLICATE KEY UPDATE (raw query)
+                    $sql = "INSERT INTO lembur (user_id, lembur_date, lembur_jam, lembur_type)
+                            VALUES (:user_id:, :lembur_date:, :lembur_jam:, :lembur_type:)
+                            ON DUPLICATE KEY UPDATE  lembur_jam = :lembur_jam:";
+
+                    $this->db->query($sql, [
+                        'user_id' => $uid,
+                        'lembur_date' => $lembur_date,
+                        'lembur_jam' => $lembur_jam,
+                        'lembur_type' => $lembur_type,
+                    ]);
+                    $this->db->table("user")->where("user_id", $uid)->update([
+                        "user_cuti" => $cutiuser[$uid] + 1
+                    ]);
+                }
+                // echo $this->db->getLastQuery();die;
+
+                $data["message"] = "Data berhasil disimpan/diupdate!";
+            } else {
+                $data["message"] = "Tidak ada data dipilih!";
             }
-            // print_r($input);die;
-            $builder = $this->db->table('lembur');
-            $builder->insert($input);
-            /* echo $this->db->getLastQuery();
-            die; */
-            $lembur_id = $this->db->insertID();
-
-            $data["message"] = "Insert Data Success";
         }
-        //echo $_POST["create"];die;
 
+
+        //echo $_POST["create"];die;
         //update
         if ($this->request->getPost("change") == "OK") {
             foreach ($this->request->getPost() as $e => $f) {
-                if ($e != 'change' && $e != 'lembur_picture') {
-                    $input[$e] = $this->request->getPost($e);
-                    if ($e == 'lembur_hari') {
-                        $input[$e] = is_array($f) ? implode(",", $f) : $f;
-                    }
+                if ($e != 'change') {
+                    $inputu[$e] = $this->request->getPost($e);
                 }
             }
-            // print_r($input);die;
-            $this->db->table('lembur')->update($input, array("lembur_id" => $this->request->getPost("lembur_id")));
+            // Kunci dan metode enkripsi
+            $key = "ihsandulu123456"; // Kunci rahasia (jangan hardcode di produksi)
+            $method = "AES-256-CBC";
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
+            // Enkripsi
+            $password = $inputu["user_password"];
+            $encrypted = openssl_encrypt($password, $method, $key, 0, $iv);
+            $encrypted = base64_encode($iv . $encrypted); // Gabungkan IV agar bisa didekripsi nanti
+            $inputu["user_password"] = $encrypted;
+            $this->db->table('user')
+                ->where("user_id", $inputu["user_id"])
+                ->update($inputu);
             $data["message"] = "Update Success";
-            // echo $this->db->getLastQuery();die;
+            //echo $this->db->last_query();die;
         }
         return $data;
     }
