@@ -56,17 +56,19 @@ class cutihutang_m extends core_m
             $cutihutang_nominal = $this->request->getPost('cutihutang_nominal');
             $cutihutang_keterangan = $this->request->getPost('cutihutang_keterangan');
 
-            //cari sisa hutang
-            $user=$this->db->table("user")
-            ->whereIn("user_id", $user_ids)
-            ->get();
-            $cutiuser=array();
-            foreach ($user->getResult() as $row) {
-                $cutiuser[$row->user_id] = $row->user_cuti;
-            }
-            // echo "<pre>";print_r($cutiuser);die;
+
 
             if ($user_ids) {
+                //cari sisa hutang
+                $user = $this->db->table("user")
+                    ->whereIn("user_id", $user_ids)
+                    ->get();
+                $cutiuser = array();
+                foreach ($user->getResult() as $row) {
+                    $cutiuser[$row->user_id] = $row->user_cuti;
+                }
+                // echo "<pre>";print_r($cutiuser);die;
+
                 foreach ($user_ids as $uid) {
                     // Gunakan ON DUPLICATE KEY UPDATE (raw query)
                     $sql = "INSERT INTO cutihutang (user_id, cutihutang_date, cutihutang_nominal, cutihutang_keterangan)
@@ -84,7 +86,7 @@ class cutihutang_m extends core_m
                     ]);
                 }
                 // echo $this->db->getLastQuery();die;
-                
+
                 $data["message"] = "Data berhasil disimpan/diupdate!";
             } else {
                 $data["message"] = "Tidak ada data dipilih!";
