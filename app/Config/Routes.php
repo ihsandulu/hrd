@@ -30,6 +30,7 @@ $routes->add('/synchron', 'transaction\synchron::index');
 $routes->add('/absen', 'transaction\absen::index');
 $routes->add('/gaji', 'transaction\gaji::index');
 $routes->add('/lembur', 'transaction\lembur::index');
+$routes->add('/cutihutang', 'transaction\cutihutang::index');
 $routes->add('/inventarist', 'transaction\inventarist::index');
 $routes->add('/mapk', 'master\mapk::index');
 $routes->add('/mpositionandroid', 'master\mpositionandroid::index');
