@@ -1,6 +1,9 @@
 <?php echo $this->include("template/header_v"); ?>
 <style>
-th, td{padding: 5px !important;}
+    th,
+    td {
+        padding: 5px !important;
+    }
 </style>
 <div class='container-fluid'>
     <div class='row'>
@@ -98,38 +101,30 @@ th, td{padding: 5px !important;}
                                                 <option value="<?= $position->position_id; ?>" <?= ($position_id == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
                                             <?php } ?>
                                         </select>
-
                                     </div>
                                 </div>
-
-
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_nama">Nama Lengkap:</label>
                                     <div class="col-sm-10">
                                         <input required type="text" class="form-control" id="user_nama" name="user_nama" placeholder="" value="<?= $user_nama; ?>">
-
                                     </div>
                                 </div>
-
-
-
-
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_nik">NIK:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="user_nik" name="user_nik" placeholder="" value="<?= $user_nik; ?>">
-
                                     </div>
                                 </div>
-
-
-
-
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_ktp">KTP:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="user_ktp" name="user_ktp" placeholder="" value="<?= $user_ktp; ?>">
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_etag">ETAG:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="user_etag" name="user_etag" placeholder="" value="<?= $user_etag; ?>">
-
                                     </div>
                                 </div>
 
@@ -192,19 +187,19 @@ th, td{padding: 5px !important;}
                                 </div>
 
 
-                                <!-- <div class="form-group">
-                                    <label class="control-label col-sm-2" for="user_bpjstk">BPJS TK:</label>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="user_bpjstk">Nomor BPJS TK:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="user_bpjstk" name="user_bpjstk" placeholder="" value="<?= $user_bpjstk; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="user_bpjskesehatan">BPJS Kesehatan:</label>
+                                    <label class="control-label col-sm-2" for="user_bpjskesehatan">Nomor BPJS Kesehatan:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="user_bpjskesehatan" name="user_bpjskesehatan" placeholder="" value="<?= $user_bpjskesehatan; ?>">
                                     </div>
-                                </div> -->
+                                </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_address">Alamat:</label>
@@ -441,6 +436,15 @@ th, td{padding: 5px !important;}
                             </div>
                         <?php } ?>
 
+                        <!-- Export Excel Data Karyawan -->
+                        <form method="post" class="form-inline" action="" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="excelkaryawan">File Excel:</label>
+                                <input type="file" class="form-control" name="excelkaryawan">
+                            </div>
+                            &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                        </form>
+
                         <div class="table-responsive m-t-40">
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="">
@@ -461,8 +465,8 @@ th, td{padding: 5px !important;}
                                         <th>Whatsapp</th>
                                         <th>NPWP</th>
                                         <th>Status</th>
-                                        <!-- <th>BPJS TK</th>
-                                        <th>BPJS Kesehatan</th> -->
+                                        <th>BPJS TK</th>
+                                        <th>BPJS Kesehatan</th>
                                         <th>Kartu Keluarga</th>
                                         <th>Bank</th>
                                         <th>No Rek:</th>
@@ -575,8 +579,8 @@ th, td{padding: 5px !important;}
                                             <td><?= $usr->user_wa; ?></td>
                                             <td><?= $usr->user_npwp; ?></td>
                                             <td><?= $aktif[$usr->user_status]; ?></td>
-                                            <!-- <td><?= $usr->user_bpjstk; ?></td>
-                                            <td><?= $usr->user_bpjskesehatan; ?></td> -->
+                                            <td><?= $usr->user_bpjstk; ?></td>
+                                            <td><?= $usr->user_bpjskesehatan; ?></td>
                                             <td><?= $usr->user_kk; ?></td>
                                             <td><?= $usr->user_bank; ?></td>
                                             <td><?= $usr->user_norek; ?></td>

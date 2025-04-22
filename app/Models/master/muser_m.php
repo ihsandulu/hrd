@@ -3,6 +3,7 @@
 namespace App\Models\master;
 
 use App\Models\core_m;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class muser_m extends core_m
 {
@@ -45,6 +46,81 @@ class muser_m extends core_m
             }
         }
 
+        //export excel
+        if (isset($_FILES['excelkaryawan'])) {
+            $file = $this->request->getFile('excelkaryawan');
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $spreadsheet = IOFactory::load($file->getTempName());
+                $dataSheet = $spreadsheet->getActiveSheet()->toArray();
+
+                //departemen
+                $departemen=$this->db->table("departemen")->get();
+                $adepartemen=array();
+                foreach($departemen->getResult() as $d){
+                    $adepartemen[$d->departemen_name]=$d->departemen_id;
+                }
+
+                
+                //position
+                $position=$this->db->table("position")->get();
+                $aposition=array();
+                foreach($position->getResult() as $d){
+                    $aposition[$d->position_name]=$d->position_id;
+                }
+
+                for ($i = 3; $i < count($dataSheet); $i++) {
+
+                    //Departemen                        
+                    $iddepartemen=$dataSheet[$i][5];
+
+                    //Posisi                        
+                    $idposition=$dataSheet[$i][26];  
+
+                    if($dataSheet[$i][27]=="Working now"){
+                        $status = "1";
+                    }else{
+                        $status = "0";
+                    }
+                    $data1[] = [
+                        'user_nik'  => $dataSheet[$i][1],
+                        'user_nama' => $dataSheet[$i][2],
+                        'user_masuk' => $dataSheet[$i][3],
+                        // 'user_nama' => $dataSheet[$i][4], Masa Kontrak                        
+                        'departemen_id' => $adepartemen[$iddepartemen],
+                        // 'user_nama' => $dataSheet[$i][6], Tgl.Retire
+                        'user_wa' => $dataSheet[$i][7],
+                        // 'user_nama' => $dataSheet[$i][8], No Locker
+                        'user_bpjstk' => $dataSheet[$i][9],
+                        'user_ktp' => $dataSheet[$i][10],
+                        'user_kk' => $dataSheet[$i][11],
+                        'user_bpjskesehatan' => $dataSheet[$i][12],
+                        'user_norek' => $dataSheet[$i][13],
+                        'user_npwp' => $dataSheet[$i][14],
+                        'user_etag' => $dataSheet[$i][15],
+                        'user_ibu' => $dataSheet[$i][16],
+                        'user_pendidikan' => $dataSheet[$i][17],
+                        'user_borncity' => $dataSheet[$i][18],
+                        'user_borndate' => $dataSheet[$i][19],
+                        'user_gender' => $dataSheet[$i][20],
+                        // 'user_nama' => $dataSheet[$i][21], Marry
+                        'user_address' => $dataSheet[$i][22],
+                        'user_payrolltype' => $dataSheet[$i][23],
+                        // 'user_email' => $dataSheet[$i][24],Duty Type
+                        'user_tanggungan' => $dataSheet[$i][25],                    
+                        'position_id' => $aposition[$idposition],
+                        'user_status' => $status
+                    ];
+                }
+                // dd($data1);
+                if (!empty($data1)) {
+                    $this->db->table("user")->insertBatch($data1);
+                    echo $this->db->getLastQuery();die;
+                }
+            }
+
+            $data["message"] = "Import Success";
+        }
 
 
         //delete
