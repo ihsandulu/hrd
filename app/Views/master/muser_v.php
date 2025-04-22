@@ -450,7 +450,7 @@
                                 <thead class="">
                                     <tr>
                                         <?php if (!isset($_GET["report"])) { ?>
-                                            <th>&nbsp;&nbsp;&nbsp;Action&nbsp;&nbsp;&nbsp;</th>
+                                            <th>__Action__</th>
                                         <?php } ?>
                                         <th>No.</th>
                                         <th>Departemen</th>
@@ -501,7 +501,8 @@
                                     $no = 1;
                                     $aktif = ["Tidak Aktif", "Aktif"];
                                     $lembur = ["Tidak", "Perjam", "Insentif"];
-                                    foreach ($usr->getResult() as $usr) { ?>
+                                    foreach ($usr->getResult() as $usr) { 
+                                        ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
@@ -567,14 +568,14 @@
                                                 </td>
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
-                                            <td><?= $usr->departemen_name; ?></td>
-                                            <td><?= $usr->position_name; ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
                                             <td><?= $usr->user_nik; ?></td>
                                             <td><?= $usr->user_etag; ?></td>
                                             <!-- <td><?= $usr->user_name; ?></td> -->
-                                            <td><?= $usr->user_nama; ?></td>
-                                            <td><?= $usr->user_address; ?></td>
-                                            <td><?= $usr->user_email; ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_nama); ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_address); ?></td>
+                                            <td class="text-left"><?= $usr->user_email; ?></td>
                                             <td><?= $usr->user_cuti; ?></td>
                                             <td><?= $usr->user_wa; ?></td>
                                             <td><?= $usr->user_npwp; ?></td>
@@ -584,7 +585,7 @@
                                             <td><?= $usr->user_kk; ?></td>
                                             <td><?= $usr->user_bank; ?></td>
                                             <td><?= $usr->user_norek; ?></td>
-                                            <td><?= $usr->user_ibu; ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_ibu); ?></td>
                                             <td><?= $usr->user_pendidikan; ?></td>
                                             <td><?= $usr->user_borndate; ?></td>
                                             <td><?= $usr->user_borncity; ?></td>
@@ -592,13 +593,13 @@
                                             <td><?= $usr->user_tanggungan; ?></td>
                                             <td><?= $usr->user_payrolltype; ?></td>
                                             <td><?= $lembur[$usr->user_lembur]; ?></td>
-                                            <td><?= $usr->user_gapok; ?></td>
-                                            <td><?= $usr->user_gakot; ?></td>
-                                            <td><?= $usr->user_ttransport; ?></td>
-                                            <td><?= $usr->user_thadir; ?></td>
-                                            <td><?= $usr->user_tmakan; ?></td>
-                                            <td><?= $usr->user_tjabatan; ?></td>
-                                            <td><?= $usr->user_insentif; ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_gapok,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_gakot,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_ttransport,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_thadir,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_tmakan,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_tjabatan,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_insentif,0,",","."); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

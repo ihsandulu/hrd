@@ -77,11 +77,27 @@
 
     $(document).ready(function() {
         $('#example23').DataTable({
-            dom: 'Bfrtip',
+            dom: 'Blfrtip',
+            autoWidth: false,
+            lengthMenu: [
+                [50, 100, -1],
+                [50, 100, "All"]
+            ],
             buttons: [{
                     extend: 'print',
                     exportOptions: {
                         columns: ':not(:first-child)'
+                    },
+                    customize: function(win) {
+                        // Tambahkan CSS langsung ke dokumen cetak
+                        var css = `
+                            .screen-only { display: none !important; }
+                            .print-only { display: inline !important; }
+                        `;
+                        $(win.document.head).append('<style>' + css + '</style>');
+                        $(win.document.body)
+                            .find('td.text-left')
+                            .css('text-align', 'left');
                     }
                 },
                 {

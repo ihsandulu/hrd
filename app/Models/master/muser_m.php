@@ -82,12 +82,25 @@ class muser_m extends core_m
                     }else{
                         $status = "0";
                     }
+
+                    if (isset($adepartemen[$iddepartemen])) {
+                        $iadepartemen= $adepartemen[$iddepartemen];
+                    } else {
+                        $iadepartemen= 0;
+                    }
+
+                    if (isset($aposition[$idposition])) {
+                        $iaposition= $aposition[$idposition];
+                    } else {
+                        $iaposition= 0;
+                    }
+
                     $data1[] = [
                         'user_nik'  => $dataSheet[$i][1],
                         'user_nama' => $dataSheet[$i][2],
                         'user_masuk' => $dataSheet[$i][3],
                         // 'user_nama' => $dataSheet[$i][4], Masa Kontrak                        
-                        'departemen_id' => $adepartemen[$iddepartemen],
+                        'departemen_id' => $iadepartemen,
                         // 'user_nama' => $dataSheet[$i][6], Tgl.Retire
                         'user_wa' => $dataSheet[$i][7],
                         // 'user_nama' => $dataSheet[$i][8], No Locker
@@ -108,14 +121,14 @@ class muser_m extends core_m
                         'user_payrolltype' => $dataSheet[$i][23],
                         // 'user_email' => $dataSheet[$i][24],Duty Type
                         'user_tanggungan' => $dataSheet[$i][25],                    
-                        'position_id' => $aposition[$idposition],
+                        'position_id' => $iaposition,
                         'user_status' => $status
                     ];
                 }
                 // dd($data1);
                 if (!empty($data1)) {
                     $this->db->table("user")->insertBatch($data1);
-                    echo $this->db->getLastQuery();die;
+                    // echo $this->db->getLastQuery();die;
                 }
             }
 
