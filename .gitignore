@@ -1,4 +1,6 @@
 #vendor/
 .env
 writable/logs/
-writable/session/
+writable/session/*
+!writable/session/index.html
+writable/debugbar/
