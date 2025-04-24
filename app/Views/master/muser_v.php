@@ -437,13 +437,23 @@
                         <?php } ?>
 
                         <!-- Export Excel Data Karyawan -->
-                        <form method="post" class="form-inline" action="" enctype="multipart/form-data">
+                         <div class="row">
+                        <form method="post" class="form-inline col-6" action="" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="excelkaryawan">File Excel:</label>
+                                <label for="excelkaryawan">Master Karyawan:&nbsp;</label>
                                 <input type="file" class="form-control" name="excelkaryawan">
                             </div>
                             &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
                         </form>
+
+                        <form method="post" class="form-inline col-6" action="" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="excelkaryawan">Sisa Cuti:&nbsp;</label>
+                                <input type="file" class="form-control" name="excelcuti">
+                            </div>
+                            &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                        </form>
+                        </div>
 
                         <div class="table-responsive m-t-40">
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
@@ -453,6 +463,7 @@
                                             <th>__Action__</th>
                                         <?php } ?>
                                         <th>No.</th>
+                                        <th>Sisa Cuti</th>
                                         <th>Departemen</th>
                                         <th>Posisi</th>
                                         <th>NIK</th>
@@ -568,6 +579,7 @@
                                                 </td>
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
+                                            <td><?= $usr->user_cuti; ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
                                             <td><?= $usr->user_nik; ?></td>
