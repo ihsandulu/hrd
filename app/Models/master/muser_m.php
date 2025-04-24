@@ -55,55 +55,36 @@ class muser_m extends core_m
                 $dataSheet = $spreadsheet->getActiveSheet()->toArray();
 
                 //departemen
-                $departemen=$this->db->table("departemen")->get();
-                $adepartemen=array();
-                foreach($departemen->getResult() as $d){
-                    $adepartemen[$d->departemen_name]=$d->departemen_id;
+                $departemen = $this->db->table("departemen")->get();
+                $adepartemen = array();
+                foreach ($departemen->getResult() as $d) {
+                    $adepartemen[$d->departemen_name] = $d->departemen_id;
                 }
 
-                
+
                 //position
-                $position=$this->db->table("position")->get();
-                $aposition=array();
-                foreach($position->getResult() as $d){
-                    $aposition[$d->position_name]=$d->position_id;
+                $position = $this->db->table("position")->get();
+                $aposition = array();
+                foreach ($position->getResult() as $d) {
+                    $aposition[$d->position_name] = $d->position_id;
                 }
+
+                $insertData = [];
+                $updateData = [];
 
                 for ($i = 3; $i < count($dataSheet); $i++) {
+                    $iddepartemen = $dataSheet[$i][5];
+                    $idposition = $dataSheet[$i][26];
+                    $status = ($dataSheet[$i][27] == "Working now") ? "1" : "0";
+                    $iadepartemen = isset($adepartemen[$iddepartemen]) ? $adepartemen[$iddepartemen] : 0;
+                    $iaposition = isset($aposition[$idposition]) ? $aposition[$idposition] : 0;
 
-                    //Departemen                        
-                    $iddepartemen=$dataSheet[$i][5];
-
-                    //Posisi                        
-                    $idposition=$dataSheet[$i][26];  
-
-                    if($dataSheet[$i][27]=="Working now"){
-                        $status = "1";
-                    }else{
-                        $status = "0";
-                    }
-
-                    if (isset($adepartemen[$iddepartemen])) {
-                        $iadepartemen= $adepartemen[$iddepartemen];
-                    } else {
-                        $iadepartemen= 0;
-                    }
-
-                    if (isset($aposition[$idposition])) {
-                        $iaposition= $aposition[$idposition];
-                    } else {
-                        $iaposition= 0;
-                    }
-
-                    $data1[] = [
-                        'user_nik'  => $dataSheet[$i][1],
+                    $data1 = [
+                        'user_nik' => $dataSheet[$i][1],
                         'user_nama' => $dataSheet[$i][2],
                         'user_masuk' => $dataSheet[$i][3],
-                        // 'user_nama' => $dataSheet[$i][4], Masa Kontrak                        
                         'departemen_id' => $iadepartemen,
-                        // 'user_nama' => $dataSheet[$i][6], Tgl.Retire
                         'user_wa' => $dataSheet[$i][7],
-                        // 'user_nama' => $dataSheet[$i][8], No Locker
                         'user_bpjstk' => $dataSheet[$i][9],
                         'user_ktp' => $dataSheet[$i][10],
                         'user_kk' => $dataSheet[$i][11],
@@ -116,19 +97,31 @@ class muser_m extends core_m
                         'user_borncity' => $dataSheet[$i][18],
                         'user_borndate' => $dataSheet[$i][19],
                         'user_gender' => $dataSheet[$i][20],
-                        // 'user_nama' => $dataSheet[$i][21], Marry
                         'user_address' => $dataSheet[$i][22],
                         'user_payrolltype' => $dataSheet[$i][23],
-                        // 'user_email' => $dataSheet[$i][24],Duty Type
-                        'user_tanggungan' => $dataSheet[$i][25],                    
+                        'user_tanggungan' => $dataSheet[$i][25],
                         'position_id' => $iaposition,
                         'user_status' => $status
                     ];
+
+                    // Cek apakah sudah ada
+                    $cekdata = $this->db->table("user")->where("user_nik", $dataSheet[$i][1])->get();
+
+                    if ($cekdata->getNumRows() > 0) {
+                        $updateData[] = $data1; // Data untuk di-update
+                    } else {
+                        $insertData[] = $data1; // Data untuk disisipkan
+                    }
                 }
-                // dd($data1);
-                if (!empty($data1)) {
-                    $this->db->table("user")->insertBatch($data1);
-                    // echo $this->db->getLastQuery();die;
+
+                // Proses Batch Insert
+                if (!empty($insertData)) {
+                    $this->db->table("user")->insertBatch($insertData);
+                }
+
+                // Proses Batch Update
+                if (!empty($updateData)) {
+                    $this->db->table("user")->updateBatch($updateData, 'user_nik');
                 }
             }
 
