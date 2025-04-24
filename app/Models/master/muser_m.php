@@ -46,7 +46,7 @@ class muser_m extends core_m
             }
         }
 
-        //export excel
+        //export excel karyawan
         if (isset($_FILES['excelkaryawan'])) {
             $file = $this->request->getFile('excelkaryawan');
 
@@ -125,6 +125,37 @@ class muser_m extends core_m
                 }
             }
 
+            $data["message"] = "Import Success";
+        }
+
+        //export excel sisa cuti
+        if (isset($_FILES['excelcuti'])) {
+            $file = $this->request->getFile('excelcuti');
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $spreadsheet = IOFactory::load($file->getTempName());
+                $dataSheet = $spreadsheet->getActiveSheet()->toArray();                
+
+                $updateData = [];
+                for ($i = 1; $i < count($dataSheet); $i++) {
+                    $data1 = [
+                        'user_nik'  => $dataSheet[$i][3], 
+                        'user_cuti' => $dataSheet[$i][5]
+                    ];
+
+                    // Cek apakah sudah ada
+                    $cekdata = $this->db->table("user")->where("user_nik", $dataSheet[$i][3])->get();
+                    if ($cekdata->getNumRows() > 0 && $dataSheet[$i][5]!="") {
+                        $updateData[] = $data1; // Data untuk di-update
+                    } 
+                }
+
+                // Proses Batch Update
+                if (!empty($updateData)) {
+                    $this->db->table("user")->updateBatch($updateData, 'user_nik');
+                    // echo $this->db->getLastQuery();die;
+                }
+            }
             $data["message"] = "Import Success";
         }
 
