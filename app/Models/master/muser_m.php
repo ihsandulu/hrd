@@ -266,9 +266,14 @@ class muser_m extends core_m
                     // Menampilkan rentang yang sesuai dalam format Y-m-d
                     // echo "Rentang yang dipakai: " . $tanggal_mulai->format('Y-m-d') . " s/d " . $tanggal_selesai->format('Y-m-d');
 
-                    if ($user_cutitambahdate < $tanggal_mulai) {
-                        $cuti = $identity_cuti + $user_cuti;
-
+                    
+                    if ($user_cutitambahdate < $tanggal_mulai->format('Y-m-d')) {
+                        if($user_cuti<0){
+                            $cuti = $identity_cuti + $user_cuti;
+                        }else{
+                            $cuti = $identity_cuti;
+                        }
+                        
                         // Update user_cuti
                         $this->db->table("user")
                             ->where("user_id", $user_id)
