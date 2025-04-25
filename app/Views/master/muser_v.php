@@ -439,19 +439,22 @@
                         <!-- Export Excel Data Karyawan -->
                         <div class="row">
                             <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
-                                <div class="form-group">
+                                <div class="form-group mb-1">
                                     <label for="excelkaryawan">Master Karyawan:&nbsp;</label>
-                                    <input type="file" class="form-control" name="excelkaryawan">
+                                    <input type="file" class="" name="excelkaryawan">
                                 </div>
                                 &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                                &nbsp;<a href="<?=base_url("karyawan.xls");?>" class="btn btn-warning fa fa-download"> Download Template</a>
+                            
                             </form>
 
                             <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
-                                <div class="form-group">
+                                <div class="form-group mb-1">
                                     <label for="excelkaryawan">Sisa Cuti:&nbsp;</label>
-                                    <input type="file" class="form-control" name="excelcuti">
+                                    <input type="file" class="" name="excelcuti">
                                 </div>
                                 &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                                &nbsp;<a href="<?=base_url("sisacuti.xlsx");?>" class="btn btn-warning fa fa-download"> Download Template</a>
                             </form>
 
                             <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
