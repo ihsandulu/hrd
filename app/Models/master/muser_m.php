@@ -79,10 +79,18 @@ class muser_m extends core_m
                     $iadepartemen = isset($adepartemen[$iddepartemen]) ? $adepartemen[$iddepartemen] : 0;
                     $iaposition = isset($aposition[$idposition]) ? $aposition[$idposition] : 0;
 
+                    $user_masuk = $dataSheet[$i][3];
+                    $user_masuk = \DateTime::createFromFormat('d-m-Y', $user_masuk);
+                    $user_masuk = $user_masuk->format('Y-m-d');
+
+                    $user_borndate = $dataSheet[$i][19];
+                    $user_borndate = \DateTime::createFromFormat('d-m-Y', $user_borndate);
+                    $user_borndate = $user_borndate->format('Y-m-d');
+
                     $data1 = [
                         'user_nik' => $dataSheet[$i][1],
                         'user_nama' => $dataSheet[$i][2],
-                        'user_masuk' => $dataSheet[$i][3],
+                        'user_masuk' => $user_masuk,
                         'departemen_id' => $iadepartemen,
                         'user_wa' => $dataSheet[$i][7],
                         'user_bpjstk' => $dataSheet[$i][9],
@@ -95,7 +103,7 @@ class muser_m extends core_m
                         'user_ibu' => $dataSheet[$i][16],
                         'user_pendidikan' => $dataSheet[$i][17],
                         'user_borncity' => $dataSheet[$i][18],
-                        'user_borndate' => $dataSheet[$i][19],
+                        'user_borndate' => $user_borndate,
                         'user_gender' => $dataSheet[$i][20],
                         'user_address' => $dataSheet[$i][22],
                         'user_payrolltype' => $dataSheet[$i][23],
@@ -134,20 +142,20 @@ class muser_m extends core_m
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 $spreadsheet = IOFactory::load($file->getTempName());
-                $dataSheet = $spreadsheet->getActiveSheet()->toArray();                
+                $dataSheet = $spreadsheet->getActiveSheet()->toArray();
 
                 $updateData = [];
                 for ($i = 1; $i < count($dataSheet); $i++) {
                     $data1 = [
-                        'user_nik'  => $dataSheet[$i][3], 
+                        'user_nik'  => $dataSheet[$i][3],
                         'user_cuti' => $dataSheet[$i][5]
                     ];
 
                     // Cek apakah sudah ada
                     $cekdata = $this->db->table("user")->where("user_nik", $dataSheet[$i][3])->get();
-                    if ($cekdata->getNumRows() > 0 && $dataSheet[$i][5]!="") {
+                    if ($cekdata->getNumRows() > 0 && $dataSheet[$i][5] != "") {
                         $updateData[] = $data1; // Data untuk di-update
-                    } 
+                    }
                 }
 
                 // Proses Batch Update
@@ -222,6 +230,57 @@ class muser_m extends core_m
                 ->update($inputu);
             $data["message"] = "Update Success";
             //echo $this->db->last_query();die;
+        }
+
+        //revisi cuti
+        if ($this->request->getPost("revisicuti") == "OK") {
+            $identity_cuti = $this->db->table("identity")->get()->getRow()->identity_cuti;
+            $user = $this->db->table("user")
+                ->where("user_status", "1")
+                ->get();
+            foreach ($user->getResult() as $u) {
+                $user_id = $u->user_id;
+                $user_nama = $u->user_nama;
+                $user_cuti = $u->user_cuti;
+                $user_cutitambahdate = $u->user_cutitambahdate;
+                $user_masuk = $u->user_masuk;
+                $tanggal_masuk = new \DateTime($user_masuk);
+                $tanggal_sekarang = new \DateTime(); // hari ini
+                $selisih = $tanggal_masuk->diff($tanggal_sekarang);
+                if ($selisih->y >= 1) {
+
+                    //rentang tahun
+                    $bulan = $tanggal_masuk->format('m');
+                    $tanggal = $tanggal_masuk->format('d');
+                    $tahun_sekarang = $tanggal_sekarang->format('Y');
+                    $tanggal_mulai = \DateTime::createFromFormat('Y-m-d', $tahun_sekarang . '-' . $bulan . '-' . $tanggal);
+                    $tanggal_selesai = (clone $tanggal_mulai)->modify('+1 year')->modify('-1 day');
+
+                    // Jika tanggal sekarang lebih kecil dari tanggal mulai, mundurkan rentang ke tahun sebelumnya
+                    if ($tanggal_sekarang < $tanggal_mulai) {
+                        $tahun_sekarang--;
+                        $tanggal_mulai = \DateTime::createFromFormat('Y-m-d', $tahun_sekarang . '-' . $bulan . '-' . $tanggal);
+                        $tanggal_selesai = (clone $tanggal_mulai)->modify('+1 year')->modify('-1 day');
+                    }
+
+                    // Menampilkan rentang yang sesuai dalam format Y-m-d
+                    // echo "Rentang yang dipakai: " . $tanggal_mulai->format('Y-m-d') . " s/d " . $tanggal_selesai->format('Y-m-d');
+
+                    if ($user_cutitambahdate < $tanggal_mulai) {
+                        $cuti = $identity_cuti + $user_cuti;
+
+                        // Update user_cuti
+                        $this->db->table("user")
+                            ->where("user_id", $user_id)
+                            ->update(array(
+                                "user_cuti" => $cuti,
+                                "user_cutitambahdate" => date("Y-m-d H:i:s")
+                            ));
+                    }
+                } else {
+                    // echo "User ID $user_id belum 1 tahun<br>";
+                }
+            }
         }
         return $data;
     }

@@ -437,22 +437,29 @@
                         <?php } ?>
 
                         <!-- Export Excel Data Karyawan -->
-                         <div class="row">
-                        <form method="post" class="form-inline col-6" action="" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label for="excelkaryawan">Master Karyawan:&nbsp;</label>
-                                <input type="file" class="form-control" name="excelkaryawan">
-                            </div>
-                            &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
-                        </form>
+                        <div class="row">
+                            <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="excelkaryawan">Master Karyawan:&nbsp;</label>
+                                    <input type="file" class="form-control" name="excelkaryawan">
+                                </div>
+                                &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                            </form>
 
-                        <form method="post" class="form-inline col-6" action="" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label for="excelkaryawan">Sisa Cuti:&nbsp;</label>
-                                <input type="file" class="form-control" name="excelcuti">
-                            </div>
-                            &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
-                        </form>
+                            <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="excelkaryawan">Sisa Cuti:&nbsp;</label>
+                                    <input type="file" class="form-control" name="excelcuti">
+                                </div>
+                                &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                            </form>
+
+                            <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="excelkaryawan">Revisi Cuti:&nbsp;</label>
+                                </div>
+                                &nbsp;<button type="submit" name="revisicuti" value="OK" class="btn btn-warning fa fa-flag-o"> Revisi</button>
+                            </form>
                         </div>
 
                         <div class="table-responsive m-t-40">
@@ -464,6 +471,7 @@
                                         <?php } ?>
                                         <th>No.</th>
                                         <th>Sisa Cuti</th>
+                                        <th>Tgl.Masuk</th>
                                         <th>Departemen</th>
                                         <th>Posisi</th>
                                         <th>NIK</th>
@@ -512,8 +520,8 @@
                                     $no = 1;
                                     $aktif = ["Tidak Aktif", "Aktif"];
                                     $lembur = ["Tidak", "Perjam", "Insentif"];
-                                    foreach ($usr->getResult() as $usr) { 
-                                        ?>
+                                    foreach ($usr->getResult() as $usr) {
+                                    ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
@@ -580,6 +588,7 @@
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
                                             <td><?= $usr->user_cuti; ?></td>
+                                            <td><?= $usr->user_masuk; ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
                                             <td><?= $usr->user_nik; ?></td>
@@ -605,13 +614,13 @@
                                             <td><?= $usr->user_tanggungan; ?></td>
                                             <td><?= $usr->user_payrolltype; ?></td>
                                             <td><?= $lembur[$usr->user_lembur]; ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_gapok,0,",","."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_gakot,0,",","."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_ttransport,0,",","."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_thadir,0,",","."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_tmakan,0,",","."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_tjabatan,0,",","."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_insentif,0,",","."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_gapok, 0, ",", "."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_gakot, 0, ",", "."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_ttransport, 0, ",", "."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_thadir, 0, ",", "."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_tmakan, 0, ",", "."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_tjabatan, 0, ",", "."); ?></td>
+                                            <td class="text-right"><?= number_format($usr->user_insentif, 0, ",", "."); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
