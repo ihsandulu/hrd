@@ -433,12 +433,12 @@
                             )
                         ) ||
                         (
-                            isset(session()->get("halaman")['74']['act_read'])
-                            && session()->get("halaman")['74']['act_read'] == "1"
+                            isset(session()->get("halaman")['96']['act_read'])
+                            && session()->get("halaman")['96']['act_read'] == "1"
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("rabsend"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Rangkuman Absensi</span></a>
+                            <a class="  " href="<?= base_url("rcutihutang"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Sisa Cuti</span></a>
                         </li>
                     <?php } ?>
 

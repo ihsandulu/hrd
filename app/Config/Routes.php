@@ -11,6 +11,7 @@ $routes->add('/api/(:any)', 'api::$1');
 $routes->add('/utama', 'utama::index');
 $routes->add('/login', 'utama::login');
 $routes->add('/logout', 'utama::logout');
+
 $routes->add('/mposition', 'master\mposition::index');
 $routes->add('/mpositionpages', 'master\mpositionpages::index');
 $routes->add('/muser', 'master\muser::index');
@@ -26,13 +27,16 @@ $routes->add('/mtunjangan', 'master\mtunjangan::index');
 $routes->add('/mbpjs', 'master\mbpjs::index');
 $routes->add('/minventaris', 'master\minventaris::index');
 $routes->add('/mter', 'master\mter::index');
+$routes->add('/mapk', 'master\mapk::index');
+$routes->add('/mpositionandroid', 'master\mpositionandroid::index');
+
 $routes->add('/synchron', 'transaction\synchron::index');
 $routes->add('/absen', 'transaction\absen::index');
 $routes->add('/gaji', 'transaction\gaji::index');
 $routes->add('/lembur', 'transaction\lembur::index');
 $routes->add('/cutihutang', 'transaction\cutihutang::index');
 $routes->add('/inventarist', 'transaction\inventarist::index');
-$routes->add('/mapk', 'master\mapk::index');
-$routes->add('/mpositionandroid', 'master\mpositionandroid::index');
-$routes->add('/rabsend', 'report\rabsend::index');
 $routes->add('/gajiprint', 'transaction\gajiprint::index');
+
+
+$routes->add('/rcutihutang', 'report\rcutihutang::index');
