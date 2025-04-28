@@ -15,39 +15,30 @@ class cutihutang_m extends core_m
 
 
         if ($this->request->getPost("delete") == "OK") {
-            $departemen_id = $this->request->getPost("departemen_id");
-            $position_id = $this->request->getPost("position_id");
-            $dari = $this->request->getPost("dari");
-            $ke = $this->request->getPost("ke");
+            $user_ids = $this->request->getPost('user_id');
+            $hutangcutis = $this->request->getPost('hutangcuti');
+            $usercutis = $this->request->getPost('usercuti');
 
-            // Step 1: Ambil semua user_id yang sesuai
-            $userQuery = $this->db->table('user');
-
-            if (!empty($departemen_id)) {
-                $userQuery->where('departemen_id', $departemen_id);
-            }
-
-            if (!empty($position_id)) {
-                $userQuery->where('position_id', $position_id);
-            }
-
-            $users = $userQuery->get()->getResultArray();
-            $user_ids = array_column($users, 'user_id');
-
-            // Step 2: Hapus dari cutihutang berdasarkan user_id dan tanggal
-            if (!empty($user_ids)) {
-                $this->db->table('cutihutang')
-                    ->whereIn('user_id', $user_ids)
-                    ->where('cutihutang_date >=', $dari)
-                    ->where('cutihutang_date <=', $ke)
+            if ($user_ids) {
+                $this->db->table("cutihutang")
+                    ->whereIn("user_id", array_keys($user_ids))
                     ->delete();
+
+                foreach ($user_ids as $user_id => $val) {
+                    $hutangcuti = $hutangcutis[$user_id] ?? 0;
+                    $usercuti = $usercutis[$user_id] ?? 0;
+                    $new_cuti = $usercuti + $hutangcuti;
+
+                    $this->db->table("user")
+                        ->where("user_id", $user_id)
+                        ->update(["user_cuti" => $new_cuti]);
+                }
 
                 $data['message'] = 'Delete Success';
             } else {
-                $data['message'] = 'Tidak ada user yang cocok dengan filter tersebut.';
+                $data["message"] = "Tidak ada data dipilih!";
             }
         }
-
 
 
         if ($this->request->getPost("create") == "OK") {
@@ -55,8 +46,6 @@ class cutihutang_m extends core_m
             $cutihutang_date = $this->request->getPost('cutihutang_date');
             $cutihutang_nominal = $this->request->getPost('cutihutang_nominal');
             $cutihutang_keterangan = $this->request->getPost('cutihutang_keterangan');
-
-
 
             if ($user_ids) {
                 //cari sisa hutang
