@@ -73,7 +73,7 @@
 
                             <div id="collapseOne" class="collapse <?= $panel1['collapseClass'] ?>" aria-labelledby="headingOne" data-parent="#faqAccordion">
                                 <div class="card-body">
-                                    <div class="alert alert-dark">
+                                    <div class="alert alert-info">
                                         <form method="get">
                                             <div class="row">
                                                 <?php
@@ -153,7 +153,7 @@
                                                 <input type="hidden" name="ke" value="<?= $ke; ?>" />
                                                 <input type="hidden" name="departemen_id" value="<?= $idepartemen; ?>" />
                                                 <input type="hidden" name="position_id" value="<?= $iposition; ?>" />
-                                                <button type="submit" name="delete" value="OK" class="btn btn-block btn-danger">Delete Semua</button>
+                                                <button onclick="return confirm(' you want to delete?');" type="submit" name="delete" value="OK" class="btn btn-block btn-danger">Delete Semua</button>
                                             </div>
                                         </div>
                                     </form>
@@ -269,8 +269,6 @@
                             </div>
                             <div id="collapseTwo" class="collapse <?= $panel2['collapseClass'] ?>" aria-labelledby="headingTwo" data-parent="#faqAccordion">
                                 <div class="card-body">
-
-
                                     <div class="alert alert-info">
                                         <form method="post" action="<?= base_url("lembur"); ?>">
                                             <div class="row">
@@ -320,21 +318,11 @@
                                             </div>
                                         </form>
                                     </div>
-
-
-
-
-
-
                                 </div>
 
                                 <form method="post" action="<?= base_url("lembur"); ?>">
-                                    <div class="alert alert-info">
-                                        <div class="row">
-
-                                            <div class="col-12 mb-3">
-                                                <button type="button" id="togglePilih" class="btn btn-block btn-info">Pilih Semua</button>
-                                            </div>
+                                    <div class="">
+                                        <div class="row">                                           
                                             <div class="col-3 row mb-2">
                                                 <div class="col-3">
                                                     <label class="text-dark">Tanggal Mulai</label>
@@ -363,12 +351,15 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-3 row mb-2">
+                                            <!-- <div class="col-3 row mb-2">
                                                 <div class="col-12">
                                                     <input type="checkbox" class="" name="lembur_hcutibayar" value="1">
                                                 
                                                     <label class="text-dark">Pot.HCuti</label>
                                                 </div>
+                                            </div> --> 
+                                            <div class="col-2 mb-2">
+                                                <button type="button" id="togglePilih" class="btn btn-block btn-info">Pilih Semua</button>
                                             </div>
                                             <div class="col-1 mb-2">
                                                 <button name="create" type="submit" class="btn btn-block btn-success" value="OK">Save</button>
@@ -398,7 +389,7 @@
                                         <?php if (session()->getFlashdata('error')): ?>
                                             <div class="alert alert-warning"><?= session()->getFlashdata('error'); ?></div>
                                         <?php endif; ?>
-                                        <div class="table-responsive m-t-40">
+                                        <div class="table-responsive m-t-1">
                                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead class="">
                                                     <tr>
@@ -457,9 +448,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>
