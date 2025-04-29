@@ -106,6 +106,7 @@
                                                     <div class="col-12">
                                                         <select class="form-control " name="departemen_id">
                                                             <option value="">Departemen</option>
+                                                            <option value="all">All</option>
                                                             <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
                                                             foreach ($departemen->getResult() as $departemen) { ?>
                                                                 <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
@@ -117,6 +118,7 @@
                                                     <div class="col-12">
                                                         <select class="form-control " name="position_id">
                                                             <option value="">Position</option>
+                                                            <option value="all">All</option>
                                                             <?php $position = $this->db->table("position")->orderBy("position_name")->get();
                                                             foreach ($position->getResult() as $position) { ?>
                                                                 <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
@@ -191,11 +193,11 @@
                                                     ->join("position", "position.position_id=user.position_id", "left")
                                                     ->join("departemen", "departemen.departemen_id=user.departemen_id", "left");
 
-                                                if (isset($_GET["departemen_id"]) && $_GET["departemen_id"] != "") {
+                                                if (isset($_GET["departemen_id"]) && $_GET["departemen_id"] != "" && $_GET["departemen_id"] != "all") {
                                                     $departemen_id = $_GET["departemen_id"];
                                                     $build->where("user.departemen_id", $departemen_id);
                                                 }
-                                                if (isset($_GET["position_id"]) && $_GET["position_id"] != "") {
+                                                if (isset($_GET["position_id"]) && $_GET["position_id"] != "" && $_GET["position_id"] != "all") {
                                                     $position_id = $_GET["position_id"];
                                                     $build->where("user.position_id", $position_id);
                                                 }
@@ -291,6 +293,7 @@
                                                     <div class="col-9">
                                                         <select class="form-control " name="departemen_id">
                                                             <option value="">Departemen</option>
+                                                            <option value="all">All</option>
                                                             <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
                                                             foreach ($departemen->getResult() as $departemen) { ?>
                                                                 <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
@@ -305,6 +308,7 @@
                                                     <div class="col-9">
                                                         <select class="form-control " name="position_id">
                                                             <option value="">Position</option>
+                                                            <option value="all">All</option>
                                                             <?php $position = $this->db->table("position")->orderBy("position_name")->get();
                                                             foreach ($position->getResult() as $position) { ?>
                                                                 <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
@@ -322,7 +326,7 @@
 
                                 <form method="post" action="<?= base_url("lembur"); ?>">
                                     <div class="">
-                                        <div class="row">                                           
+                                        <div class="row">
                                             <div class="col-3 row mb-2">
                                                 <div class="col-3">
                                                     <label class="text-dark">Tanggal Mulai</label>
@@ -357,7 +361,7 @@
                                                 
                                                     <label class="text-dark">Pot.HCuti</label>
                                                 </div>
-                                            </div> --> 
+                                            </div> -->
                                             <div class="col-2 mb-2">
                                                 <button type="button" id="togglePilih" class="btn btn-block btn-info">Pilih Semua</button>
                                             </div>
@@ -407,14 +411,14 @@
                                                     $build = $this->db->table("user")
                                                         ->join("position", "position.position_id=user.position_id", "left")
                                                         ->join("departemen", "departemen.departemen_id=user.departemen_id", "left");
-                                                    if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "") {
-                                                        $departemen_id = $_POST["departemen_id"];
-                                                        $build->where("user.departemen_id", $departemen_id);
-                                                    }
-                                                    if (isset($_POST["position_id"]) && $_POST["position_id"] != "") {
-                                                        $position_id = $_POST["position_id"];
-                                                        $build->where("user.position_id", $position_id);
-                                                    }
+                                                        if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
+                                                            $departemen_id = $_POST["departemen_id"];
+                                                            $build->where("user.departemen_id", $departemen_id);
+                                                        }
+                                                        if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
+                                                            $position_id = $_POST["position_id"];
+                                                            $build->where("user.position_id", $position_id);
+                                                        }
                                                     if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"])) {
                                                         $build->where("user.position_id", "0");
                                                     }
