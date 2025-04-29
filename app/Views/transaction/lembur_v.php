@@ -150,113 +150,132 @@
                                     </div>
                                     <form method="post">
                                         <div class="row">
-                                            <div class="offset-10 col-2">
-                                                <input type="hidden" name="dari" value="<?= $dari; ?>" />
-                                                <input type="hidden" name="ke" value="<?= $ke; ?>" />
-                                                <input type="hidden" name="departemen_id" value="<?= $idepartemen; ?>" />
-                                                <input type="hidden" name="position_id" value="<?= $iposition; ?>" />
+                                            <div class="offset-8 col-2">
+                                                <button type="button" id="togglePilih0" class="btn btn-block btn-info">Pilih Semua</button>
+                                            </div>
+                                            <div class="col-2">
                                                 <button onclick="return confirm(' you want to delete?');" type="submit" name="delete" value="OK" class="btn btn-block btn-danger">Delete Semua</button>
                                             </div>
+                                            <script>
+                                                $(document).ready(function() {
+                                                    let semuaTerpilih = false;
+
+                                                    $('#togglePilih0').click(function() {
+                                                        semuaTerpilih = !semuaTerpilih;
+                                                        $('.cpilih0').prop('checked', semuaTerpilih);
+
+                                                        if (semuaTerpilih) {
+                                                            $(this).text('Hapus Semua Pilihan');
+                                                            $(this).removeClass('btn-info').addClass('btn-warning');
+                                                        } else {
+                                                            $(this).text('Pilih Semua');
+                                                            $(this).removeClass('btn-warning').addClass('btn-info');
+                                                        }
+                                                    });
+                                                });
+                                            </script>
                                         </div>
-                                    </form>
 
 
-                                    <div class="table-responsive m-t-40">
-                                        <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                            <thead class="">
-                                                <tr>
-                                                    <?php if (!isset($_GET["report"])) { ?>
-                                                        <th>Action</th>
-                                                    <?php } ?>
-                                                    <!-- <th>No.</th> -->
-                                                    <th>Departemen</th>
-                                                    <th>Posisi</th>
-                                                    <th>NIK</th>
-                                                    <th>Name</th>
-                                                    <th>Status</th>
-                                                    <th>Date</th>
-                                                    <th>Hari</th>
-                                                    <th>Keterangan</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                if (isset($_GET["dari"])) {
-                                                    $dari = $_GET["dari"];
-                                                    $ke = $_GET["ke"];
-                                                } else {
-                                                    $dari = date("Y-m-d");
-                                                    $ke = date("Y-m-d");
-                                                }
-                                                $build = $this->db->table("lembur")
-                                                    ->join("user", "user.user_id=lembur.user_id", "left")
-                                                    ->join("position", "position.position_id=user.position_id", "left")
-                                                    ->join("departemen", "departemen.departemen_id=user.departemen_id", "left");
-
-                                                if (isset($_GET["departemen_id"]) && $_GET["departemen_id"] != "" && $_GET["departemen_id"] != "all") {
-                                                    $departemen_id = $_GET["departemen_id"];
-                                                    $build->where("user.departemen_id", $departemen_id);
-                                                }
-                                                if (isset($_GET["position_id"]) && $_GET["position_id"] != "" && $_GET["position_id"] != "all") {
-                                                    $position_id = $_GET["position_id"];
-                                                    $build->where("user.position_id", $position_id);
-                                                }
-                                                if (!isset($_GET["departemen_id"]) && !isset($_GET["position_id"])) {
-                                                    $build->where("user.position_id", "0");
-                                                }
-                                                if ((isset($_GET["departemen_id"]) && $_GET["departemen_id"] == "") && (isset($_GET["position_id"]) && $_GET["position_id"] == "")) {
-                                                    $build->where("user.position_id", "0");
-                                                }
-                                                $build->where("lembur_date >=", $dari);
-                                                $build->where("lembur_date <=", $ke);
-                                                $usr = $build->orderBy("departemen_name", "ASC")
-                                                    ->orderBy("position_name", "ASC")
-                                                    ->orderBy("user_nama", "ASC")
-                                                    ->get();
-                                                //echo $this->db->getLastquery();
-                                                $no = 1;
-                                                $aktif = ["Tidak Aktif", "Aktif"];
-                                                $lembur = ["Tidak", "Perjam", "Insentif"];
-                                                foreach ($usr->getResult() as $usr) { ?>
+                                        <div class="table-responsive m-t-1">
+                                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                                <thead class="">
                                                     <tr>
                                                         <?php if (!isset($_GET["report"])) { ?>
-                                                            <td style="padding-left:0px; padding-right:0px;">
-                                                                <?php
-                                                                if (
-                                                                    (
-                                                                        isset(session()->get("position_id")[0][0])
-                                                                        && (
-                                                                            session()->get("position_id") == "1"
-                                                                            || session()->get("position_id") == "2"
-                                                                        )
-                                                                    ) ||
-                                                                    (
-                                                                        isset(session()->get("halaman")['5']['act_delete'])
-                                                                        && session()->get("halaman")['5']['act_delete'] == "1"
-                                                                    )
-                                                                ) { ?>
-                                                                    <form method="post" class="btn-action" style="">
-                                                                        <button class="btn btn-sm btn-danger delete" onclick="return confirm(' you want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
-                                                                        <input type="hidden" name="lembur_id" value="<?= $usr->lembur_id; ?>" />
-                                                                    </form>
-                                                                <?php } ?>
-                                                            </td>
+                                                            <th>Action</th>
                                                         <?php } ?>
-                                                        <!-- <td><?= $no++; ?></td> -->
-                                                        <td><?= $usr->departemen_name; ?></td>
-                                                        <td><?= $usr->position_name; ?></td>
-                                                        <td><?= $usr->user_nik; ?></td>
-                                                        <td><?= $usr->user_nama; ?></td>
-                                                        <td><?= $aktif[$usr->user_status]; ?></td>
-                                                        <td><?= $usr->lembur_date; ?></td>
-                                                        <td><?= $usr->lembur_jam; ?></td>
-                                                        <td><?= $usr->lembur_type; ?></td>
+                                                        <!-- <th>No.</th> -->
+                                                        <th>Departemen</th>
+                                                        <th>Posisi</th>
+                                                        <th>NIK</th>
+                                                        <th>Name</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Hari</th>
+                                                        <th>Keterangan</th>
                                                     </tr>
-                                                <?php } ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    if (isset($_GET["dari"])) {
+                                                        $dari = $_GET["dari"];
+                                                        $ke = $_GET["ke"];
+                                                    } else {
+                                                        $dari = date("Y-m-d");
+                                                        $ke = date("Y-m-d");
+                                                    }
+                                                    $build = $this->db->table("lembur")
+                                                        ->join("user", "user.user_id=lembur.user_id", "left")
+                                                        ->join("position", "position.position_id=user.position_id", "left")
+                                                        ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
+                                                        ->where("user.user_id !=", "10");
 
+                                                    if (isset($_GET["departemen_id"]) && $_GET["departemen_id"] != "" && $_GET["departemen_id"] != "all") {
+                                                        $departemen_id = $_GET["departemen_id"];
+                                                        $build->where("user.departemen_id", $departemen_id);
+                                                    }
+                                                    if (isset($_GET["position_id"]) && $_GET["position_id"] != "" && $_GET["position_id"] != "all") {
+                                                        $position_id = $_GET["position_id"];
+                                                        $build->where("user.position_id", $position_id);
+                                                    }
+                                                    if (!isset($_GET["departemen_id"]) && !isset($_GET["position_id"])) {
+                                                        $build->where("user.position_id", "0");
+                                                    }
+                                                    if ((isset($_GET["departemen_id"]) && $_GET["departemen_id"] == "") && (isset($_GET["position_id"]) && $_GET["position_id"] == "")) {
+                                                        $build->where("user.position_id", "0");
+                                                    }
+                                                    $build->where("lembur_date >=", $dari);
+                                                    $build->where("lembur_date <=", $ke);
+                                                    $usr = $build->orderBy("departemen_name", "ASC")
+                                                        ->orderBy("position_name", "ASC")
+                                                        ->orderBy("user_nama", "ASC")
+                                                        ->get();
+                                                    //echo $this->db->getLastquery();
+                                                    $no = 1;
+                                                    $aktif = ["Tidak Aktif", "Aktif"];
+                                                    $lembur = ["Tidak", "Perjam", "Insentif"];
+                                                    foreach ($usr->getResult() as $usr) { ?>
+                                                        <tr>
+                                                            <?php if (!isset($_GET["report"])) { ?>
+                                                                <td style="padding-left:0px; padding-right:0px;">
+                                                                    <?php
+                                                                    if (
+                                                                        (
+                                                                            isset(session()->get("position_id")[0][0])
+                                                                            && (
+                                                                                session()->get("position_id") == "1"
+                                                                                || session()->get("position_id") == "2"
+                                                                            )
+                                                                        ) ||
+                                                                        (
+                                                                            isset(session()->get("halaman")['5']['act_delete'])
+                                                                            && session()->get("halaman")['5']['act_delete'] == "1"
+                                                                        )
+                                                                    ) { ?>
+                                                                        <form method="post" class="btn-action" style="">
+                                                                            <!-- <button class="btn btn-sm btn-danger delete" onclick="return confirm(' you want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
+                                                                        <input type="hidden" name="lembur_id" value="<?= $usr->lembur_id; ?>" /> -->
+                                                                        </form>
+                                                                    <?php } ?>
+                                                                    <input class="cpilih0" type="checkbox" id="p<?= $usr->user_id; ?>" name="user_id[<?= $usr->user_id; ?>]" value="<?= $usr->user_id; ?>" />
+                                                                </td>
+                                                            <?php } ?>
+                                                            <!-- <td><?= $no++; ?></td> -->
+                                                            <td><?= $usr->departemen_name; ?></td>
+                                                            <td><?= $usr->position_name; ?></td>
+                                                            <td><?= $usr->user_nik; ?></td>
+                                                            <td><?= $usr->user_nama; ?></td>
+                                                            <td><?= $aktif[$usr->user_status]; ?></td>
+                                                            <td><?= $usr->lembur_date; ?></td>
+                                                            <td><?= $usr->lembur_jam; ?></td>
+                                                            <td><?= $usr->lembur_type; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -337,7 +356,7 @@
                                             </div>
                                             <div class="col-2 row mb-2">
                                                 <div class="col-3">
-                                                    <label class="text-dark">Jam</label>
+                                                    <label class="text-dark">Jml Jam</label>
                                                 </div>
                                                 <div class="col-9">
                                                     <input type="number" class="form-control" placeholder="" name="lembur_jam">
@@ -410,15 +429,17 @@
                                                     <?php
                                                     $build = $this->db->table("user")
                                                         ->join("position", "position.position_id=user.position_id", "left")
-                                                        ->join("departemen", "departemen.departemen_id=user.departemen_id", "left");
-                                                        if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
-                                                            $departemen_id = $_POST["departemen_id"];
-                                                            $build->where("user.departemen_id", $departemen_id);
-                                                        }
-                                                        if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
-                                                            $position_id = $_POST["position_id"];
-                                                            $build->where("user.position_id", $position_id);
-                                                        }
+                                                        ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
+                                                        ->where("user.user_id !=", "10");
+
+                                                    if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
+                                                        $departemen_id = $_POST["departemen_id"];
+                                                        $build->where("user.departemen_id", $departemen_id);
+                                                    }
+                                                    if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
+                                                        $position_id = $_POST["position_id"];
+                                                        $build->where("user.position_id", $position_id);
+                                                    }
                                                     if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"])) {
                                                         $build->where("user.position_id", "0");
                                                     }

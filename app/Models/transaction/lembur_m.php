@@ -15,31 +15,11 @@ class lembur_m extends core_m
 
 
         if ($this->request->getPost("delete") == "OK") {
-            $departemen_id = $this->request->getPost("departemen_id");
-            $position_id = $this->request->getPost("position_id");
-            $dari = $this->request->getPost("dari");
-            $ke = $this->request->getPost("ke");
-
-            // Step 1: Ambil semua user_id yang sesuai
-            $userQuery = $this->db->table('user');
-
-            if (!empty($departemen_id)) {
-                $userQuery->where('departemen_id', $departemen_id);
-            }
-
-            if (!empty($position_id)) {
-                $userQuery->where('position_id', $position_id);
-            }
-
-            $users = $userQuery->get()->getResultArray();
-            $user_ids = array_column($users, 'user_id');
-
-            // Step 2: Hapus dari lembur berdasarkan user_id dan tanggal
-            if (!empty($user_ids)) {
-                $this->db->table('lembur')
-                    ->whereIn('user_id', $user_ids)
-                    ->where('lembur_date >=', $dari)
-                    ->where('lembur_date <=', $ke)
+            $user_ids = $this->request->getPost("user_id");
+            // dd($user_ids);
+            if ($user_ids) {
+                $this->db->table("lembur")
+                    ->whereIn("user_id", array_keys($user_ids))
                     ->delete();
 
                 $data['message'] = 'Delete Success';
