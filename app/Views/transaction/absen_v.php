@@ -250,7 +250,7 @@
                                                         <td><?= $usr->user_nama; ?></td>
                                                         <td><?= $aktif[$usr->user_status]; ?></td>
                                                         <td><?= $usr->absen_date; ?></td>
-                                                        <td><?= $usr->absen_jam; ?></td>
+                                                        <td><?= $usr->absen_masuk; ?></td>
                                                         <td><?= $usr->absen_type; ?></td>
                                                     </tr>
                                                 <?php } ?>
