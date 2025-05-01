@@ -194,11 +194,11 @@
                                                     ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
                                                     ->where("absen.user_id !=", "10");
 
-                                                if (isset($_GET["departemen_id"]) && $_GET["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
+                                                if (isset($_GET["departemen_id"]) && $_GET["departemen_id"] != "" && $_GET["departemen_id"] != "all") {
                                                     $departemen_id = $_GET["departemen_id"];
                                                     $build->where("user.departemen_id", $departemen_id);
                                                 }
-                                                if (isset($_GET["position_id"]) && $_GET["position_id"] != "" && $_POST["position_id"] != "all") {
+                                                if (isset($_GET["position_id"]) && $_GET["position_id"] != "" && $_GET["position_id"] != "all") {
                                                     $position_id = $_GET["position_id"];
                                                     $build->where("user.position_id", $position_id);
                                                 }
