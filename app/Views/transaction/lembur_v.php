@@ -267,7 +267,7 @@
                                                             <td><?= $usr->user_nama; ?></td>
                                                             <td><?= $aktif[$usr->user_status]; ?></td>
                                                             <td><?= $usr->lembur_date; ?></td>
-                                                            <td><?= $usr->lembur_jam; ?></td>
+                                                            <td><?= $usr->lembur_jam; ?> Jam</td>
                                                             <td><?= $usr->lembur_type; ?></td>
                                                         </tr>
                                                     <?php } ?>
@@ -351,7 +351,7 @@
                                                     <label class="text-dark">Tanggal Mulai</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <input type="date" class="form-control" placeholder="Tanggal Mulai" name="lembur_date">
+                                                    <input required type="date" class="form-control" placeholder="Tanggal Mulai" name="lembur_date">
                                                 </div>
                                             </div>
                                             <div class="col-2 row mb-2">
@@ -359,7 +359,7 @@
                                                     <label class="text-dark">Jml Jam</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <input type="number" class="form-control" placeholder="" name="lembur_jam">
+                                                    <input required type="number" class="form-control" placeholder="" name="lembur_jam">
                                                 </div>
                                             </div>
                                             <div class="col-3 row mb-2">
@@ -367,7 +367,8 @@
                                                     <label class="text-dark">Type.</label>
                                                 </div>
                                                 <div class="col-9">
-                                                    <select class="form-control" name="lembur_type">
+                                                    <select required class="form-control" name="lembur_type">
+                                                        <option value="">Pilih Tipe Lembur</option>
                                                         <option value="Full">Full</option>
                                                         <option value="Awal">Awal</option>
                                                         <option value="Akhir">Akhir</option>
