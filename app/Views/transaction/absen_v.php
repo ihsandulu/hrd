@@ -151,7 +151,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12  mb-2 mt-2">
-                                                    <button value="OK" id="cari1" type="submit" class="btn btn-block btn-primary">Search</button>
+                                                    <button value="OK" id="cari1" name="cari1" type="submit" class="btn btn-block btn-primary">Search</button>
                                                 </div>
                                             </div>
                                         </form>
