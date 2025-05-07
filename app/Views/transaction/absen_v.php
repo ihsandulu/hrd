@@ -241,8 +241,8 @@
                                                     if (isset($_GET["cari1"]) && $_GET["cari1"] == "NOK") {
                                                         $masuk = $usr->absen_masuk;
                                                     } else {
-                                                        if ($usr->absen_masuk < date("Y-m-d 06:15:s", strtotime($usr->absen_masuk))) {
-                                                            $masuk = date("Y-m-d 06:15:s", strtotime($usr->absen_masuk));
+                                                        if ($usr->absen_masuk < date("Y-m-d 06:15:00", strtotime($usr->absen_masuk))) {
+                                                            $masuk = date("Y-m-d 06:15:00", strtotime($usr->absen_masuk));
                                                         } else {
                                                             $masuk = $usr->absen_masuk;
                                                         }
@@ -279,7 +279,7 @@
                                                         <td><?= $usr->user_nama; ?></td>
                                                         <td><?= $aktif[$usr->user_status]; ?></td>
                                                         <td><?= $usr->absen_date; ?></td>
-                                                        <td><?= ($usr->absen_type == "Masuk") ? $usr->absen_masuk : $usr->absen_keluar; ?></td>
+                                                        <td><?= ($usr->absen_type == "Masuk") ? $masuk : $usr->absen_keluar; ?></td>
                                                         <td><?= $usr->absen_type; ?></td>
                                                     </tr>
                                                 <?php } ?>
