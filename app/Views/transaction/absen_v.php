@@ -102,51 +102,70 @@
                                                     $iposition = "";
                                                 }
                                                 ?>
-                                                <div class="col-3 row mb-2">
-                                                    <div class="col-12">
-                                                        <select class="form-control " name="departemen_id">
-                                                            <option value="">Departemen</option>
-                                                            <option value="all">All</option>
-                                                            <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
-                                                            foreach ($departemen->getResult() as $departemen) { ?>
-                                                                <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
-                                                            <?php } ?>
-                                                        </select>
+                                                <div class="col-3 mb-2">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <select class="form-control " name="departemen_id">
+                                                                <option value="">Departemen</option>
+                                                                <option value="all">All</option>
+                                                                <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
+                                                                foreach ($departemen->getResult() as $departemen) { ?>
+                                                                    <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-3 row mb-2">
-                                                    <div class="col-12">
-                                                        <select class="form-control " name="position_id">
-                                                            <option value="">Position</option>
-                                                            <option value="all">All</option>
-                                                            <?php $position = $this->db->table("position")->orderBy("position_name")->get();
-                                                            foreach ($position->getResult() as $position) { ?>
-                                                                <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
-                                                            <?php } ?>
-                                                        </select>
+                                                <div class="col-3 mb-2">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <select class="form-control " name="position_id">
+                                                                <option value="">Position</option>
+                                                                <option value="all">All</option>
+                                                                <?php $position = $this->db->table("position")->orderBy("position_name")->get();
+                                                                foreach ($position->getResult() as $position) { ?>
+                                                                    <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-3 row mb-2">
-                                                    <div class="col-4">
-                                                        <label class="text-dark">Dari :</label>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <input type="date" class="form-control" placeholder="Dari" name="dari" value="<?= $dari; ?>">
+                                                <div class="col-3 mb-2">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <label class="text-dark">Dari :<span onclick="jamasli()">*</span></label>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="date" class="form-control" placeholder="Dari" name="dari" value="<?= $dari; ?>">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-3 row mb-2">
-                                                    <div class="col-4">
-                                                        <label class="text-dark">Ke :</label>
-                                                    </div>
-                                                    <div class="col-8">
-                                                        <input type="date" class="form-control" placeholder="Ke" name="ke" value="<?= $ke; ?>">
+                                                <div class="col-3 mb-2">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <label class="text-dark">Ke :</label>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="date" class="form-control" placeholder="Ke" name="ke" value="<?= $ke; ?>">
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12  mb-2 mt-2">
-                                                    <button type="submit" class="btn btn-block btn-primary">Search</button>
+                                                    <button value="OK" id="cari1" type="submit" class="btn btn-block btn-primary">Search</button>
                                                 </div>
                                             </div>
                                         </form>
+                                        <script>
+                                            function jamasli() {
+                                                let rubah = $("#cari1");
+                                                rubah.toggleClass("btn-primary btn-danger");
+                                                if (rubah.val() === "OK") {
+                                                    rubah.val("NOK");
+                                                } else {
+                                                    rubah.val("OK");
+                                                }
+                                            }
+                                        </script>
                                     </div>
                                     <form method="post">
                                         <div class="row">
@@ -218,7 +237,17 @@
                                                 $no = 1;
                                                 $aktif = ["Tidak Aktif", "Aktif"];
                                                 $absen = ["Tidak", "Perjam", "Insentif"];
-                                                foreach ($usr->getResult() as $usr) { ?>
+                                                foreach ($usr->getResult() as $usr) {
+                                                    if (isset($_GET["cari1"]) && $_GET["cari1"] == "NOK") {
+                                                        $masuk = $usr->absen_masuk;
+                                                    } else {
+                                                        if ($usr->absen_masuk < date("Y-m-d 06:15:s", strtotime($usr->absen_masuk))) {
+                                                            $masuk = date("Y-m-d 06:15:s", strtotime($usr->absen_masuk));
+                                                        } else {
+                                                            $masuk = $usr->absen_masuk;
+                                                        }
+                                                    }
+                                                ?>
                                                     <tr>
                                                         <?php if (!isset($_GET["report"])) { ?>
                                                             <td style="padding-left:0px; padding-right:0px;">
@@ -250,7 +279,7 @@
                                                         <td><?= $usr->user_nama; ?></td>
                                                         <td><?= $aktif[$usr->user_status]; ?></td>
                                                         <td><?= $usr->absen_date; ?></td>
-                                                        <td><?= ($usr->absen_type=="Masuk")?$usr->absen_masuk:$usr->absen_keluar; ?></td>
+                                                        <td><?= ($usr->absen_type == "Masuk") ? $usr->absen_masuk : $usr->absen_keluar; ?></td>
                                                         <td><?= $usr->absen_type; ?></td>
                                                     </tr>
                                                 <?php } ?>
@@ -336,7 +365,10 @@
                                 <form method="post" action="<?= base_url("absen"); ?>">
                                     <div class="">
                                         <div class="row">
-                                            <div class="col-3 row mb-2">
+
+                                        </div>
+                                        <div class="col-3 mb-2">
+                                            <div class="row">
                                                 <div class="col-3">
                                                     <label class="text-dark">Type</label>
                                                 </div>
@@ -418,7 +450,10 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-3 row mb-2">
+
+                                        </div>
+                                        <div class="col-3 mb-2">
+                                            <div class="row">
                                                 <div class="col-3">
                                                     <label class="text-dark">Cuti</label>
                                                 </div>
