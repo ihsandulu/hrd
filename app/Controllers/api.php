@@ -423,58 +423,61 @@ class api extends BaseController
             ->where("user_etag", $etag)
             ->get();
         $usercount = $user->getNumRows();
-        foreach ($user->getResult() as $user) {
-            $input["user_id"] = $user->user_id;
-            $input["departemen_id"] = $user->departemen_id;
-            $input["departemen_name"] = $user->departemen_name;
-            $input["user_payrolltype"] = $user->user_payrolltype;
-            $input["user_lembur"] = $user->user_lembur;
-            $input["user_name"] = $user->user_nama;
-        }
-
-        $input["absen_masuk"] = "";
-        $input["absen_keluar"] = "";
-        if ($etime === false) {
-            $input["absen_type"] = "Masuk";
-            $input["absen_masuk"] = $edate . ' 06:00:00';
-        } else
-        if ($etime > "12:00:00") {
-            $input["absen_type"] = "Keluar";
-            $input["absen_keluar"] = $datetime;
-        } else {
-            $input["absen_type"] = "Masuk";
-            $input["absen_masuk"] = $datetime;
-        }
-        //    echo $etime;die;
-
-        $input["user_etag"] = $etag;
-        $input["absen_date"] = $edate;
-        $input["absen_skd"] = 0;
-        $input["cuti_id"] = 0;
-        $input["absen_note"] = "";
-
-
-
         if ($usercount > 0) {
-            //cek absen
-            $cekcok["user_id"] = $input["user_id"];
-            $cekcok["absen_date"] = $input["absen_date"];
-            $cek = $this->db->table("absen")->where($cekcok)->get()->getNumRows();
-            if ($cek > 0) {
-                $data["message"] = "Insert Data Gagal! Duplikat data.";
-                $status = "gagal";
-                $keterangan = "Double Input Absen!";
-            } else {
+            foreach ($user->getResult() as $user) {
+                $uid = $user->user_id;
+                $input["absen_date"] = $edate;
+                $input["absen_type"] = "Normal";
+                if ($etime < "12:00:00") {
+                    $input["absen_masuk"] = $datetime;
+                    $input["absen_keluar"] = "";
+                } else {
+                    $input["absen_masuk"] = "";
+                    $input["absen_keluar"] = $datetime;
+                }
+                //delete jika sudah ada input
+                $wd["user_id"] = $uid;
+                $wd["absen_date"] = $input["absen_date"];
+                $this->db->table("absen")->where($wd)->delete();
+
+                $input["user_id"] = $uid;
+                $input["departemen_id"] = $user->departemen_id;
+                $input["departemen_name"] = $user->departemen_name;
+                $input["user_etag"] = $user->user_etag;
+                $input["user_name"] = $user->user_nama;
+                $input["user_payrolltype"] = $user->user_payrolltype;
+                $input["user_lembur"] = $user->user_lembur;
+                if ($input["absen_masuk"] != "") {
+                    $input["absen_masuk"] = $input["absen_date"] . " " . date("H:i:s", strtotime($input["absen_masuk"]));
+                }
+                if ($input["absen_keluar"] != "") {
+                    $input["absen_keluar"] = $input["absen_date"] . " " . date("H:i:s", strtotime($input["absen_keluar"]));
+                }
 
                 //cari jml jam kerja
                 if ($input["absen_keluar"] != "") {
+                    if ($input["absen_masuk"] == "") {
+                        //cari absen masuk
+                        $ww["absen_date"] = $input["absen_date"];
+                        $ww["user_id"] = $input["user_id"];
+                        $absen = $this->db->table("absen")->where($ww)->get();
+                        $counta = $absen->getNumRows();
+                        if ($counta > 0) {
+                            $input["absen_masuk"] = $absen->getRow()->absen_masuk;
+                        }
+                    }
                     $masuk = new \DateTime($input["absen_masuk"]);
                     $keluar = new \DateTime($input["absen_keluar"]);
                     $diff = $masuk->diff($keluar);
-                    $jml_jam = $diff->h + ($diff->i / 60);
-                    $input["absen_kerjajam"] = $jml_jam;
-                }
 
+                    // Hitung total jam termasuk selisih hari
+                    $total_jam = ($diff->days * 24) + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+                    $input["absen_kerjajam"] = round($total_jam, 2); // dibulatkan 2 angka desimal
+                }
+                /* echo $input["absen_kerjajam"]."---";
+                echo $input["absen_masuk"]."---";
+                echo $input["absen_keluar"];
+                die; */
                 //catatan: jumlah jam kerja tidak berhubungan dengan berapa jam lembur, dikarenakan lebur sudah terjadwal di menu lembur.
 
                 //ambil lembur
@@ -568,16 +571,16 @@ class api extends BaseController
                         $no++;
                     }
                     /*  $arcek[$no]["OT1"] = $OT1;
-    $arcek[$no]["OT2"] = $OT2;
-    $arcek[$no]["OT3"] = $OT3;
-    $arcek[$no]["OT4"] = $OT4;
-    $arcek[$no]["OTN1"] = $OTN1;
-    $arcek[$no]["OTN2"] = $OTN2;
-    $arcek[$no]["OTN3"] = $OTN3;
-    $arcek[$no]["OTN4"] = $OTN4; */
+                        $arcek[$no]["OT2"] = $OT2;
+                        $arcek[$no]["OT3"] = $OT3;
+                        $arcek[$no]["OT4"] = $OT4;
+                        $arcek[$no]["OTN1"] = $OTN1;
+                        $arcek[$no]["OTN2"] = $OTN2;
+                        $arcek[$no]["OTN3"] = $OTN3;
+                        $arcek[$no]["OTN4"] = $OTN4; */
 
                     /* print_r($arcek);
-    die; */
+                        die; */
 
                     $input["absen_ot1jam"] = $OT1;
                     $input["absen_ot2jam"] = $OT2;
@@ -611,7 +614,7 @@ class api extends BaseController
                         $input["absen_phadir"] = 0;
                         $input["absen_pmakan"] = 0;
                     } else
-        if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
+                    if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
                         $input["absen_ptransport"] = $user_ttransport / 30;
                         $input["absen_phadir"] = $user_thadir / 30;
                         $input["absen_pmakan"] = $user_tmakan / 30;
@@ -653,6 +656,8 @@ class api extends BaseController
                         $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
                         if ($pulangcepatmenit > 0) {
                             $pulangcepat = 1;
+                        } else {
+                            $pulangcepatmenit = 0;
                         }
                     }
                 }
@@ -663,25 +668,38 @@ class api extends BaseController
                 if ($liburk == 1 && $lemburjam > 0) {
                     $input["absen_lain"] = $identity->identity_uanggantimakan;
                 }
-
-
-                $builder = $this->db->table('absen');
-                $builder->insert($input);
-                /* echo $this->db->getLastQuery();
-die; */
-                $absen_id = $this->db->insertID();
-                $data["message"] = "Insert Data Success";
-                $status = "success";
-                $keterangan = "Insert Data Success!";
+                // dd($input);
+                //cek absen
+                $cekcok["user_id"] = $input["user_id"];
+                $cekcok["absen_date"] = $input["absen_date"];
+                $cekcok["absen_type"] = $input["absen_type"];
+                $cek = $this->db->table("absen")->where($cekcok)->get();
+                // echo $this->db->getLastQuery(); die;
+                $cek = $cek->getNumRows();
+                // echo $cek;die;
+                if ($cek > 0) {
+                    $builder = $this->db->table('absen');
+                    $builder
+                        ->where($cekcok)
+                        ->update($input);
+                    // echo $this->db->getLastQuery();die;
+                    $data["message"] = "Update Data Success";
+                    $status = "success";
+                } else {
+                    $builder = $this->db->table('absen');
+                    $builder->insert($input);
+                    // echo $this->db->getLastQuery(); die;
+                    $absen_id = $this->db->insertID();
+                    $data["message"] = "Insert Data Success";
+                    $status = "success";
+                }
             }
         } else {
             $status = "gagal";
-            $keterangan = "User Tidak Ditemukan!";
+            $data["message"] = "User Tidak Ditemukan!";
         }
 
-        // echo $this->db->getLastQuery();
-
-        return $this->response->setJSON(['status' => $status, 'keterangan' => $keterangan]);
+        return $this->response->setJSON(['status' => $status, 'keterangan' => $data["message"]]);
     }
 
     public function tarikabsen()
