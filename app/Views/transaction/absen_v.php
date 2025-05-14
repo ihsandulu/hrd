@@ -142,10 +142,10 @@
                                                 </div>
                                                 <div class="col-3 mb-2">
                                                     <div class="row">
-                                                        <div class="col-4">
+                                                        <div class="col-4 d-flex align-items-center">
                                                             <label class="text-dark">Ke :</label>
                                                         </div>
-                                                        <div class="col-8">
+                                                        <div class="col-8 d-flex align-items-center">
                                                             <input type="date" class="form-control" placeholder="Ke" name="ke" value="<?= $ke; ?>">
                                                         </div>
                                                     </div>
@@ -194,7 +194,7 @@
                                                     <th>Name</th>
                                                     <th>Status</th>
                                                     <th>Date</th>
-                                                    <th>Hari</th>
+                                                    <th>Jam</th>
                                                     <th>Keterangan</th>
                                                 </tr>
                                             </thead>
@@ -279,8 +279,17 @@
                                                         <td><?= $usr->user_nama; ?></td>
                                                         <td><?= $aktif[$usr->user_status]; ?></td>
                                                         <td><?= $usr->absen_date; ?></td>
-                                                        <td><?= ($usr->absen_type == "Masuk") ? $masuk : $usr->absen_keluar; ?></td>
-                                                        <td><?= $usr->absen_type; ?></td>
+                                                        <td>
+                                                            <?php if ($usr->absen_type == "Normal") { ?>
+                                                                M : <?= $masuk; ?>
+                                                                <?php
+                                                                if ($usr->absen_keluar != "0000-00-00 00:00:00") { ?>
+                                                                    <br />
+                                                                    K : <?= $usr->absen_keluar; ?>
+                                                                <?php } ?>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td><?= ($usr->absen_type == "Normal") ? "Masuk" : $usr->absen_type; ?></td>
                                                     </tr>
                                                 <?php } ?>
                                             </tbody>
@@ -365,106 +374,142 @@
                                 <form method="post" action="<?= base_url("absen"); ?>">
                                     <div class="">
                                         <div class="row">
+                                            <div class="col-2 mb-2">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <select onchange="pilihtipe()" autofocus required class="form-control" id="absen_type" name="absen_type">
+                                                            <option value="">Pilih Type</option>
+                                                            <option value="Normal">Masuk</option>
+                                                            <option value="Sakit">Sakit</option>
+                                                            <option value="Izin">Izin</option>
+                                                            <option value="Cuti">Cuti</option>
+                                                            <option value="Alpha">Alpha</option>
+                                                        </select>
+                                                        <script>
+                                                            function pilihtipeori() {
+                                                                var absen_type = $("#absen_type").val();
+                                                                if (absen_type == "Sakit") {
+                                                                    $(".sakit").show();
+                                                                } else {
+                                                                    $(".sakit").hide();
+                                                                }
+                                                                if (absen_type == "Cuti") {
+                                                                    $(".cuti").show();
+                                                                } else {
+                                                                    $(".cuti").hide();
+                                                                }
+                                                                if (absen_type == "Normal") {
+                                                                    $(".cmasuk").show();
+                                                                    $(".ckeluar").show();
+                                                                } else {
+                                                                    $(".cmasuk").hide();
+                                                                    $(".ckeluar").hide();
+                                                                }
+                                                            }
 
-                                        </div>
-                                        <div class="col-3 mb-2">
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    <label class="text-dark">Type</label>
-                                                </div>
-                                                <div class="col-9">
-                                                    <select onchange="pilihtipe()" autofocus required class="form-control select" id="absen_type" name="absen_type">
-                                                        <option value="">Pilih Type</option>
-                                                        <option value="Masuk">Masuk</option>
-                                                        <option value="Sakit">Sakit</option>
-                                                        <option value="Izin">Izin</option>
-                                                        <option value="Cuti">Cuti</option>
-                                                        <option value="Alpha">Alpha</option>
-                                                    </select>
-                                                    <script>
-                                                        function pilihtipeori() {
-                                                            var absen_type = $("#absen_type").val();
-                                                            if (absen_type == "Sakit") {
-                                                                $(".sakit").show();
-                                                            } else {
+                                                            function pilihtipe() {
+                                                                var absen_type = $("#absen_type").val();
+                                                                if (absen_type == "Sakit") {
+                                                                    $(".sakit").show();
+                                                                } else {
+                                                                    $(".sakit").hide();
+                                                                    $("#absen_skd").val(0);
+                                                                }
+                                                                if (absen_type == "Cuti") {
+                                                                    $(".cuti").show();
+                                                                } else {
+                                                                    $(".cuti").hide();
+                                                                    $("#cuti_id").val(0);
+                                                                }
+                                                                if (absen_type == "Normal") {
+                                                                    $(".cmasuk").show();
+                                                                    $(".ckeluar").show();
+                                                                } else {
+                                                                    $(".cmasuk").hide();
+                                                                    $("#absen_masuk").prop("value", "");
+                                                                    $(".ckeluar").hide();
+                                                                    $("#absen_keluar").prop("value", "");
+                                                                }
+                                                                if (absen_type == "Izin") {
+                                                                    $(".izin").show();
+                                                                } else {
+                                                                    $(".izin").hide();
+                                                                    $("#absen_note").prop("value", "");
+                                                                }
+                                                            }
+                                                            $(document).ready(function() {
                                                                 $(".sakit").hide();
-                                                            }
-                                                            if (absen_type == "Cuti") {
-                                                                $(".cuti").show();
-                                                            } else {
                                                                 $(".cuti").hide();
-                                                            }
-                                                            if (absen_type == "Masuk") {
-                                                                $(".cmasuk").show();
-                                                            } else {
                                                                 $(".cmasuk").hide();
-                                                            }
-                                                        }
-
-                                                        function pilihtipe() {
-                                                            var absen_type = $("#absen_type").val();
-                                                            if (absen_type == "Sakit") {
-                                                                $(".sakit").show();
-                                                            } else {
-                                                                $(".sakit").hide();
-                                                                $("#absen_skd").val(0);
-                                                            }
-                                                            if (absen_type == "Cuti") {
-                                                                $(".cuti").show();
-                                                            } else {
-                                                                $(".cuti").hide();
-                                                                $("#cuti_id").val(0);
-                                                            }
-                                                            if (absen_type == "Masuk") {
-                                                                $(".cmasuk").show();
-                                                            } else {
-                                                                $(".cmasuk").hide();
-                                                                $(".imasuk").prop("value", "");
-                                                            }
-                                                        }
-                                                        $(document).ready(function() {
-                                                            $(".sakit").hide();
-                                                            $(".cuti").hide();
-                                                            $(".cmasuk").hide();
-                                                            pilihtipeori();
-                                                        });
-                                                    </script>
+                                                                $(".ckeluar").hide();
+                                                                $(".izin").hide();
+                                                                pilihtipeori();
+                                                            });
+                                                        </script>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-2 row mb-2">
-                                                <div class="col-3">
-                                                    <label class="text-dark">Date</label>
-                                                </div>
-                                                <div class="col-9">
-                                                    <input required type="date" class="form-control" id="absen_date" name="absen_date" placeholder="" value="<?= $absen_date; ?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-2 row mb-2">
-                                                <div class="col-3">
-                                                    <label class="text-dark">SKD</label>
-                                                </div>
-                                                <div class="col-9">
-                                                    <select class="form-control" id="absen_skd" name="absen_skd">
-                                                        <option value="0" <?= ($absen_skd == "0") ? "selected" : ""; ?>>Tidak</option>
-                                                        <option value="1" <?= ($absen_skd == "1") ? "selected" : ""; ?>>Ya</option>
-                                                    </select>
+                                            <div class="col-2 mb-2">
+                                                <div class="row">
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        <label class="text-dark">Date</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <input required type="date" class="form-control" id="absen_date" name="absen_date" placeholder="" value="<?= ($absen_date) ? $absen_date : date("Y-m-d"); ?>">
+                                                    </div>
                                                 </div>
                                             </div>
-
-                                        </div>
-                                        <div class="col-3 mb-2">
-                                            <div class="row">
-                                                <div class="col-3">
-                                                    <label class="text-dark">Cuti</label>
+                                            <div class="col-3 mb-2 cmasuk">
+                                                <div class="row">
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        <label class="text-dark">Jam Masuk</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <input type="time" class="form-control" id="absen_masuk" name="absen_masuk" placeholder="" value="<?= ($absen_masuk) ? $absen_masuk : ""; ?>">
+                                                    </div>
                                                 </div>
-                                                <div class="col-9">
-                                                    <select class="form-control" id="cuti_id" name="cuti_id">
-                                                        <option value="0" <?= ($cuti_id == "0") ? "selected" : ""; ?>>Pilih Cuti</option>
-                                                        <?php $cuti = $this->db->table("cuti")->orderBy("cuti_name", "ASC")->get(); ?>
-                                                        <?php foreach ($cuti->getResult() as $cuti) { ?>
-                                                            <option value="<?= $cuti->cuti_id; ?>" <?= ($cuti_id == $cuti->cuti_id) ? "selected" : ""; ?>><?= $cuti->cuti_name; ?></option>
-                                                        <?php } ?>
-                                                    </select>
+                                            </div>
+                                            <div class="col-3 mb-2 ckeluar">
+                                                <div class="row">
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        <label class="text-dark">Jam Keluar</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <input type="time" class="form-control" id="absen_keluar" name="absen_keluar" placeholder="" value="<?= ($absen_keluar) ? $absen_keluar : ""; ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4 mb-2 izin">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <input type="text" class="form-control" id="absen_note" name="absen_note" placeholder="Keterangan" value="<?= $absen_note; ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-2 row mb-2 sakit">
+                                                <div class="row">
+                                                    <div class="col-3 d-flex align-items-center">
+                                                        <label class="text-dark">SKD</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <select class="form-control" id="absen_skd" name="absen_skd">
+                                                            <option value="0" <?= ($absen_skd == "0") ? "selected" : ""; ?>>Tidak</option>
+                                                            <option value="1" <?= ($absen_skd == "1") ? "selected" : ""; ?>>Ya</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-2 mb-2 cuti">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <select class="form-control" id="cuti_id" name="cuti_id">
+                                                            <option value="0" <?= ($cuti_id == "0") ? "selected" : ""; ?>>Pilih Cuti</option>
+                                                            <?php $cuti = $this->db->table("cuti")->orderBy("cuti_name", "ASC")->get(); ?>
+                                                            <?php foreach ($cuti->getResult() as $cuti) { ?>
+                                                                <option value="<?= $cuti->cuti_id; ?>" <?= ($cuti_id == $cuti->cuti_id) ? "selected" : ""; ?>><?= $cuti->cuti_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-2 mb-2">
@@ -473,86 +518,88 @@
                                             <div class="col-1 mb-2">
                                                 <button name="create" type="submit" class="btn btn-block btn-success" value="OK">Save</button>
                                             </div>
+
                                         </div>
-                                        <script>
-                                            $(document).ready(function() {
-                                                let semuaTerpilih = false;
+                                    </div>
+                                    <script>
+                                        $(document).ready(function() {
+                                            let semuaTerpilih = false;
 
-                                                $('#togglePilih').click(function() {
-                                                    semuaTerpilih = !semuaTerpilih;
-                                                    $('.cpilih').prop('checked', semuaTerpilih);
+                                            $('#togglePilih').click(function() {
+                                                semuaTerpilih = !semuaTerpilih;
+                                                $('.cpilih').prop('checked', semuaTerpilih);
 
-                                                    if (semuaTerpilih) {
-                                                        $(this).text('Hapus Semua Pilihan');
-                                                        $(this).removeClass('btn-info').addClass('btn-warning');
-                                                    } else {
-                                                        $(this).text('Pilih Semua');
-                                                        $(this).removeClass('btn-warning').addClass('btn-info');
-                                                    }
-                                                });
+                                                if (semuaTerpilih) {
+                                                    $(this).text('Hapus Semua Pilihan');
+                                                    $(this).removeClass('btn-info').addClass('btn-warning');
+                                                } else {
+                                                    $(this).text('Pilih Semua');
+                                                    $(this).removeClass('btn-warning').addClass('btn-info');
+                                                }
                                             });
-                                        </script>
-                                        <?php if (session()->getFlashdata('success')): ?>
-                                            <div class="alert alert-success"><?= session()->getFlashdata('success'); ?></div>
-                                        <?php endif; ?>
-                                        <?php if (session()->getFlashdata('error')): ?>
-                                            <div class="alert alert-warning"><?= session()->getFlashdata('error'); ?></div>
-                                        <?php endif; ?>
-                                        <div class="table-responsive m-t-1">
-                                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                                <thead class="">
-                                                    <tr>
-                                                        <th>Pilih</th>
-                                                        <th>Sisa Cuti</th>
-                                                        <th>Departemen</th>
-                                                        <th>Posisi</th>
-                                                        <th>NIK</th>
-                                                        <th>Name</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $build = $this->db->table("user")
-                                                        ->join("position", "position.position_id=user.position_id", "left")
-                                                        ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
-                                                        ->where("user.user_id !=", "10");
+                                        });
+                                    </script>
+                                    <?php if (session()->getFlashdata('success')): ?>
+                                        <div class="alert alert-success"><?= session()->getFlashdata('success'); ?></div>
+                                    <?php endif; ?>
+                                    <?php if (session()->getFlashdata('error')): ?>
+                                        <div class="alert alert-warning"><?= session()->getFlashdata('error'); ?></div>
+                                    <?php endif; ?>
+                                    <div class="table-responsive m-t-1">
+                                        <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                            <thead class="">
+                                                <tr>
+                                                    <th>Pilih</th>
+                                                    <th>Sisa Cuti</th>
+                                                    <th>Departemen</th>
+                                                    <th>Posisi</th>
+                                                    <th>NIK</th>
+                                                    <th>Name</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $build = $this->db->table("user")
+                                                    ->join("position", "position.position_id=user.position_id", "left")
+                                                    ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
+                                                    ->where("user.user_id !=", "10");
 
-                                                    if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
-                                                        $departemen_id = $_POST["departemen_id"];
-                                                        $build->where("user.departemen_id", $departemen_id);
-                                                    }
-                                                    if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
-                                                        $position_id = $_POST["position_id"];
-                                                        $build->where("user.position_id", $position_id);
-                                                    }
-                                                    if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"])) {
-                                                        $build->where("user.position_id", "0");
-                                                    }
-                                                    if ((isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "")) {
-                                                        $build->where("user.position_id", "0");
-                                                    }
-                                                    $usr = $build->orderBy("departemen_name", "ASC")
-                                                        ->orderBy("position_name", "ASC")
-                                                        ->orderBy("user_nama", "ASC")
-                                                        ->get();
-                                                    // echo $this->db->getLastquery();
-                                                    $no = 1;
-                                                    $aktif = ["Tidak Aktif", "Aktif"];
-                                                    $absen = ["Tidak", "Perjam", "Insentif"];
-                                                    foreach ($usr->getResult() as $usr) { ?>
-                                                        <td><input class="cpilih" type="checkbox" id="p<?= $usr->user_id; ?>" name="user_id[]" value="<?= $usr->user_id; ?>" /></td>
-                                                        <td><?= $usr->user_cuti; ?></td>
-                                                        <td><?= $usr->departemen_name; ?></td>
-                                                        <td><?= $usr->position_name; ?></td>
-                                                        <td><?= $usr->user_nik; ?></td>
-                                                        <td><?= $usr->user_nama; ?></td>
-                                                        <td><?= $aktif[$usr->user_status]; ?></td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
+                                                    $departemen_id = $_POST["departemen_id"];
+                                                    $build->where("user.departemen_id", $departemen_id);
+                                                }
+                                                if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
+                                                    $position_id = $_POST["position_id"];
+                                                    $build->where("user.position_id", $position_id);
+                                                }
+                                                if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"])) {
+                                                    $build->where("user.position_id", "0");
+                                                }
+                                                if ((isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "")) {
+                                                    $build->where("user.position_id", "0");
+                                                }
+                                                $usr = $build->orderBy("departemen_name", "ASC")
+                                                    ->orderBy("position_name", "ASC")
+                                                    ->orderBy("user_nama", "ASC")
+                                                    ->get();
+                                                // echo $this->db->getLastquery();
+                                                $no = 1;
+                                                $aktif = ["Tidak Aktif", "Aktif"];
+                                                $absen = ["Tidak", "Perjam", "Insentif"];
+                                                foreach ($usr->getResult() as $usr) { ?>
+                                                    <td><input class="cpilih" type="checkbox" id="p<?= $usr->user_id; ?>" name="user_id[]" value="<?= $usr->user_id; ?>" /></td>
+                                                    <td><?= $usr->user_cuti; ?></td>
+                                                    <td><?= $usr->departemen_name; ?></td>
+                                                    <td><?= $usr->position_name; ?></td>
+                                                    <td><?= $usr->user_nik; ?></td>
+                                                    <td><?= $usr->user_nama; ?></td>
+                                                    <td><?= $aktif[$usr->user_status]; ?></td>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
                                 </form>
                             </div>

@@ -91,28 +91,67 @@ class absen_m extends core_m
         //insert
         if ($this->request->getPost("create") == "OK") {
             foreach ($this->request->getPost() as $e => $f) {
-                if ($e != 'create' && $e != 'absen_id') {
+                if ($e != 'create' && $e != 'absen_id' && $e != 'user_id') {
                     $input[$e] = $this->request->getPost($e);
                 }
             }
+
+
+
+
             // print_r($input);die;
-            //cek absen
-            $cekcok["user_id"] = $input["user_id"];
-            $cekcok["absen_date"] = $input["absen_date"];
-            $cek = $this->db->table("absen")->where($cekcok)->get()->getNumRows();
-            if ($cek > 0) {
-                $data["message"] = "Insert Data Gagal! Duplikat data.";
-            } else {
+
+            $user_ids = $this->request->getPost('user_id');
+            foreach ($user_ids as $uid) {
+                //delete jika sudah ada input
+                $wd["user_id"] = $uid;
+                $wd["absen_date"] = $input["absen_date"];
+                $this->db->table("absen")->where($wd)->delete();
+
+                $user = $this->db->table("user")
+                    ->join('departemen', 'departemen.departemen_id = user.departemen_id', 'left')
+                    ->whereIn("user_id", $user_ids)
+                    ->get()
+                    ->getRow();
+                $input["user_id"] = $uid;
+                $input["departemen_id"] = $user->departemen_id;
+                $input["departemen_name"] = $user->departemen_name;
+                $input["user_etag"] = $user->user_etag;
+                $input["user_name"] = $user->user_nama;
+                $input["user_payrolltype"] = $user->user_payrolltype;
+                $input["user_lembur"] = $user->user_lembur;
+                if ($input["absen_masuk"] != "") {
+                    $input["absen_masuk"] = $input["absen_date"] . " " . date("H:i:s", strtotime($input["absen_masuk"]));
+                }
+                if ($input["absen_keluar"] != "") {
+                    $input["absen_keluar"] = $input["absen_date"] . " " . date("H:i:s", strtotime($input["absen_keluar"]));
+                }
+
 
                 //cari jml jam kerja
                 if ($input["absen_keluar"] != "") {
+                    if ($input["absen_masuk"] == "") {
+                        //cari absen masuk
+                        $ww["absen_date"] = $input["absen_date"];
+                        $ww["user_id"] = $input["user_id"];
+                        $absen = $this->db->table("absen")->where($ww)->get();
+                        $counta = $absen->getNumRows();
+                        if ($counta > 0) {
+                            $input["absen_masuk"] = $absen->getRow()->absen_masuk;
+                        }
+                    }
                     $masuk = new \DateTime($input["absen_masuk"]);
                     $keluar = new \DateTime($input["absen_keluar"]);
                     $diff = $masuk->diff($keluar);
-                    $jml_jam = $diff->h + ($diff->i / 60);
-                    $input["absen_kerjajam"] = $jml_jam;
-                }
 
+                    // Hitung total jam termasuk selisih hari
+                    $total_jam = ($diff->days * 24) + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+                    $input["absen_kerjajam"] = round($total_jam, 2); // dibulatkan 2 angka desimal
+                }
+                /* echo $input["absen_kerjajam"]."---";
+                echo $input["absen_masuk"]."---";
+                echo $input["absen_keluar"];
+                die; */
                 //catatan: jumlah jam kerja tidak berhubungan dengan berapa jam lembur, dikarenakan lebur sudah terjadwal di menu lembur.
 
                 //ambil lembur
@@ -206,16 +245,16 @@ class absen_m extends core_m
                         $no++;
                     }
                     /*  $arcek[$no]["OT1"] = $OT1;
-                $arcek[$no]["OT2"] = $OT2;
-                $arcek[$no]["OT3"] = $OT3;
-                $arcek[$no]["OT4"] = $OT4;
-                $arcek[$no]["OTN1"] = $OTN1;
-                $arcek[$no]["OTN2"] = $OTN2;
-                $arcek[$no]["OTN3"] = $OTN3;
-                $arcek[$no]["OTN4"] = $OTN4; */
+                        $arcek[$no]["OT2"] = $OT2;
+                        $arcek[$no]["OT3"] = $OT3;
+                        $arcek[$no]["OT4"] = $OT4;
+                        $arcek[$no]["OTN1"] = $OTN1;
+                        $arcek[$no]["OTN2"] = $OTN2;
+                        $arcek[$no]["OTN3"] = $OTN3;
+                        $arcek[$no]["OTN4"] = $OTN4; */
 
                     /* print_r($arcek);
-                die; */
+                        die; */
 
                     $input["absen_ot1jam"] = $OT1;
                     $input["absen_ot2jam"] = $OT2;
@@ -291,6 +330,8 @@ class absen_m extends core_m
                         $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
                         if ($pulangcepatmenit > 0) {
                             $pulangcepat = 1;
+                        } else {
+                            $pulangcepatmenit = 0;
                         }
                     }
                 }
@@ -301,14 +342,29 @@ class absen_m extends core_m
                 if ($liburk == 1 && $lemburjam > 0) {
                     $input["absen_lain"] = $identity->identity_uanggantimakan;
                 }
-
-
-                $builder = $this->db->table('absen');
-                $builder->insert($input);
-                /* echo $this->db->getLastQuery();
-            die; */
-                $absen_id = $this->db->insertID();
-                $data["message"] = "Insert Data Success";
+                // dd($input);
+                //cek absen
+                $cekcok["user_id"] = $input["user_id"];
+                $cekcok["absen_date"] = $input["absen_date"];
+                $cekcok["absen_type"] = $input["absen_type"];
+                $cek = $this->db->table("absen")->where($cekcok)->get();
+                // echo $this->db->getLastQuery(); die;
+                $cek = $cek->getNumRows();
+                // echo $cek;die;
+                if ($cek > 0) {
+                    $builder = $this->db->table('absen');
+                    $builder
+                        ->where($cekcok)
+                        ->update($input);
+                    // echo $this->db->getLastQuery();die;
+                    $data["message"] = "Update Data Success";
+                } else {
+                    $builder = $this->db->table('absen');
+                    $builder->insert($input);
+                    // echo $this->db->getLastQuery(); die;
+                    $absen_id = $this->db->insertID();
+                    $data["message"] = "Insert Data Success";
+                }
             }
         }
 
@@ -529,6 +585,8 @@ class absen_m extends core_m
                     $pulangcepatmenit = (strtotime($jamkerja->jamkerja_akhir) - strtotime($input["absen_keluar"])) / 60;
                     if ($pulangcepatmenit > 0) {
                         $pulangcepat = 1;
+                    } else {
+                        $pulangcepatmenit = 0;
                     }
                 }
             }
