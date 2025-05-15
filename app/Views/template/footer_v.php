@@ -264,6 +264,17 @@
 <script src="js/lib/toastr/toastr.min.js"></script>
 <script src="js/lib/toastr/toastr.init.js"></script>
 
+<script>
+$(document).ready(function () {
+    var activeLink = $('.scroll-sidebar a.active');
+    if (activeLink.length) {
+        var container = $('.scroll-sidebar');
+        var scrollPosition = activeLink.offset().top - container.offset().top + container.scrollTop() - 100;
+        container.animate({ scrollTop: scrollPosition }, 500);
+    }
+});
+</script>
+
 </body>
 
 </html>

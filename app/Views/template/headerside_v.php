@@ -43,7 +43,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("midentity"); ?>" aria-expanded="false"><i class="fa fa-tree"></i><span class="hide-menu">Identitas</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'midentity' ? 'active' : ''; ?>" href="<?= base_url("midentity"); ?>" aria-expanded="false"><i class="fa fa-tree"></i><span class="hide-menu">Identitas</span></a>
                         </li>
                     <?php } ?>
 
@@ -115,7 +115,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mdepartemen"); ?>" aria-expanded="false"><i class="fa fa-building"></i><span class="hide-menu">Departemen</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mdepartemen' ? 'active' : ''; ?>" href="<?= base_url("mdepartemen"); ?>" aria-expanded="false"><i class="fa fa-building"></i><span class="hide-menu">Departemen</span></a>
                         </li>
                     <?php } ?>
                     
@@ -134,7 +134,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mjamkerja"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Jam Kerja</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mjamkerja' ? 'active' : ''; ?>" href="<?= base_url("mjamkerja"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Jam Kerja</span></a>
                         </li>
                     <?php } ?>
                     
@@ -153,7 +153,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mlibur"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Libur</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mlibur' ? 'active' : ''; ?>" href="<?= base_url("mlibur"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Libur</span></a>
                         </li>
                     <?php } ?>
                     
@@ -172,7 +172,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mramadlan"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Ramadlan</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mramadlan' ? 'active' : ''; ?>" href="<?= base_url("mramadlan"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Ramadlan</span></a>
                         </li>
                     <?php } ?>
                     
@@ -191,7 +191,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mcuti"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Cuti</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mcuti' ? 'active' : ''; ?>" href="<?= base_url("mcuti"); ?>" aria-expanded="false"><i class="fa fa-clock-o"></i><span class="hide-menu">Cuti</span></a>
                         </li>
                     <?php } ?>
                     
@@ -210,7 +210,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mtunjangan"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Tunjangan</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mtunjangan' ? 'active' : ''; ?>" href="<?= base_url("mtunjangan"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Tunjangan</span></a>
                         </li>
                     <?php } ?>
                     
@@ -229,7 +229,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mbpjs"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">BPJS</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mbpjs' ? 'active' : ''; ?>" href="<?= base_url("mbpjs"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">BPJS</span></a>
                         </li>
                     <?php } ?>
                     
@@ -248,7 +248,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("minventaris"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Inventaris</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'minventaris' ? 'active' : ''; ?>" href="<?= base_url("minventaris"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Inventaris</span></a>
                         </li>
                     <?php } ?>
                     
@@ -267,7 +267,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("mter"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">TER</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mter' ? 'active' : ''; ?>" href="<?= base_url("mter"); ?>" aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">TER</span></a>
                         </li>
                     <?php } ?>
                     
@@ -310,7 +310,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("cutihutang"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Hutang Cuti</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'cutihutang' ? 'active' : ''; ?>" href="<?= base_url("cutihutang"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Hutang Cuti</span></a>
                         </li>
                     <?php } ?>
                     
@@ -329,7 +329,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("lembur"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Lembur</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'lembur' ? 'active' : ''; ?>" href="<?= base_url("lembur"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Lembur</span></a>
                         </li>
                     <?php } ?>
                     
@@ -348,7 +348,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("absen"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Absensi</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'absen' ? 'active' : ''; ?>" href="<?= base_url("absen"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Absensi</span></a>
                         </li>
                     <?php } ?>
                     
@@ -367,7 +367,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("gaji"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Penggajian</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'gaji' ? 'active' : ''; ?>" href="<?= base_url("gaji"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Penggajian</span></a>
                         </li>
                     <?php } ?>
 
@@ -386,7 +386,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("inventarist"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Pot. Inventaris</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'inventarist' ? 'active' : ''; ?>" href="<?= base_url("inventarist"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Pot. Inventaris</span></a>
                         </li>
                     <?php } ?>
 
@@ -438,7 +438,7 @@
                         )
                     ) { ?>
                         <li>
-                            <a class="  " href="<?= base_url("rcutihutang"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Sisa Cuti</span></a>
+                            <a class="<?= current_url(true)->getSegment(1) == 'rcutihutang' ? 'active' : ''; ?>" href="<?= base_url("rcutihutang"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Sisa Cuti</span></a>
                         </li>
                     <?php } ?>
 
