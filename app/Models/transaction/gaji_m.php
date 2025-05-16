@@ -127,7 +127,7 @@ class gaji_m extends core_m
             //departemen
             if ($this->request->getPost("departemen_id") != "") {
                 $departemen_id = $this->request->getPost("departemen_id");
-                $departemen = " departemen_id = " . $departemen_id;
+                $departemen = " absen.departemen_id = " . $departemen_id;
                 $anddep = " AND";
             } else {
                 $departemen = "";
@@ -137,7 +137,7 @@ class gaji_m extends core_m
             //position
             if ($this->request->getPost("position_id") != "") {
                 $position_id = $this->request->getPost("position_id");
-                $position = $anddep . " position_id = " . $position_id;
+                $position = $anddep . " user.position_id = " . $position_id;
                 $andpos = " AND";
             } else {
                 $position = "";
@@ -147,8 +147,8 @@ class gaji_m extends core_m
             //user
             if ($this->request->getPost("user_id") != "") {
                 $user_id = $this->request->getPost("user_id");
-                $user = $andpos . " user_id = " . $user_id;
-                $anduser = " AND";
+                $user = $andpos . " absen.user_id = " . $user_id;
+                $anduser = " ";
             } else {
                 $user = "";
                 $anduser = "";
@@ -169,7 +169,7 @@ class gaji_m extends core_m
 
 
 
-                $periode = $anduser . " absen_date >='" . $dari . " AND absen_date <=" . $ke . "'";
+                $periode = $anduser . " AND absen.absen_date >='" . $dari . "' AND absen.absen_date <='" . $ke . "' ";
 
                 /* //hari libur
                 $arliburhari = array();

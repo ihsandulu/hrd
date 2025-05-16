@@ -166,12 +166,12 @@
                                             <label class="text-dark">User : </label>
                                         </div>
                                         <div class="col-9">
-                                            <select class="form-control" id="user_id" name="user_id">
+                                            <select class="form-control select" id="user_id" name="user_id">
                                                 <?php
-                                                $user = $this->db->table("user")->orderBy("user_name")->get(); ?>
+                                                $user = $this->db->table("user")->orderBy("user_nama")->get(); ?>
                                                 <option value="">Semua User</option>
                                                 <?php foreach ($user->getResult() as $user) { ?>
-                                                    <option value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_name; ?></option>
+                                                    <option value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_nama; ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -251,33 +251,33 @@
                         </div>
                         <div class="alert alert-dark">
                             <form>
-                            <?php
-                                    $gaji_bulan = date("m");
-                                    $gaji_tahun = date("Y");
-                                    $departemen_id = 0;
-                                    $position_id = 0;
-                                    $user_id = 0;
-                                    $gaji_print = date("Y-m-05");
-                                    if (isset($_GET["gaji_bulan"])) {
-                                        $gaji_bulan = $_GET["gaji_bulan"];
-                                    }
-                                    if (isset($_GET["gaji_tahun"])) {
-                                        $gaji_tahun = $_GET["gaji_tahun"];
-                                    }
-                                    if (isset($_GET["departemen_id"])) {
-                                        $departemen_id = $_GET["departemen_id"];
-                                    }
-                                    if (isset($_GET["position_id"])) {
-                                        $position_id = $_GET["position_id"];
-                                    }
-                                    if (isset($_GET["user_id"])) {
-                                        $user_id = $_GET["user_id"];
-                                    }
-                                    if (isset($_GET["gaji_print"]) && $_GET["gaji_print"] != "") {
-                                        $gaji_print = $_GET["gaji_print"];
-                                    }
-                                    // echo $gaji_print;
-                                    ?>
+                                <?php
+                                $gaji_bulan = date("m");
+                                $gaji_tahun = date("Y");
+                                $departemen_id = 0;
+                                $position_id = 0;
+                                $user_id = 0;
+                                $gaji_print = date("Y-m-05");
+                                if (isset($_GET["gaji_bulan"])) {
+                                    $gaji_bulan = $_GET["gaji_bulan"];
+                                }
+                                if (isset($_GET["gaji_tahun"])) {
+                                    $gaji_tahun = $_GET["gaji_tahun"];
+                                }
+                                if (isset($_GET["departemen_id"])) {
+                                    $departemen_id = $_GET["departemen_id"];
+                                }
+                                if (isset($_GET["position_id"])) {
+                                    $position_id = $_GET["position_id"];
+                                }
+                                if (isset($_GET["user_id"])) {
+                                    $user_id = $_GET["user_id"];
+                                }
+                                if (isset($_GET["gaji_print"]) && $_GET["gaji_print"] != "") {
+                                    $gaji_print = $_GET["gaji_print"];
+                                }
+                                // echo $gaji_print;
+                                ?>
                                 <div class="row">
                                     <?php
                                     $gaji_bulan = date("m");
@@ -336,12 +336,12 @@
                                             <label class="text-dark">User : </label>
                                         </div>
                                         <div class="col-9">
-                                            <select class="form-control" id="user_id" name="user_id">
+                                            <select class="form-control select" id="user_id2" name="user_id">
                                                 <?php
-                                                $user = $this->db->table("user")->orderBy("user_name")->get(); ?>
+                                                $user = $this->db->table("user")->orderBy("user_nama")->get(); ?>
                                                 <option value="">Semua User</option>
                                                 <?php foreach ($user->getResult() as $user) { ?>
-                                                    <option value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_name; ?></option>
+                                                    <option value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_nama; ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -461,7 +461,7 @@
                                                             && session()->get("halaman")['50']['act_update'] == "1"
                                                         )
                                                     ) { ?>
-                                                        <form method="get" target="_blank" action="<?=base_url("gajiprint");?>" class="btn-action" style="">
+                                                        <form method="get" target="_blank" action="<?= base_url("gajiprint"); ?>" class="btn-action" style="">
                                                             <button class="btn btn-sm btn-info " name="print" value="OK"><span class="fa fa-print" style="color:white;"></span> </button>
                                                             <input type="hidden" name="gaji_id" value="<?= $usr->gaji_id; ?>" />
                                                         </form>
@@ -515,29 +515,29 @@
                                             <td><?= $usr->user_name; ?></td>
                                             <td><?= $usr->user_masuk; ?></td>
                                             <td>H:<?= $usr->gaji_hadir; ?>|C:<?= $usr->gaji_cuti; ?>|S:<?= $usr->gaji_sakit; ?>|I:<?= $usr->gaji_izin; ?>|A: <?= $usr->gaji_alpha; ?></td>
-                                            <td><?= number_format($usr->gaji_pokok,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_tjabatan,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_ttransport,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_tkehadiran,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_tmakan,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_ot1nominal,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_ot2nominal,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_ot3nominal,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_ot4nominal,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_lain,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_kotor,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_alphanominal,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_ptransportasi,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_pkehadiran,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_pmakan,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_inventaris,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_bpjskesehatan,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_bpjsjht,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_bpjspensiun,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_pph21,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_plain,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_potongantotal,0,",","."); ?></td>
-                                            <td><?= number_format($usr->gaji_total,0,",","."); ?></td>
+                                            <td><?= number_format($usr->gaji_pokok, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_tjabatan, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_ttransport, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_tkehadiran, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_tmakan, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot1nominal, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot2nominal, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot3nominal, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_ot4nominal, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_lain, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_kotor, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_alphanominal, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_ptransportasi, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_pkehadiran, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_pmakan, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_inventaris, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_bpjskesehatan, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_bpjsjht, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_bpjspensiun, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_pph21, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_plain, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_potongantotal, 0, ",", "."); ?></td>
+                                            <td><?= number_format($usr->gaji_total, 0, ",", "."); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
