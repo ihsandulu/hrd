@@ -343,7 +343,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_gakot">Gaji Kotor:</label>
                                     <div class="col-sm-10">
-                                        <input onchange="tlain()" type="number" class="form-control" id="user_gakot" name="user_gakot" placeholder="" value="<?= $user_gakot; ?>">
+                                        <input onchange="tlain()" type="text" class="form-control" id="user_gakot" name="user_gakot" placeholder="" value="<?= $user_gakot; ?>">
                                     </div>
                                 </div>
 
@@ -378,21 +378,21 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_ttransport">Tunjangan Transport:</label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" id="user_ttransport" name="user_ttransport" placeholder="" value="<?= $user_ttransport; ?>">
+                                        <input type="text" class="form-control" id="user_ttransport" name="user_ttransport" placeholder="" value="<?= $user_ttransport; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_thadir">Tunjangan Kehadiran:</label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" id="user_thadir" name="user_thadir" placeholder="" value="<?= $user_thadir; ?>">
+                                        <input type="text" class="form-control" id="user_thadir" name="user_thadir" placeholder="" value="<?= $user_thadir; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_tmakan">Tunjangan Makan:</label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" id="user_tmakan" name="user_tmakan" placeholder="" value="<?= $user_tmakan; ?>">
+                                        <input type="text" class="form-control" id="user_tmakan" name="user_tmakan" placeholder="" value="<?= $user_tmakan; ?>">
                                     </div>
                                 </div>
 
@@ -401,21 +401,21 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_gapok">Gaji Pokok:</label>
                                     <div class="col-sm-10">
-                                        <input onchange="tjabatan()" type="number" class="form-control" id="user_gapok" name="user_gapok" placeholder="" value="<?= $user_gapok; ?>">
+                                        <input onchange="tjabatan()" type="text" class="form-control" id="user_gapok" name="user_gapok" placeholder="" value="<?= $user_gapok; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_tjabatan">Tunjangan Jabatan:</label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" id="user_tjabatan" name="user_tjabatan" placeholder="" value="<?= $user_tjabatan; ?>">
+                                        <input type="text" class="form-control" id="user_tjabatan" name="user_tjabatan" placeholder="" value="<?= $user_tjabatan; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_insentif">Insentif:</label>
                                     <div class="col-sm-10">
-                                        <input type="number" class="form-control" id="user_insentif" name="user_insentif" placeholder="" value="<?= $user_insentif; ?>">
+                                        <input type="text" class="form-control" id="user_insentif" name="user_insentif" placeholder="" value="<?= $user_insentif; ?>">
                                     </div>
                                 </div>
 
