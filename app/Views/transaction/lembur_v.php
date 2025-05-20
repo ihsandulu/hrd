@@ -191,8 +191,8 @@
                                                         <th>Name</th>
                                                         <th>Status</th>
                                                         <th>Date</th>
-                                                        <th>Hari</th>
-                                                        <th>Keterangan</th>
+                                                        <!-- <th>Hari</th>
+                                                        <th>Keterangan</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -267,8 +267,8 @@
                                                             <td><?= $usr->user_nama; ?></td>
                                                             <td><?= $aktif[$usr->user_status]; ?></td>
                                                             <td><?= $usr->lembur_date; ?></td>
-                                                            <td><?= $usr->lembur_jam; ?> Jam</td>
-                                                            <td><?= $usr->lembur_type; ?></td>
+                                                            <!-- <td><?= $usr->lembur_jam; ?> Jam</td>
+                                                            <td><?= $usr->lembur_type; ?></td> -->
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>
@@ -354,15 +354,15 @@
                                                     <input required type="date" class="form-control" placeholder="Tanggal Mulai" name="lembur_date">
                                                 </div>
                                             </div>
-                                            <div class="col-2 row mb-2">
+                                            <!-- <div class="col-2 row mb-2">
                                                 <div class="col-3">
                                                     <label class="text-dark">Jml Jam</label>
                                                 </div>
                                                 <div class="col-9">
                                                     <input required type="number" class="form-control" placeholder="" name="lembur_jam">
                                                 </div>
-                                            </div>
-                                            <div class="col-3 row mb-2">
+                                            </div> -->
+                                           <!--  <div class="col-3 row mb-2">
                                                 <div class="col-3">
                                                     <label class="text-dark">Type.</label>
                                                 </div>
@@ -374,7 +374,7 @@
                                                         <option value="Akhir">Akhir</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- <div class="col-3 row mb-2">
                                                 <div class="col-12">
                                                     <input type="checkbox" class="" name="lembur_hcutibayar" value="1">
