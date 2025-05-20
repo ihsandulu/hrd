@@ -435,10 +435,6 @@ class api extends BaseController
                     $input["absen_masuk"] = "";
                     $input["absen_keluar"] = $datetime;
                 }
-                //delete jika sudah ada input
-                $wd["user_id"] = $uid;
-                $wd["absen_date"] = $input["absen_date"];
-                $this->db->table("absen")->where($wd)->delete();
 
                 $input["user_id"] = $uid;
                 $input["departemen_id"] = $user->departemen_id;
@@ -447,12 +443,7 @@ class api extends BaseController
                 $input["user_name"] = $user->user_nama;
                 $input["user_payrolltype"] = $user->user_payrolltype;
                 $input["user_lembur"] = $user->user_lembur;
-                if ($input["absen_masuk"] != "") {
-                    $input["absen_masuk"] = $input["absen_date"] . " " . date("H:i:s", strtotime($input["absen_masuk"]));
-                }
-                if ($input["absen_keluar"] != "") {
-                    $input["absen_keluar"] = $input["absen_date"] . " " . date("H:i:s", strtotime($input["absen_keluar"]));
-                }
+
 
                 //cari jml jam kerja
                 if ($input["absen_keluar"] != "") {
@@ -464,6 +455,10 @@ class api extends BaseController
                         $counta = $absen->getNumRows();
                         if ($counta > 0) {
                             $input["absen_masuk"] = $absen->getRow()->absen_masuk;
+
+                            //delete jika sudah ada input
+                            $wd["absen_id"] = $absen->getRow()->absen_id;
+                            $this->db->table("absen")->where($wd)->delete();
                         }
                     }
                     $masuk = new \DateTime($input["absen_masuk"]);
@@ -486,7 +481,20 @@ class api extends BaseController
                 $lembur = $this->db->table("lembur")->where($wlembur)->get();
                 $lemburjam = 0;
                 foreach ($lembur->getResult() as $lembur) {
-                    $lemburjam += $lembur->lembur_jam;
+                    // $lemburjam += $lembur->lembur_jam;
+                    $absen_date = $input["absen_date"];
+                    $day_number = date('N', strtotime($absen_date)); // 1 = Senin, ..., 7 = Minggu
+
+                    if ($day_number >= 1 && $day_number <= 4) {
+                        $kategori = 1; // Senin - Kamis
+                         $lemburjam = $input["absen_kerjajam"] - 9;
+                    } elseif ($day_number == 5) {
+                        $kategori = 2; // Jumat
+                         $lemburjam = $input["absen_kerjajam"] - 9.5;
+                    } else {
+                        $kategori = 3; // Sabtu - Minggu
+                         $lemburjam = $input["absen_kerjajam"];
+                    }
                 }
                 $input["absen_lemburjam"] = $lemburjam;
                 // print_r($input);die;

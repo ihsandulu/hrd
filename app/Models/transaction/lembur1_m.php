@@ -33,6 +33,11 @@ class lembur_m extends core_m
         if ($this->request->getPost("create") == "OK") {
             $user_ids = $this->request->getPost('user_id');
             $lembur_date = $this->request->getPost('lembur_date');
+            $lembur_jam = $this->request->getPost('lembur_jam');
+            $lembur_type = $this->request->getPost('lembur_type');
+
+
+
 
             if ($user_ids) {
                 //cari sisa hutang
@@ -46,9 +51,17 @@ class lembur_m extends core_m
                 // echo "<pre>";print_r($cutiuser);die;
 
                 foreach ($user_ids as $uid) {
-                    // Gunakan ON DUPLICATE KEY UPDATE (raw query)                            
-                    $sql = "INSERT IGNORE INTO lembur (user_id, lembur_date) VALUES (?, ?)";
-                    $this->db->query($sql, [$uid, $lembur_date]);
+                    // Gunakan ON DUPLICATE KEY UPDATE (raw query)
+                    $sql = "INSERT INTO lembur (user_id, lembur_date, lembur_jam, lembur_type)
+                            VALUES (:user_id:, :lembur_date:, :lembur_jam:, :lembur_type:)
+                            ON DUPLICATE KEY UPDATE  lembur_jam = :lembur_jam:";
+
+                    $this->db->query($sql, [
+                        'user_id' => $uid,
+                        'lembur_date' => $lembur_date,
+                        'lembur_jam' => $lembur_jam,
+                        'lembur_type' => $lembur_type,
+                    ]);
                     $this->db->table("user")->where("user_id", $uid)->update([
                         "user_cuti" => $cutiuser[$uid] + 1
                     ]);

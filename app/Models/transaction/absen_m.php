@@ -160,7 +160,20 @@ class absen_m extends core_m
                 $lembur = $this->db->table("lembur")->where($wlembur)->get();
                 $lemburjam = 0;
                 foreach ($lembur->getResult() as $lembur) {
-                    $lemburjam += $lembur->lembur_jam;
+                    // $lemburjam += $lembur->lembur_jam;
+                    $absen_date = $input["absen_date"];
+                    $day_number = date('N', strtotime($absen_date)); // 1 = Senin, ..., 7 = Minggu
+
+                    if ($day_number >= 1 && $day_number <= 4) {
+                        $kategori = 1; // Senin - Kamis
+                        $lemburjam = $input["absen_kerjajam"] - 9;
+                    } elseif ($day_number == 5) {
+                        $kategori = 2; // Jumat
+                        $lemburjam = $input["absen_kerjajam"] - 9.5;
+                    } else {
+                        $kategori = 3; // Sabtu - Minggu
+                        $lemburjam = $input["absen_kerjajam"];
+                    }
                 }
                 $input["absen_lemburjam"] = $lemburjam;
                 // print_r($input);die;

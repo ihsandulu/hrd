@@ -357,7 +357,7 @@ class gaji_m extends core_m
                     //pulang cepat
                     $input["gaji_pulangcepat"] = $absen->pulangcepat;
 
-                    //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramalan maka diganti dengan uang 8rb
+                    //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramadlan maka diganti dengan uang 8rb
                     $input["gaji_lain"] = $absen->gaji_lain;
 
                     //potongan lain-lain
