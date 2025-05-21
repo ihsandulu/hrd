@@ -40,11 +40,17 @@ class absen_m extends core_m
 
         //delete
         if ($this->request->getPost("delete") == "OK") {
-            $absen_id = $this->request->getPost("absen_id");
-            $this->db
-                ->table("absen")
-                ->delete(array("absen_id" =>  $absen_id));
-            $data["message"] = "Delete Success";
+             $absen_ids = $this->request->getPost("absen_id");
+            // dd($absen_ids);
+            if ($absen_ids) {
+                $this->db->table("absen")
+                    ->whereIn("absen_id", array_keys($absen_ids))
+                    ->delete();
+
+                $data['message'] = 'Delete Success';
+            } else {
+                $data['message'] = 'Tidak ada user yang cocok dengan filter tersebut.';
+            }
         }
 
         //submit
@@ -106,6 +112,7 @@ class absen_m extends core_m
                 //delete jika sudah ada input
                 $wd["user_id"] = $uid;
                 $wd["absen_date"] = $input["absen_date"];
+                $wd["absen_type"] = $input["absen_type"];
                 $this->db->table("absen")->where($wd)->delete();
 
                 $user = $this->db->table("user")
