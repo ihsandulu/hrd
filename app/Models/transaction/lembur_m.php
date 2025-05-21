@@ -15,11 +15,11 @@ class lembur_m extends core_m
 
 
         if ($this->request->getPost("delete") == "OK") {
-            $user_ids = $this->request->getPost("user_id");
-            // dd($user_ids);
-            if ($user_ids) {
+            $lembur_ids = $this->request->getPost("lembur_id");
+            // dd($lembur_ids);
+            if ($lembur_ids) {
                 $this->db->table("lembur")
-                    ->whereIn("user_id", array_keys($user_ids))
+                    ->whereIn("lembur_id", array_keys($lembur_ids))
                     ->delete();
 
                 $data['message'] = 'Delete Success';

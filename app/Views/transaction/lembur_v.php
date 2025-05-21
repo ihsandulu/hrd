@@ -105,8 +105,8 @@
                                                 <div class="col-3 row mb-2">
                                                     <div class="col-12">
                                                         <select class="form-control " name="departemen_id">
-                                                            <option value="">Departemen</option>
-                                                            <option value="all">All</option>
+                                                            <option value="" <?= ($idepartemen == "") ? "selected" : ""; ?>>Departemen</option>
+                                                            <option value="all" <?= ($idepartemen == "all") ? "selected" : ""; ?>>All</option>
                                                             <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
                                                             foreach ($departemen->getResult() as $departemen) { ?>
                                                                 <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
@@ -117,8 +117,8 @@
                                                 <div class="col-3 row mb-2">
                                                     <div class="col-12">
                                                         <select class="form-control " name="position_id">
-                                                            <option value="">Position</option>
-                                                            <option value="all">All</option>
+                                                            <option value="" <?= ($iposition == "") ? "selected" : ""; ?>>Position</option>
+                                                            <option value="all" <?= ($iposition == "all") ? "selected" : ""; ?>>All</option>
                                                             <?php $position = $this->db->table("position")->orderBy("position_name")->get();
                                                             foreach ($position->getResult() as $position) { ?>
                                                                 <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
@@ -154,7 +154,7 @@
                                                 <button type="button" id="togglePilih0" class="btn btn-block btn-info">Pilih Semua</button>
                                             </div>
                                             <div class="col-2">
-                                                <button onclick="return confirm(' you want to delete?');" type="submit" name="delete" value="OK" class="btn btn-block btn-danger">Delete Semua</button>
+                                                <button onclick="return confirm(' you want to delete?');" type="submit" name="delete" value="OK" class="btn btn-block btn-danger">Delete</button>
                                             </div>
                                             <script>
                                                 $(document).ready(function() {
@@ -257,7 +257,7 @@
                                                                         <input type="hidden" name="lembur_id" value="<?= $usr->lembur_id; ?>" /> -->
                                                                         </form>
                                                                     <?php } ?>
-                                                                    <input class="cpilih0" type="checkbox" id="p<?= $usr->user_id; ?>" name="user_id[<?= $usr->user_id; ?>]" value="<?= $usr->user_id; ?>" />
+                                                                    <input class="cpilih0" type="checkbox" id="p<?= $usr->lembur_id; ?>" name="lembur_id[<?= $usr->lembur_id; ?>]" value="<?= $usr->lembur_id; ?>" />
                                                                 </td>
                                                             <?php } ?>
                                                             <!-- <td><?= $no++; ?></td> -->
