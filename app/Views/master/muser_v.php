@@ -401,8 +401,23 @@
                                 <div class="form-group">
                                     <label class="control-label col-sm-2" for="user_gapok">Gaji Pokok:</label>
                                     <div class="col-sm-10">
-                                        <input onchange="tjabatan()" type="text" class="form-control" id="user_gapok" name="user_gapok" placeholder="" value="<?= $user_gapok; ?>">
+                                        <input onchange="rgapok()" type="text" class="form-control" id="user_gapok" name="user_gapok" placeholder="" value="<?= $user_gapok; ?>">
                                     </div>
+                                    <script>
+                                        function rgapok() {
+                                            let user_payrolltype = $("#user_payrolltype").val();
+                                            if (user_payrolltype == "bulanan") {
+                                                let user_gapok = $("#user_gapok").val();
+                                                let user_tjabatan = $("#user_tjabatan").val();
+                                                let user_ttransport = $("#user_ttransport").val();
+                                                let user_thadir = $("#user_thadir").val();
+                                                let user_tmakan = $("#user_tmakan").val();
+                                                let user_insentif = $("#user_insentif").val();
+                                                let user_gakot = parseFloat(user_gapok) + parseFloat(user_tjabatan) + parseFloat(user_ttransport) + parseFloat(user_thadir) + parseFloat(user_tmakan) + parseFloat(user_insentif);
+                                                $("#user_gakot").val(user_gakot);
+                                            }
+                                        }
+                                    </script>
                                 </div>
 
                                 <div class="form-group">
@@ -444,8 +459,8 @@
                                     <input type="file" class="" name="excelkaryawan">
                                 </div>
                                 &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
-                                &nbsp;<a href="<?=base_url("karyawan.xls");?>" class="btn btn-warning fa fa-download"> Download Template</a>
-                            
+                                &nbsp;<a href="<?= base_url("karyawan.xls"); ?>" class="btn btn-warning fa fa-download"> Download Template</a>
+
                             </form>
 
                             <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
@@ -454,7 +469,7 @@
                                     <input type="file" class="" name="excelcuti">
                                 </div>
                                 &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
-                                &nbsp;<a href="<?=base_url("sisacuti.xlsx");?>" class="btn btn-warning fa fa-download"> Download Template</a>
+                                &nbsp;<a href="<?= base_url("sisacuti.xlsx"); ?>" class="btn btn-warning fa fa-download"> Download Template</a>
                             </form>
 
                             <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
