@@ -122,17 +122,18 @@
                                                 let dari = $("#dari").val();
                                                 let ke = $("#ke").val();
                                                 // let host = window.location.hostname;
-                                                let port ='<?= $this->session->get("identity_port");?>';
-                                                let host ='<?= $this->session->get("identity_ip");?>';
-                                                alert("http://" + host + ":"+port+"/tarikabsen?dari=" + dari + "&ke=" + ke);
-                                                $.get("http://" + host + ":"+port+"/tarikabsen", {
+                                                let port = '<?= $this->session->get("identity_port"); ?>';
+                                                let host = '<?= $this->session->get("identity_ip"); ?>';
+                                                // alert("http://" + host + ":"+port+"/tarikabsen?dari=" + dari + "&ke=" + ke);
+                                                $.get("http://" + host + ":" + port + "/tarikabsen", {
                                                     dari: dari,
                                                     ke: ke
                                                 }).done(function(data) {
                                                     if (!intervalId) {
                                                         intervalId = setInterval(() => {
-                                                            $.get("http://" + host + ":"+port+"/status")
+                                                            $.get("http://" + host + ":" + port + "/status")
                                                                 .done(function(data) {
+                                                                    $("#eketerangan").html("Berjalan");
                                                                     const [etag, edate, etime, etotal] = data.split("|");
                                                                     document.getElementById("etag").textContent = etag;
                                                                     document.getElementById("edate").textContent = edate;
@@ -144,7 +145,7 @@
                                                                         if (stagnantCount >= threshold) {
                                                                             clearInterval(intervalId);
                                                                             intervalId = null;
-                                                                            alert("Selesai");
+                                                                            $("#eketerangan").html("Selesai");
                                                                         }
                                                                     } else {
                                                                         lastTotal = etotal;
@@ -169,7 +170,8 @@
                                         <b>ETAG:</b> <span id="etag"></span> |
                                         <b>EDATE:</b> <span id="edate"></span> |
                                         <b>ETIME:</b> <span id="etime"></span> |
-                                        <b>Total:</b> <span id="etotal"></span>
+                                        <b>Total:</b> <span id="etotal"></span> |
+                                        <b>Status:</b> <span id="eketerangan"></span>
                                     </div>
 
                                 </div>
