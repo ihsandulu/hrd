@@ -121,8 +121,7 @@
                                             function tarikdata() {
                                                 let dari = $("#dari").val();
                                                 let ke = $("#ke").val();
-                                                // let host = window.location.hostname;
-                                                let host = "localhost";
+                                                let host = window.location.hostname;
                                                 let port ='<?= $this->session->get("identity_port");?>';
                                                 alert("http://" + host + ":"+port+"/tarikabsen?dari=" + dari + "&ke=" + ke);
                                                 $.get("http://" + host + ":"+port+"/tarikabsen", {
