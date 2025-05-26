@@ -122,15 +122,15 @@
                                                 let dari = $("#dari").val();
                                                 let ke = $("#ke").val();
                                                 let host = window.location.hostname;
-                                                let port = $("#port").val();
-                                                alert("http://" + host + ":8080/tarikabsen?dari=" + dari + "&ke=" + ke);
-                                                $.get("http://" + host + ":8080/tarikabsen", {
+                                                let port ='<?= $this->session->get("identity_port");?>';
+                                                alert("http://" + host + ":"+port+"/tarikabsen?dari=" + dari + "&ke=" + ke);
+                                                $.get("http://" + host + ":"+port+"/tarikabsen", {
                                                     dari: dari,
                                                     ke: ke
                                                 }).done(function(data) {
                                                     if (!intervalId) {
                                                         intervalId = setInterval(() => {
-                                                            $.get("http://" + host + ":8080/status")
+                                                            $.get("http://" + host + ":"+port+"/status")
                                                                 .done(function(data) {
                                                                     const [etag, edate, etime, etotal] = data.split("|");
                                                                     document.getElementById("etag").textContent = etag;
