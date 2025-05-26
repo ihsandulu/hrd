@@ -63,6 +63,116 @@
 
                     <div class="accordion" id="faqAccordion">
                         <div class="card">
+                            <div class="card-header card-success" id="headingThree">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link btn-block text-left text-white bold <?= $panel1['buttonClass'] ?>" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="<?= $panel1['ariaExpanded'] ?>" aria-controls="collapseThree">
+                                        <i class="fa fa-arrow-down"></i> Tarik Data
+                                    </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapseThree" class="collapse <?= $panel1['collapseClass'] ?>" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                                <div class="card-body">
+                                    <div class="alert alert-dark">
+                                        <form method="get">
+                                            <div class="row">
+                                                <?php
+                                                $dari = date("Y-m-d");
+                                                $ke = date("Y-m-d");
+                                                $idepartemen = 0;
+                                                if (isset($_GET["dari"])) {
+                                                    $dari = $_GET["dari"];
+                                                }
+                                                if (isset($_GET["ke"])) {
+                                                    $ke = $_GET["ke"];
+                                                }
+                                                ?>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <label class="text-dark">Dari :</label>
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <input type="date" class="form-control" placeholder="Dari" id="dari" value="<?= $dari; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <div class="col-4 d-flex align-items-center">
+                                                            <label class="text-dark">Ke :</label>
+                                                        </div>
+                                                        <div class="col-8 d-flex align-items-center">
+                                                            <input type="date" class="form-control" placeholder="Ke" id="ke" value="<?= $ke; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12  mb-2 mt-2">
+                                                    <button value="OK" id="cari1" name="cari1" type="button" class="btn btn-block btn-primary" onclick="tarikdata()">Tarik Data</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <script>
+                                            let intervalId;
+                                            let lastTotal = null;
+                                            let stagnantCount = 0; // Berapa kali data tidak berubah
+                                            const threshold = 5; // Jumlah pengulangan (misal 5x = 500ms jika interval 100ms)
+
+                                            function tarikdata() {
+                                                let dari = $("#dari").val();
+                                                let ke = $("#ke").val();
+
+                                                $.get("http://localhost:8080/tarikabsen", {
+                                                    dari: dari,
+                                                    ke: ke
+                                                }).done(function(data) {
+                                                    if (!intervalId) {
+                                                        intervalId = setInterval(() => {
+                                                            $.get("http://localhost:8080/status")
+                                                                .done(function(data) {
+                                                                    const [etag, edate, etime, etotal] = data.split("|");
+                                                                    document.getElementById("etag").textContent = etag;
+                                                                    document.getElementById("edate").textContent = edate;
+                                                                    document.getElementById("etime").textContent = etime;
+                                                                    document.getElementById("etotal").textContent = etotal;
+
+                                                                    if (lastTotal === etotal) {
+                                                                        stagnantCount++;
+                                                                        if (stagnantCount >= threshold) {
+                                                                            clearInterval(intervalId);
+                                                                            intervalId = null;
+                                                                            alert("Selesai");
+                                                                        }
+                                                                    } else {
+                                                                        lastTotal = etotal;
+                                                                        stagnantCount = 0;
+                                                                    }
+                                                                })
+                                                                .fail(function() {
+                                                                    console.log("Gagal menghubungi server.");
+                                                                });
+                                                        }, 100);
+                                                    }
+                                                }).fail(function(xhr, status, error) {
+                                                    alert("Gagal: " + xhr.responseText + " " + status + " " + error);
+                                                    console.log(xhr.responseText);
+                                                });
+                                            }
+                                        </script>
+
+
+                                    </div>
+                                    <div class="">
+                                        <b>ETAG:</b> <span id="etag"></span> |
+                                        <b>EDATE:</b> <span id="edate"></span> |
+                                        <b>ETIME:</b> <span id="etime"></span> |
+                                        <b>Total:</b> <span id="etotal"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
                             <div class="card-header card-success" id="headingOne">
                                 <h2 class="mb-0">
                                     <button class="btn btn-link btn-block text-left text-white bold <?= $panel1['buttonClass'] ?>" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="<?= $panel1['ariaExpanded'] ?>" aria-controls="collapseOne">
@@ -309,7 +419,7 @@
                                                                             && session()->get("halaman")['5']['act_delete'] == "1"
                                                                         )
                                                                     ) { ?>
-                                                                       <!--  <form method="post" class="btn-action" style="">
+                                                                        <!--  <form method="post" class="btn-action" style="">
                                                                             <button class="btn btn-sm btn-danger delete" onclick="return confirm(' you want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
                                                                             <input type="hidden" name="absen_id" value="<?= $usr->absen_id; ?>" />
                                                                         </form> -->

@@ -473,7 +473,7 @@ class api extends BaseController
                 echo $input["absen_masuk"]."---";
                 echo $input["absen_keluar"];
                 die; */
-                //catatan: jumlah jam kerja tidak berhubungan dengan berapa jam lembur, dikarenakan lebur sudah terjadwal di menu lembur.
+                //catatan: jam kerja berhubungan dengan berapa jam lembur, yg  menentukan lembur tidaknya adalah jadwal lembur.
 
                 //ambil lembur
                 $wlembur["lembur_date"] = $input["absen_date"];
