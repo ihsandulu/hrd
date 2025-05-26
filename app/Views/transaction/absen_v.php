@@ -121,14 +121,14 @@
                                             function tarikdata() {
                                                 let dari = $("#dari").val();
                                                 let ke = $("#ke").val();
-
-                                                $.get("http://localhost:8080/tarikabsen", {
+                                                let host = window.location.hostname;
+                                                $.get("http://" + host + ":8080/tarikabsen", {
                                                     dari: dari,
                                                     ke: ke
                                                 }).done(function(data) {
                                                     if (!intervalId) {
                                                         intervalId = setInterval(() => {
-                                                            $.get("http://localhost:8080/status")
+                                                            $.get("http://" + host + ":8080/status")
                                                                 .done(function(data) {
                                                                     const [etag, edate, etime, etotal] = data.split("|");
                                                                     document.getElementById("etag").textContent = etag;
