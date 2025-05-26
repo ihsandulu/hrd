@@ -122,7 +122,7 @@
                                                 let dari = $("#dari").val();
                                                 let ke = $("#ke").val();
                                                 let host = window.location.hostname;
-                                                alert("http://" + host + ":8080/tarikabsen");
+                                                alert("http://" + host + ":8080/tarikabsen?dari=" + dari + "&ke=" + ke);
                                                 $.get("http://" + host + ":8080/tarikabsen", {
                                                     dari: dari,
                                                     ke: ke
