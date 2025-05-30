@@ -61,123 +61,134 @@
     $no = 1;
     foreach ($usr->getResult() as $usr) {
 
-    ?><div class="col-md-6 p-2">
+    ?><div class="col-6 p-2">
             <div class="row border m-2">
-                <div class="col-md-12 bold text-center"><?= strtoupper($this->session->get("identity_company")); ?></div>
-                <div class="col-md-12 border bold text-center">Salary Slip</div>
-                <div class="col-md-4">Periode</div>
-                <div class="col-md-8">: <?= $usr->gaji_print; ?></div>
-                <div class="col-md-4">Bagian</div>
-                <div class="col-md-8">: <?= $usr->departemen_name; ?></div>
-                <div class="col-md-4">Jabatan</div>
-                <div class="col-md-8">: <?= $usr->position_name; ?></div>
-                <div class="col-md-4">Nama</div>
-                <div class="col-md-8">: <?= $usr->user_name; ?></div>
-                <div class="col-md-4">Tgl Masuk</div>
-                <div class="col-md-8">: <?= $usr->user_masuk; ?></div>
-                <div class="col-md-4">Absensi</div>
-                <div class="col-md-8">: H:<?= $usr->gaji_hadir; ?>|C:<?= $usr->gaji_cuti; ?>|S:<?= $usr->gaji_sakit; ?>|I:<?= $usr->gaji_izin; ?>|A: <?= $usr->gaji_alpha; ?></div>
-                <div class="col-md-12 border-top p-0 m-0"></div>
+                <div class="col-12 bold text-center"><?= strtoupper($this->session->get("identity_company")); ?></div>
+                <div class="col-12 border bold text-center">Salary Slip</div>
+                <div class="col-4">Periode</div>
+                <div class="col-8">: <?= $usr->gaji_print; ?></div>
+                <div class="col-4">Bagian</div>
+                <div class="col-8">: <?= $usr->departemen_name; ?></div>
+                <div class="col-4">Jabatan</div>
+                <div class="col-8">: <?= $usr->position_name; ?></div>
+                <div class="col-4">Nama</div>
+                <div class="col-8">: <?= $usr->user_name; ?></div>
+                <div class="col-4">Tgl Masuk</div>
+                <div class="col-8">: <?= $usr->user_masuk; ?></div>
+                <div class="col-4">Absensi</div>
+                <div class="col-8">: H:<?= $usr->gaji_hadir; ?>|C:<?= $usr->gaji_cuti; ?>|S:<?= $usr->gaji_sakit; ?>|I:<?= $usr->gaji_izin; ?>|A: <?= $usr->gaji_alpha; ?></div>
+                <div class="col-12 border-top p-0 m-0"></div>
 
-                <div class="col-md-12 bold mt-2">UPAH TETAP</div>
-                <div class="col-md-4">Gaji Pokok</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_pokok, 0, ",", "."); ?></div>
-                <div class="col-md-4">T. Jabatan</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_tjabatan, 0, ",", "."); ?></div>
+                <div class="col-12 bold mt-2">UPAH TETAP</div>
+                <div class="col-4">Gaji Pokok</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_pokok, 0, ",", "."); ?></div>
+                <div class="col-4">T. Jabatan</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_tjabatan, 0, ",", "."); ?></div>
 
-                <div class="col-md-12 bold  mt-2">UPAH TDK TETAP</div>
-                <div class="col-md-4">T.Transport</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_ttransport, 0, ",", "."); ?></div>
+                <div class="col-12 bold  mt-2">UPAH TDK TETAP</div>
+                <div class="col-4">T.Transport</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_ttransport, 0, ",", "."); ?></div>
 
-                <div class="col-md-4">T.Kehadiran</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_tkehadiran, 0, ",", "."); ?></div>
-                <div class="col-md-4">T.Makan</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_tmakan, 0, ",", "."); ?></div>
+                <div class="col-4">T.Kehadiran</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_tkehadiran, 0, ",", "."); ?></div>
+                <div class="col-4">T.Makan</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_tmakan, 0, ",", "."); ?></div>
 
 
                 <?php if ($usr->user_payrolltype == "harian") { ?>
-                    <div class="col-md-4">Lembur OT1</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_ot1nominal, 0, ",", "."); ?></div>
-                    <div class="col-md-4">Lembur OT2</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_ot2nominal, 0, ",", "."); ?></div>
-                    <div class="col-md-4">Lembur OT3</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_ot3nominal, 0, ",", "."); ?></div>
-                    <div class="col-md-4">Lembur OT4</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_ot4nominal, 0, ",", "."); ?></div>
+                    <div class="col-4">Lembur OT1</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_ot1nominal, 0, ",", "."); ?></div>
+                    <div class="col-4">Lembur OT2</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_ot2nominal, 0, ",", "."); ?></div>
+                    <div class="col-4">Lembur OT3</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_ot3nominal, 0, ",", "."); ?></div>
+                    <div class="col-4">Lembur OT4</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_ot4nominal, 0, ",", "."); ?></div>
                 <?php } ?>
 
-                <div class="col-md-4">Insentif</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_insentive1, 0, ",", "."); ?></div>
-                <!-- <div class="col-md-4">Uang Libur</div>
-            <div class="col-md-2">: Rp </div>
-            <div class="col-md-6 text-right"><?= number_format(0, 0, ",", "."); ?></div> -->
-                <div class="col-md-4">Lain-lain</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_lain, 0, ",", "."); ?></div>
-                <div class="col-md-12 border-top"></div>
+                <div class="col-4">Insentif</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_insentive1, 0, ",", "."); ?></div>
+                <!-- <div class="col-4">Uang Libur</div>
+            <div class="col-2">: Rp </div>
+            <div class="col-6 text-right"><?= number_format(0, 0, ",", "."); ?></div> -->
+                <div class="col-4">Lain-lain</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_lain, 0, ",", "."); ?></div>
+                <div class="col-12 border-top"></div>
 
 
-                <div class="col-md-4">Gaji Kotor</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_kotor, 0, ",", "."); ?></div>
+                <div class="col-4">Gaji Kotor</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_kotor, 0, ",", "."); ?></div>
 
-                <div class="col-md-12 bold mt-2">POTONGAN</div>
-                <div class="col-md-4">Absence</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_alphanominal, 0, ",", "."); ?></div>
+                <div class="col-12 bold mt-2">POTONGAN</div>
+                <div class="col-4">Absence</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_alphanominal, 0, ",", "."); ?></div>
 
                 <?php if ($usr->user_payrolltype == "bulanan") { ?>
-                    <div class="col-md-4">T.Transport</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_ptransportasi, 0, ",", "."); ?></div>
-                    <div class="col-md-4">T.Kehadiran</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_pkehadiran, 0, ",", "."); ?></div>
-                    <div class="col-md-4">T.Makan</div>
-                    <div class="col-md-2">: Rp </div>
-                    <div class="col-md-6 text-right"><?= number_format($usr->gaji_pmakan, 0, ",", "."); ?></div>
+                    <div class="col-4">T.Transport</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_ptransportasi, 0, ",", "."); ?></div>
+                    <div class="col-4">T.Kehadiran</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_pkehadiran, 0, ",", "."); ?></div>
+                    <div class="col-4">T.Makan</div>
+                    <div class="col-2">: Rp </div>
+                    <div class="col-6 text-right"><?= number_format($usr->gaji_pmakan, 0, ",", "."); ?></div>
                 <?php } ?>
 
-                <div class="col-md-4">Inventaris</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_inventaris, 0, ",", "."); ?></div>
+                <div class="col-4">Inventaris</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_inventaris, 0, ",", "."); ?></div>
 
-                <div class="col-md-4">BPJS Kesehatan</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_bpjskesehatan, 0, ",", "."); ?></div>
-                <div class="col-md-4">BPJS JHT</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_bpjsjht, 0, ",", "."); ?></div>
-                <div class="col-md-4">BPJS Pensiun</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_bpjspensiun, 0, ",", "."); ?></div>
-                <div class="col-md-4">PPH21</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_pph21, 0, ",", "."); ?></div>
-                <div class="col-md-4">Lain-lain</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_plain, 0, ",", "."); ?></div>
-                <div class="col-md-12 border-top"></div>
+                <div class="col-4">BPJS Kesehatan</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_bpjskesehatan, 0, ",", "."); ?></div>
+                <div class="col-4">BPJS JHT</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_bpjsjht, 0, ",", "."); ?></div>
+                <div class="col-4">BPJS Pensiun</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_bpjspensiun, 0, ",", "."); ?></div>
+                <div class="col-4">PPH21</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_pph21, 0, ",", "."); ?></div>
+                <div class="col-4">Lain-lain</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_plain, 0, ",", "."); ?></div>
+                <div class="col-12 border-top"></div>
 
 
-                <div class="col-md-4">Potongan Total</div>
-                <div class="col-md-2">: Rp </div>
-                <div class="col-md-6 text-right"><?= number_format($usr->gaji_potongantotal, 0, ",", "."); ?></div>
-                <div class="col-md-12 border-top"></div>
+                <div class="col-4">Potongan Total</div>
+                <div class="col-2">: Rp </div>
+                <div class="col-6 text-right"><?= number_format($usr->gaji_potongantotal, 0, ",", "."); ?></div>
+                <div class="col-12 border-top"></div>
 
-                <div class="col-md-4 bold">GAJI TOTAL</div>
-                <div class="col-md-2 bold">: Rp </div>
-                <div class="col-md-6 text-right bold"><?= number_format($usr->gaji_total, 0, ",", "."); ?></div>
+                <div class="col-4 bold">Pengembalian DTP</div>
+                <div class="col-2 bold">: Rp </div>
+                <div class="col-6 text-right bold"><?= number_format($usr->gaji_pph21, 0, ",", "."); ?></div>
+
+                <div class="col-4 bold">GAJI TOTAL</div>
+                <div class="col-2 bold">: Rp </div>
+                <div class="col-6 text-right bold"><?= number_format($usr->gaji_thp, 0, ",", "."); ?></div>
+
+                <div class="col-12" style="font-size: 12px; font-style:italic;"><?=$this->session->get("identity_city");?>, <?=date("d F Y",strtotime($usr->gaji_date));?></div>
+
+                <div class="col-6 bold" style="font-size: 12px; font-style:italic;"></div>
+                <div class="col-6 bold text-center" style="font-size: 12px; font-style:italic; margin-bottom:30px;">Diterima Oleh</div>
+                <div class="col-6 bold" style="font-size: 12px; font-style:italic;"></div>
+                <div class="col-6 bold text-center" style="font-size: 12px; font-style:italic;"><?=$usr->user_name;?></div>
             </div>
         </div>
     <?php } ?>

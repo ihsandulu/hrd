@@ -50,6 +50,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="control-label col-sm-2" for="identity_city">City:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" autofocus class="form-control" id="identity_city" name="identity_city" placeholder="" value="<?= $identity_city; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="control-label col-sm-2" for="identity_address">Alamat:</label>
                                     <div class="col-sm-10">
                                         <input type="text" autofocus class="form-control" id="identity_address" name="identity_address" placeholder="" value="<?= $identity_address; ?>">
@@ -126,12 +133,12 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class="form-group">
-                                    <label class="control-label col-sm-2" for="identity_about">About:</label>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="identity_bupensiun">Batas Upah Pensiun:</label>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control" id="identity_about" name="identity_about" placeholder="Mis:Barang tidak dapat ditukar."><?= $identity_about; ?></textarea>
+                                        <input type="text" autofocus class="form-control" id="identity_bupensiun" name="identity_bupensiun" placeholder="" value="<?= $identity_bupensiun; ?>">
                                     </div>
-                                </div> -->
+                                </div>
 
                                 <div class="form-group">
                                     <label class="control-label col-sm-12" for="identity_logo">Logo: (Max 134 X 134)</label>

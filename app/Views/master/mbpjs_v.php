@@ -78,6 +78,13 @@
                                 </div>
 
                                 <div class="form-group ">
+                                    <label class="control-label col-sm-2" for="bpjs_discpekerja">Diskon Pekerja(%):</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control " id="bpjs_discpekerja" name="bpjs_discpekerja" placeholder="" value="<?= $bpjs_discpekerja; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group ">
                                     <label class="control-label col-sm-2" for="bpjs_perusahaan">Prosentase Perusahaan (%):</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control " id="bpjs_perusahaan" name="bpjs_perusahaan" placeholder="" value="<?= $bpjs_perusahaan; ?>">
@@ -85,9 +92,9 @@
                                 </div>
 
                                 <div class="form-group ">
-                                    <label class="control-label col-sm-2" for="bpjs_discount">Diskon (%):</label>
+                                    <label class="control-label col-sm-2" for="bpjs_discperusahaan">Diskon Perusahaan(%):</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control " id="bpjs_discount" name="bpjs_discount" placeholder="" value="<?= $bpjs_discount; ?>">
+                                        <input type="text" class="form-control " id="bpjs_discperusahaan" name="bpjs_discperusahaan" placeholder="" value="<?= $bpjs_discperusahaan; ?>">
                                     </div>
                                 </div>
 
@@ -119,8 +126,9 @@
                                         <!-- <th>No.</th> -->
                                         <th>Nama BPJS</th>
                                         <th>Prosentase Pekerja (%)</th>
+                                        <th>Diskon Pekerja(%)</th>
                                         <th>Prosentase Perusahaan (%)</th>
-                                        <th>Diskon (%)</th>
+                                        <th>Diskon Perusahaan(%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -181,8 +189,9 @@
                                             <!-- <td><?= $no++; ?></td> -->
                                             <td class=""><?= $usr->bpjs_name; ?></td>
                                             <td class=""><?= $usr->bpjs_pekerja; ?></td>
+                                            <td class=""><?= $usr->bpjs_discpekerja; ?></td>
                                             <td class=""><?= $usr->bpjs_perusahaan; ?></td>
-                                            <td class=""><?= $usr->bpjs_discount; ?></td>
+                                            <td class=""><?= $usr->bpjs_discperusahaan; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

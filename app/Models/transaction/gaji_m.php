@@ -120,7 +120,8 @@ class gaji_m extends core_m
             foreach ($bpjs->getResult() as $bpjs) {
                 $arbpjs[$bpjs->bpjs_name]["pekerja"] = $bpjs->bpjs_pekerja;
                 $arbpjs[$bpjs->bpjs_name]["perusahaan"] = $bpjs->bpjs_perusahaan;
-                $arbpjs[$bpjs->bpjs_name]["diskon"] = $bpjs->bpjs_discount;
+                $arbpjs[$bpjs->bpjs_name]["pekdiskon"] = $bpjs->bpjs_discpekerja;
+                $arbpjs[$bpjs->bpjs_name]["perdiskon"] = $bpjs->bpjs_discperusahaan;
             }
 
 
@@ -141,7 +142,7 @@ class gaji_m extends core_m
                 $andpos = " AND";
             } else {
                 $position = "";
-                $andpos = "";
+                if($anddep!=""){$andpos = " AND";}else{$andpos = "";}                
             }
 
             //user
@@ -151,7 +152,7 @@ class gaji_m extends core_m
                 $anduser = " ";
             } else {
                 $user = "";
-                $anduser = "";
+                if($anddep!="" || $andpos!=""){$anduser = " AND";}else{$anduser = "";}
             }
 
             //tahun
@@ -219,6 +220,24 @@ class gaji_m extends core_m
                 $absen = $this->db->query($sql);
                 // echo $this->db->getLastQuery();die;
                 foreach ($absen->getResult() as $absen) {
+                    //lain-lain
+                    $mlain = 0;
+                    $plain = 0;
+                    $lain = $this->db
+                        ->table("lain")
+                        ->where("user_id", $user_id)
+                        ->where("lain_date >=", $dari)
+                        ->where("lain_date <=", $ke)
+                        ->select("SUM(if(lain_type=1,lain_nominal,0))AS mlain, 
+                          SUM(if(lain_type=2,lain_nominal,0))AS plain")
+                        ->get();
+                    foreach ($lain->getResult() as $lain) {
+                        $mlain = $lain->mlain;
+                        $plain = $lain->plain;
+                    }
+                    $input["gaji_lain"] = $mlain;
+                    $input["gaji_plain"] = $plain;
+
                     $input["user_payrolltype"] = $absen->user_payrolltype;
                     $input["gaji_bulan"] = $this->request->getPost("gaji_bulan");
                     $input["gaji_tahun"] = $this->request->getPost("gaji_tahun");
@@ -252,8 +271,12 @@ class gaji_m extends core_m
                         $jabatan = $absen->user_tjabatan;
                         $insentif = $absen->insentif;
                     }
-
                     $input["gaji_tjabatan"] = $jabatan;
+
+                    //penghasilan tetap
+                    $petetap = $absen->user_gapok + $jabatan;
+                    $input["gaji_petetap"] = $petetap;
+
                     $input["gaji_ttransport"] = $transportasi;
                     $input["gaji_insentive1"] = $insentif;
                     $input["gaji_insentive2"] = 0;
@@ -269,8 +292,15 @@ class gaji_m extends core_m
                     $input["gaji_ot4jam"] = $absen->gaji_ot4jam;
                     $input["gaji_ot4nominal"] = $absen->gaji_ot4nominal;
 
-                    //gakot
-                    if ($absen->user_payrolltype == "bulanan") {
+
+                    //penghasilan tidak tetap
+                    $pettetap = $transportasi + $kehadiran + $makan + $insentif + $mlain + $absen->gaji_ot1nominal + $absen->gaji_ot2nominal + $absen->gaji_ot3nominal + $absen->gaji_ot4nominal;
+                    $input["gaji_pettetap"] = $pettetap;
+
+                    //gakot            
+                    $gajikotor = $petetap + $pettetap;
+
+                    /* if ($absen->user_payrolltype == "bulanan") {
                         $gajikotor = $absen->user_gakot;
                     }
                     if ($absen->user_payrolltype == "harian") {
@@ -279,7 +309,7 @@ class gaji_m extends core_m
                         $gajikotor += $absen->gaji_ot2nominal;
                         $gajikotor += $absen->gaji_ot3nominal;
                         $gajikotor += $absen->gaji_ot4nominal;
-                    }
+                    } */
                     $input["gaji_kotor"] = $gajikotor;
 
                     $input["gaji_alphanominal"] = $absen->gaji_alphanominal;
@@ -287,55 +317,127 @@ class gaji_m extends core_m
                     $input["gaji_pkehadiran"] = $absen->gaji_pkehadiran;
                     $input["gaji_pmakan"] = $absen->gaji_pmakan;
 
-                    if(isset($arinventarist[$absen->user_id])){
+                    if (isset($arinventarist[$absen->user_id])) {
                         $gaji_inventaris = $arinventarist[$absen->user_id];
-                    }else{
+                    } else {
                         $gaji_inventaris = 0;
                     }
                     $input["gaji_inventaris"] = $gaji_inventaris;
 
                     $input["gaji_serikatburuh"] = 0;
 
+
+                    $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"];
+                    $input["gaji_potonganasli"] = $potonganasli;
+
                     //bpjs
                     //gapok+t.jabatan
+                    //penghasilan tetap
                     $gbpjs = $input["gaji_pokok"] + $jabatan;
+
+                    //jika melebihi batas upah maksimal pensiun maka yg dipakai batas upah maksimal pensiun
+                    $bupensiun = $this->db->table("identity")->get()->getRow()->identity_bupensiun;
+                    $gbpjsp = 0;
+                    if ($gbpjs > $bupensiun) {
+                        $gbpjsp = $bupensiun;
+                    } else {
+                        $gbpjsp = $gbpjs;
+                    }
+
+                    //Premi Asuransi Pemberi Kerja
                     //kesehatan
-                    if ($arbpjs["Kesehatan"]["diskon"] > 0) {
-                        $dkesehatan = $arbpjs["Kesehatan"]["diskon"] / 100;
+                    if ($arbpjs["Kesehatan"]["perdiskon"] > 0) {
+                        $dkesehatanp = $arbpjs["Kesehatan"]["perdiskon"] / 100;
+                    } else {
+                        $dkesehatanp = 1;
+                    }
+                    $input["gaji_pbpjskesehatan"] = ($arbpjs["Kesehatan"]["perusahaan"] / 100 * $gbpjs) * $dkesehatanp;
+                    //jht
+                    if ($arbpjs["JHT"]["perdiskon"] > 0) {
+                        $dJHTp = $arbpjs["JHT"]["perdiskon"] / 100;
+                    } else {
+                        $dJHTp = 1;
+                    }
+                    $input["gaji_pbpjsjht"] = ($arbpjs["JHT"]["perusahaan"] / 100 * $gbpjs) * $dJHTp;
+                    //jkk
+                    if ($arbpjs["JKK"]["perdiskon"] > 0) {
+                        $dJKKp = $arbpjs["JKK"]["perdiskon"] / 100;
+                    } else {
+                        $dJKKp = 1;
+                    }
+                    $input["gaji_pbpjsjkk"] = ($arbpjs["JKK"]["perusahaan"] / 100 * $gbpjs) * $dJKKp;
+                    //jkm
+                    if ($arbpjs["JKM"]["perdiskon"] > 0) {
+                        $dJKMp = $arbpjs["JKM"]["perdiskon"] / 100;
+                    } else {
+                        $dJKMp = 1;
+                    }
+                    $input["gaji_pbpjsjkm"] = ($arbpjs["JKM"]["perusahaan"] / 100 * $gbpjs) * $dJKMp;
+                    //pensiun
+                    if ($arbpjs["JP"]["perdiskon"] > 0) {
+                        $dJPp = $arbpjs["JP"]["perdiskon"] / 100;
+                    } else {
+                        $dJPp = 1;
+                    }
+                    $input["gaji_pbpjspensiun"] = ($arbpjs["JP"]["perusahaan"] / 100 * $gbpjsp) * $dJPp;
+
+                    $penghasilanpbpjs = $input["gaji_pbpjskesehatan"] +
+                        $input["gaji_pbpjsjht"] +
+                        $input["gaji_pbpjsjkk"] +
+                        $input["gaji_pbpjsjkm"] +
+                        $input["gaji_pbpjspensiun"];
+                    $input["gaji_penghasilanpbpjs"] = $penghasilanpbpjs;
+
+
+
+
+                    //Premi Asuransi dipotong karyawan (BPJS Pengurang)
+                    //kesehatan
+                    if ($arbpjs["Kesehatan"]["pekdiskon"] > 0) {
+                        $dkesehatan = $arbpjs["Kesehatan"]["pekdiskon"] / 100;
                     } else {
                         $dkesehatan = 1;
                     }
                     $input["gaji_bpjskesehatan"] = ($arbpjs["Kesehatan"]["pekerja"] / 100 * $gbpjs) * $dkesehatan;
                     //jht
-                    if ($arbpjs["JHT"]["diskon"] > 0) {
-                        $dJHT = $arbpjs["JHT"]["diskon"] / 100;
+                    if ($arbpjs["JHT"]["pekdiskon"] > 0) {
+                        $dJHT = $arbpjs["JHT"]["pekdiskon"] / 100;
                     } else {
                         $dJHT = 1;
                     }
                     $input["gaji_bpjsjht"] = ($arbpjs["JHT"]["pekerja"] / 100 * $gbpjs) * $dJHT;
                     //jkk
-                    if ($arbpjs["JKK"]["diskon"] > 0) {
-                        $dJKK = $arbpjs["JKK"]["diskon"] / 100;
+                    if ($arbpjs["JKK"]["pekdiskon"] > 0) {
+                        $dJKK = $arbpjs["JKK"]["pekdiskon"] / 100;
                     } else {
                         $dJKK = 1;
                     }
                     $input["gaji_bpjsjkk"] = ($arbpjs["JKK"]["pekerja"] / 100 * $gbpjs) * $dJKK;
                     //jkm
-                    if ($arbpjs["JKM"]["diskon"] > 0) {
-                        $dJKM = $arbpjs["JKM"]["diskon"] / 100;
+                    if ($arbpjs["JKM"]["pekdiskon"] > 0) {
+                        $dJKM = $arbpjs["JKM"]["pekdiskon"] / 100;
                     } else {
                         $dJKM = 1;
                     }
                     $input["gaji_bpjsjkm"] = ($arbpjs["JKM"]["pekerja"] / 100 * $gbpjs) * $dJKM;
                     //pensiun
-                    if ($arbpjs["JP"]["diskon"] > 0) {
-                        $dJP = $arbpjs["JP"]["diskon"] / 100;
+                    if ($arbpjs["JP"]["pekdiskon"] > 0) {
+                        $dJP = $arbpjs["JP"]["pekdiskon"] / 100;
                     } else {
                         $dJP = 1;
                     }
-                    $input["gaji_bpjspensiun"] = ($arbpjs["JP"]["pekerja"] / 100 * $gbpjs) * $dJP;
+                    $input["gaji_bpjspensiun"] = ($arbpjs["JP"]["pekerja"] / 100 * $gbpjsp) * $dJP;
+
+                    $potonganbpjs = $input["gaji_bpjskesehatan"] +
+                        $input["gaji_bpjsjht"] +
+                        $input["gaji_bpjsjkk"] +
+                        $input["gaji_bpjsjkm"] +
+                        $input["gaji_bpjspensiun"];
+                    $input["gaji_potonganbpjs"] = $potonganbpjs;
 
                     //persentase pph
+                    $bruto = $input["gaji_kotor"] + $input["gaji_penghasilanpbpjs"] - $input["gaji_potonganasli"];
+                    $input["gaji_bruto"] = $bruto;
                     $ter = $this->db
                         ->table("ter")
                         ->where("ter_jenis", $absen->user_tanggunganjenis)
@@ -345,9 +447,9 @@ class gaji_m extends core_m
                     $pph21 = 0;
                     foreach ($ter->getResult() as $ter) {
                         $persen = $ter->ter_persen;
-                        $pph21 = $input["gaji_kotor"] * $persen / 100;
+                        $pph21 = $input["gaji_bruto"] * $persen / 100;
                     }
-
+                    $input["gaji_ter"] = $persen;
                     $input["gaji_pph21"] = $pph21;
 
                     $input["gaji_date"] = date("Y-m-d");
@@ -363,13 +465,13 @@ class gaji_m extends core_m
                     //potongan lain-lain
                     $input["gaji_plain"] = 0;
 
-                    $gaji_potongantotal = $input["gaji_alphanominal"] + $input["gaji_inventaris"] + $input["gaji_serikatburuh"] + $input["gaji_bpjskesehatan"] + $input["gaji_bpjsjht"] + $input["gaji_bpjspensiun"] + $input["gaji_pph21"] + $input["gaji_plain"];
+                    $gaji_potongantotal = $input["gaji_potonganasli"] + $input["gaji_pph21"] + $input["gaji_potonganbpjs"];
                     $input["gaji_potongantotal"] = $gaji_potongantotal;
 
                     $gaji_total = $input["gaji_kotor"] - $input["gaji_potongantotal"];
 
                     $input["gaji_total"] = $gaji_total;
-
+                    $input["gaji_thp"] = $gaji_total + $pph21;
                     $input["gaji_print"] = $this->request->getPost("gaji_print");
 
                     $builder = $this->db->table('gaji');

@@ -20,6 +20,10 @@
         width: auto;
         height: auto;
     }
+
+    .text-success {
+        color: cadetblue !important;
+    }
 </style>
 
 <div class='container-fluid'>
@@ -95,6 +99,411 @@
                             </form>
                         </div>
                     <?php } else { ?>
+                        <?php
+                        function accordionState($active = false)
+                        {
+                            return [
+                                'buttonClass' => $active ? '' : 'collapsed',
+                                'ariaExpanded' => $active ? 'true' : 'false',
+                                'collapseClass' => $active ? 'collapse show' : 'collapse',
+                            ];
+                        }
+                        if (isset($_GET["dari"])) {
+                            $panel1 = accordionState(true);
+                            $panel2 = accordionState(false);
+                        } else {
+                            $panel1 = accordionState(false);
+                            $panel2 = accordionState(true);
+                        }
+
+                        ?>
+                        <div class="accordion" id="faqAccordion">
+                            <div class="card">
+                                <div class="card-header card-success" id="headingThree">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link btn-block text-left text-white bold <?= $panel1['buttonClass'] ?>" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="<?= $panel1['ariaExpanded'] ?>" aria-controls="collapseThree">
+                                            <i class="fa fa-arrow-down"></i> Simulasi Penggajian
+                                        </button>
+                                    </h2>
+                                </div>
+
+                                <div id="collapseThree" class="collapse <?= $panel1['collapseClass'] ?>" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                                    <div class="card-body">
+                                        <div class="alert alert-dark">
+                                            <form method="get">
+                                                <div class="row">
+                                                    <div class="col-4 row mb-2">
+                                                        <div class="col-4">
+                                                            <label class="text-dark">Priode :</label>
+                                                        </div>
+                                                        <?php
+                                                        if (isset($_GET["dari"])) {
+                                                            $dari = $_GET["dari"];
+                                                        } else {
+                                                            $dari = date("Y-m-01");
+                                                        }
+                                                        if (isset($_GET["ke"])) {
+                                                            $ke = $_GET["ke"];
+                                                        } else {
+                                                            $ke = date("Y-m-t");
+                                                        }
+                                                        ?>
+                                                        <div class="col-4">
+                                                            <input type="date" class="form-control" placeholder="Dari" id="dari" name="dari" value="<?= $dari; ?>">
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <input type="date" class="form-control" placeholder="Ke" id="ke" name="ke" value="<?= $ke; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4 row mb-2">
+                                                        <div class="col-3">
+                                                            <label class="text-dark">User : </label>
+                                                        </div>
+                                                        <div class="col-9">
+                                                            <select class="form-control select" id="user_ids" name="user_id" style="width: 500px;">
+                                                                <?php
+                                                                $user = $this->db->table("user")
+                                                                    ->join("departemen", "departemen.departemen_id = user.departemen_id", "left")
+                                                                    ->join("position", "position.position_id = user.position_id", "left")
+                                                                    ->where("user_status", "1")
+                                                                    ->orderBy("user_nama")->get(); ?>
+                                                                <option value="">Semua User</option>
+                                                                <?php foreach ($user->getResult() as $user) { ?>
+                                                                    <option value="<?= $user->user_id; ?>" <?= ($user_id == $user->user_id) ? "selected" : ""; ?>><?= $user->user_nama; ?> (<?= $user->departemen_name; ?> - <?= $user->position_name; ?>)</option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 row">
+                                                        <div class="col-12">
+                                                            <button type="button" name="generate" value="OK" class="btn btn-block btn-primary" onclick="return simulasi()">Simulasi</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <script>
+                                                function formatRupiah(angka) {
+                                                    return new Intl.NumberFormat('id-ID').format(angka);
+                                                }
+
+                                                function simulasi() {
+                                                    let dari = $("#dari").val();
+                                                    let ke = $("#ke").val();
+                                                    let user = $("#user_ids").val();
+                                                    // alert("<?= base_url("api/simulasi"); ?>?dari=" + dari + "&ke=" + ke + "&user_id=" + user);
+                                                    $.get("<?= base_url("api/simulasi"); ?>", {
+                                                        dari: dari,
+                                                        ke: ke,
+                                                        user_id: user
+                                                    }).done(function(data) {
+                                                        $("#gaji_pokok").html(formatRupiah(data.gaji_pokok));
+                                                        $("#gaji_tjabatan").html(formatRupiah(data.gaji_tjabatan));
+
+                                                        $("#petetap").html(formatRupiah(data.gaji_petetap));
+
+                                                        $("#gaji_tmakan").html(formatRupiah(data.gaji_tmakan));
+                                                        $("#gaji_tkehadiran").html(formatRupiah(data.gaji_tkehadiran));
+                                                        $("#gaji_ttransport").html(formatRupiah(data.gaji_ttransport));
+                                                        $("#gaji_lain").html(formatRupiah(data.gaji_lain));
+
+
+                                                        $("#pettetap").html(formatRupiah(data.gaji_pettetap));
+
+
+                                                        $("#gaji_kotor").html(formatRupiah(data.gaji_kotor));
+                                                        $("#totalpenghasilan").html(formatRupiah(data.gaji_kotor));
+                                                        
+
+
+                                                        // potongan
+                                                        $("#gaji_alphanominal").html(formatRupiah(data.gaji_alphanominal));
+                                                        $("#gaji_ptransportasi").html(formatRupiah(data.gaji_ptransportasi));
+                                                        $("#gaji_pkehadiran").html(formatRupiah(data.gaji_pkehadiran));
+                                                        $("#gaji_pmakan").html(formatRupiah(data.gaji_pmakan));
+                                                        $("#gaji_inventaris").html(formatRupiah(data.gaji_inventaris));
+
+                                                        
+                                                        $("#potongan").html(formatRupiah(data.gaji_potonganasli));
+
+                                                        //potongan + penghasilan tetap
+                                                        let pottetap = parseFloat(data.gaji_petetap) + parseFloat(data.gaji_potonganasli);
+                                                        $("#pottetap").html(formatRupiah(pottetap));
+
+
+                                                        let bpjs = data.masterbpjs;
+
+                                                        //Premi Asuransi Pemberi Kerja
+                                                        $("#gaji_pbpjskesehatan").html(formatRupiah(data.gaji_pbpjskesehatan));
+                                                        $("#gaji_pbpjsjht").html(formatRupiah(data.gaji_pbpjsjht));
+                                                        $("#gaji_pbpjsjkk").html(formatRupiah(data.gaji_pbpjsjkk));
+                                                        $("#gaji_pbpjsjkm").html(formatRupiah(data.gaji_pbpjsjkm));
+                                                        $("#gaji_pbpjspensiun").html(formatRupiah(data.gaji_pbpjspensiun));
+
+                                                        let pbpjs = parseFloat(data.gaji_pbpjskesehatan) + parseFloat(data.gaji_pbpjsjht) + parseFloat(data.gaji_pbpjsjkk) + parseFloat(data.gaji_pbpjsjkm) + parseFloat(data.gaji_pbpjspensiun);
+                                                        $("#pbpjs").html(formatRupiah(pbpjs));
+
+                                                        $("#rKesehatan").html(formatRupiah(bpjs.Kesehatan.perusahaan));
+                                                        $("#drKesehatan").html(formatRupiah(bpjs.Kesehatan.perdiskon));
+                                                        $("#rJHT").html(formatRupiah(bpjs.JHT.perusahaan));
+                                                        $("#drJHT").html(formatRupiah(bpjs.JHT.perdiskon));
+                                                        $("#rJKK").html(formatRupiah(bpjs.JKK.perusahaan));
+                                                        $("#drJKK").html(formatRupiah(bpjs.JKK.perdiskon));
+                                                        $("#rJKM").html(formatRupiah(bpjs.JKM.perusahaan));
+                                                        $("#drJKM").html(formatRupiah(bpjs.JKM.perdiskon));
+                                                        $("#rJP").html(formatRupiah(bpjs.JP.perusahaan));
+                                                        $("#drJP").html(formatRupiah(bpjs.JP.perdiskon));
+
+                                                        //Premi Asuransi Pekerja
+                                                        $("#gaji_bpjskesehatan").html(formatRupiah(data.gaji_bpjskesehatan));
+                                                        $("#gaji_bpjsjht").html(formatRupiah(data.gaji_bpjsjht));
+                                                        $("#gaji_bpjsjkk").html(formatRupiah(data.gaji_bpjsjkk));
+                                                        $("#gaji_bpjsjkm").html(formatRupiah(data.gaji_bpjsjkm));
+                                                        $("#gaji_bpjspensiun").html(formatRupiah(data.gaji_bpjspensiun));
+
+                                                        let tbpjs = parseFloat(data.gaji_bpjskesehatan) + parseFloat(data.gaji_bpjsjht) + parseFloat(data.gaji_bpjsjkk) + parseFloat(data.gaji_bpjsjkm) + parseFloat(data.gaji_bpjspensiun);
+                                                        $("#tbpjs").html(formatRupiah(tbpjs));
+
+                                                        $("#kKesehatan").html(formatRupiah(bpjs.Kesehatan.pekerja));
+                                                        $("#dkKesehatan").html(formatRupiah(bpjs.Kesehatan.pekdiskon));
+                                                        $("#kJHT").html(formatRupiah(bpjs.JHT.pekerja));
+                                                        $("#dkJHT").html(formatRupiah(bpjs.JHT.pekdiskon));
+                                                        $("#kJKK").html(formatRupiah(bpjs.JKK.pekerja));
+                                                        $("#dkJKK").html(formatRupiah(bpjs.JKK.pekdiskon));
+                                                        $("#kJKM").html(formatRupiah(bpjs.JKM.pekerja));
+                                                        $("#dkJKM").html(formatRupiah(bpjs.JKM.pekdiskon));
+                                                        $("#kJP").html(formatRupiah(bpjs.JP.pekerja));
+                                                        $("#dkJP").html(formatRupiah(bpjs.JP.pekdiskon));
+
+                                                        $("#bruto").html(formatRupiah(data.gaji_bruto));
+                                                        $("#gaji_pph21").html(formatRupiah(data.gaji_pph21));
+                                                        $("#gaji_ter").html(formatRupiah(data.gaji_ter));
+
+                                                        $("#gaji_potongantotal").html(formatRupiah(data.gaji_potongantotal));
+                                                        $("#gaji_total").html(formatRupiah(data.gaji_total));
+                                                        $("#gaji_thp").html(formatRupiah(data.gaji_thp));
+
+                                                    }).fail(function(xhr, status, error) {
+                                                        alert("Gagal: " + xhr.responseText + " " + status + " " + error);
+                                                        console.log(xhr.responseText);
+                                                    });
+                                                }
+                                            </script>
+
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">Gaji Pokok: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_pokok"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Tunjangan Jabatan: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_tjabatan"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <hr />
+                                            <div class="col-4 text-info"><b>Penghasilan Tetap:</b> </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right text-info"><b><span id="petetap"></span></b> </div>
+                                            <div class="col-5"></div>
+                                            <hr />
+
+                                            <hr />
+                                            <div class="col-4">Tunjangan Makan: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_tmakan"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Tunjangan Kahadiran: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_tkehadiran"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Tunjangan Transport: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_ttransport"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Lain-lain: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_lain"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <hr />
+                                            <div class="col-4 text-info"><b>Penghasilan Tidak Tetap:</b> </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right text-info"><b><span id="pettetap"></span></b></div>
+                                            <div class="col-5"></div>
+
+                                            <hr />
+                                            <div class="col-4 text-primary"><b>Gaji Kotor:</b> </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right text-primary"><b><span id="gaji_kotor"></span></b></div>
+                                            <div class="col-5"></div>
+                                            <hr />
+
+                                            <!-- BPJS Perusahaan-->
+                                            <div class="col-4 text-success">Kesehatan: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_pbpjskesehatan"></span> </div>
+                                            <div class="col-5 text-success">(<span id="rKesehatan"></span>%, Disc.:<span id="drKesehatan"></span>%)</div>
+
+                                            <div class="col-4 text-success">JHT: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_pbpjsjht"></span> </div>
+                                            <div class="col-5 text-success">(<span id="rJHT"></span>%, Disc.:<span id="drJHT"></span>%)</div>
+
+                                            <div class="col-4 text-success">JKK: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_pbpjsjkk"></span> </div>
+                                            <div class="col-5 text-success">(<span id="rJKK"></span>%, Disc.:<span id="drJKK"></span>%)</div>
+
+                                            <div class="col-4 text-success">JKM: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_pbpjsjkm"></span> </div>
+                                            <div class="col-5 text-success">(<span id="rJKM"></span>%, Disc.:<span id="drJKM"></span>%)</div>
+
+                                            <div class="col-4 text-success">Pensiun: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_pbpjspensiun"></span> </div>
+                                            <div class="col-5 text-success">(<span id="rJP"></span>%, Disc.:<span id="drJP"></span>%)</div>
+
+                                            <hr />
+                                            <div class="col-4  text-primary"><b>Premi Asuransi Pemberi Kerja:</b> </div>
+                                            <div class="col-1 text-primary">Rp. </div>
+                                            <div class="col-2 text-right  text-primary"><b><span id="pbpjs"></span></b></div>
+                                            <div class="col-5 text-primary"></div>
+                                            <hr />
+
+                                            <!-- potongan -->
+                                            <div class="col-4">Pot. Absence: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_alphanominal"></span> </div>
+                                            <div class="col-5"></div>
+
+
+                                            <div class="col-4">Pot. Tunjangan Makan: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_pmakan"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Pot. Tunjangan Kehadiran: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_pkehadiran"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Pot. Tunjangan Transport: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_ptransportasi"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Pot. Inventaris: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_inventaris"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <hr />
+                                            <div class="col-4 text-danger"><b>Jumlah Potongan:</b> </div>
+                                            <div class="col-1 text-danger">Rp. </div>
+                                            <div class="col-2 text-right text-danger"><b><span id="potongan"></span></b></div>
+                                            <div class="col-5 text-danger"></div>
+                                            <hr />
+
+
+                                            <hr />
+                                            <div class="col-4 text-primary"><b>Penghasilan Tetap + Potongan:</b> </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right text-primary"><b><span id="pottetap"></span></b></div>
+                                            <div class="col-5"></div>
+                                            <hr />
+
+                                            
+
+
+                                            <!-- BPJS Pekerja-->
+                                            <div class="col-4 text-success">Kesehatan: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_bpjskesehatan"></span> </div>
+                                            <div class="col-5 text-success">(<span id="kKesehatan"></span>%, Disc.:<span id="dkKesehatan"></span>%)</div>
+
+                                            <div class="col-4 text-success">JHT: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_bpjsjht"></span> </div>
+                                            <div class="col-5 text-success">(<span id="kJHT"></span>%, Disc.:<span id="dkJHT"></span>%)</div>
+
+                                            <div class="col-4 text-success">JKK: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_bpjsjkk"></span> </div>
+                                            <div class="col-5 text-success">(<span id="kJKK"></span>%, Disc.:<span id="dkJKK"></span>%)</div>
+
+                                            <div class="col-4 text-success">JKM: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_bpjsjkm"></span> </div>
+                                            <div class="col-5 text-success">(<span id="kJKM"></span>%, Disc.:<span id="dkJKM"></span>%)</div>
+
+                                            <div class="col-4 text-success">Pensiun: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_bpjspensiun"></span> </div>
+                                            <div class="col-5 text-success">(<span id="kJP"></span>%, Disc.:<span id="dkJP"></span>%)</div>
+
+                                            <hr />
+                                            <div class="col-4  text-primary"><b>Premi Asuransi Potong Karyawan:</b> </div>
+                                            <div class="col-1 text-primary">Rp. </div>
+                                            <div class="col-2 text-right  text-primary"><b><span id="tbpjs"></span></b></div>
+                                            <div class="col-5 text-primary"></div>
+                                            <hr />
+
+                                            <hr />
+                                            <div class="col-4  text-primary"><b>Bruto:</b> </div>
+                                            <div class="col-1 text-primary">Rp. </div>
+                                            <div class="col-2 text-right  text-primary"><b><span id="bruto"></span></b></div>
+                                            <div class="col-5 text-primary"></div>
+                                            <hr />
+
+                                            <div class="col-4 text-success">PPH21: </div>
+                                            <div class="col-1 text-success">Rp. </div>
+                                            <div class="col-2 text-right text-success"><span id="gaji_pph21"></span> </div>
+                                            <div class="col-5 text-success">(<span id="gaji_ter"></span>%)</div>
+
+                                            
+
+                                            <hr />
+                                            <div class="col-4  text-primary"><b>Total Penghasilan:</b> </div>
+                                            <div class="col-1 text-primary">Rp. </div>
+                                            <div class="col-2 text-right  text-primary"><b><span id="totalpenghasilan"></span></b></div>
+                                            <div class="col-5 text-primary"></div>
+                                            <hr />
+
+                                            <hr />
+                                            <div class="col-4  text-danger"><b>Total Potongan:</b> </div>
+                                            <div class="col-1 text-danger">Rp. </div>
+                                            <div class="col-2 text-right  text-danger"><b><span id="gaji_potongantotal"></span></b></div>
+                                            <div class="col-5 text-danger"></div>
+                                            <hr />
+
+                                            <hr />
+                                            <div class="col-4  text-primary"><b>Total:</b> </div>
+                                            <div class="col-1 text-primary">Rp. </div>
+                                            <div class="col-2 text-right  text-primary"><b><span id="gaji_total"></span></b></div>
+                                            <div class="col-5 text-primary"></div>
+                                            <hr />
+
+                                            
+
+                                            <hr />
+                                            <div class="col-4  text-primary"><b>THP:</b> </div>
+                                            <div class="col-1 text-primary">Rp. </div>
+                                            <div class="col-2 text-right  text-primary"><b><span id="gaji_thp"></span></b></div>
+                                            <div class="col-5 text-primary"></div>
+                                            <hr />
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <?php if ($message != "") { ?>
                             <div class="alert alert-info alert-dismissable">
                                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
