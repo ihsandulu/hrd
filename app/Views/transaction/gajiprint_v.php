@@ -26,6 +26,7 @@
     .m-0 {
         margin: 0px !important;
     }
+    div{font-size: 10px;}
 </style>
 
 <div class="row">

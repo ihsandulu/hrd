@@ -315,7 +315,7 @@
                                             <div class="col-2 text-right"><span id="gaji_tmakan"></span> </div>
                                             <div class="col-5"></div>
 
-                                            <div class="col-4">Tunjangan Kahadiran: </div>
+                                            <div class="col-4">Tunjangan Kehadiran: </div>
                                             <div class="col-1">Rp. </div>
                                             <div class="col-2 text-right"><span id="gaji_tkehadiran"></span> </div>
                                             <div class="col-5"></div>

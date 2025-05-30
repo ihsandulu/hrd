@@ -170,7 +170,7 @@ class gaji_m extends core_m
 
 
 
-                $periode = $anduser . " AND absen.absen_date >='" . $dari . "' AND absen.absen_date <='" . $ke . "' ";
+                $periode = $anduser . " absen.absen_date >='" . $dari . "' AND absen.absen_date <='" . $ke . "' ";
 
                 /* //hari libur
                 $arliburhari = array();
@@ -220,6 +220,7 @@ class gaji_m extends core_m
                 $absen = $this->db->query($sql);
                 // echo $this->db->getLastQuery();die;
                 foreach ($absen->getResult() as $absen) {
+                    $user_id= $absen->user_id;
                     //lain-lain
                     $mlain = 0;
                     $plain = 0;
