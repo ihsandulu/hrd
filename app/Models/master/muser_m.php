@@ -87,6 +87,21 @@ class muser_m extends core_m
                     $user_borndate = \DateTime::createFromFormat('d-m-Y', $user_borndate);
                     $user_borndate = $user_borndate->format('Y-m-d');
 
+                    if ($dataSheet[$i][25] == "K") {
+                        $usertanggungan = "K/0";
+                    } else if ($dataSheet[$i][25] == "TK") {
+                        $usertanggungan = "TK/0";
+                    } else {
+                        $usertanggungan = $dataSheet[$i][25];
+                    }
+                    $tanggunganjenis = "";
+                    if ($usertanggungan != "") {
+                        $tanggungan = $this->db->table("tanggungan")->where("tanggungan_jenis", $usertanggungan)->get();
+                        foreach ($tanggungan->getResult() as $tanggungan) {
+                            $tanggunganjenis = $tanggungan->tanggungan_ter;
+                        }
+                    }
+
                     $data1 = [
                         'user_nik' => $dataSheet[$i][1],
                         'user_nama' => $dataSheet[$i][2],
@@ -107,7 +122,8 @@ class muser_m extends core_m
                         'user_gender' => $dataSheet[$i][20],
                         'user_address' => $dataSheet[$i][22],
                         'user_payrolltype' => $dataSheet[$i][23],
-                        'user_tanggungan' => $dataSheet[$i][25],
+                        'user_tanggungan' => $usertanggungan,
+                        'user_tanggunganjenis' => $tanggunganjenis,
                         'position_id' => $iaposition,
                         'user_status' => $status
                     ];
@@ -153,6 +169,43 @@ class muser_m extends core_m
 
                     // Cek apakah sudah ada
                     $cekdata = $this->db->table("user")->where("user_nik", $dataSheet[$i][3])->get();
+                    if ($cekdata->getNumRows() > 0 && $dataSheet[$i][5] != "") {
+                        $updateData[] = $data1; // Data untuk di-update
+                    }
+                }
+
+                // Proses Batch Update
+                if (!empty($updateData)) {
+                    $this->db->table("user")->updateBatch($updateData, 'user_nik');
+                    // echo $this->db->getLastQuery();die;
+                }
+            }
+            $data["message"] = "Import Success";
+        }
+
+        //export excel update gaji
+        if (isset($_FILES['excelgaji'])) {
+            $file = $this->request->getFile('excelgaji');
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $spreadsheet = IOFactory::load($file->getTempName());
+                $dataSheet = $spreadsheet->getActiveSheet()->toArray();
+
+                $updateData = [];
+                for ($i = 1; $i < count($dataSheet); $i++) {
+                    $data1 = [
+                        'user_nik' => $dataSheet[$i][0],
+                        'user_ttransport' => $dataSheet[$i][2],
+                        'user_thadir' => $dataSheet[$i][3],
+                        'user_tmakan' => $dataSheet[$i][4],
+                        'user_tjabatan' => $dataSheet[$i][5],
+                        'user_insentif' => $dataSheet[$i][6],
+                        'user_gapok' => $dataSheet[$i][7],
+                        'user_gakot'  => $dataSheet[$i][8]
+                    ];
+
+                    // Cek apakah sudah ada
+                    $cekdata = $this->db->table("user")->where("user_nik", $dataSheet[$i][0])->get();
                     if ($cekdata->getNumRows() > 0 && $dataSheet[$i][5] != "") {
                         $updateData[] = $data1; // Data untuk di-update
                     }
@@ -266,14 +319,14 @@ class muser_m extends core_m
                     // Menampilkan rentang yang sesuai dalam format Y-m-d
                     // echo "Rentang yang dipakai: " . $tanggal_mulai->format('Y-m-d') . " s/d " . $tanggal_selesai->format('Y-m-d');
 
-                    
+
                     if ($user_cutitambahdate < $tanggal_mulai->format('Y-m-d')) {
-                        if($user_cuti<0){
+                        if ($user_cuti < 0) {
                             $cuti = $identity_cuti + $user_cuti;
-                        }else{
+                        } else {
                             $cuti = $identity_cuti;
                         }
-                        
+
                         // Update user_cuti
                         $this->db->table("user")
                             ->where("user_id", $user_id)

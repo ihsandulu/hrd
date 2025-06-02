@@ -294,7 +294,7 @@
                                             <option value="" <?= ($user_tanggungan == "") ? "selected" : ""; ?>>Pilih Status</option>
                                             <?php $tanggungan = $this->db->table("tanggungan")->get();
                                             foreach ($tanggungan->getResult() as $tanggungan) { ?>
-                                                <option value="<?= $tanggungan->tanggungan_id; ?>" data-ter="<?= $tanggungan->tanggungan_ter; ?>" <?= ($user_tanggungan == $tanggungan->tanggungan_id) ? "selected" : ""; ?>><?= $tanggungan->tanggungan_jenis; ?></option>
+                                                <option value="<?= $tanggungan->tanggungan_jenis; ?>" data-ter="<?= $tanggungan->tanggungan_ter; ?>" <?= ($user_tanggungan == $tanggungan->tanggungan_jenis) ? "selected" : ""; ?>><?= $tanggungan->tanggungan_jenis; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -459,20 +459,29 @@
                                     <input type="file" class="" name="excelkaryawan">
                                 </div>
                                 &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
-                                &nbsp;<a href="<?= base_url("karyawan.xls"); ?>" class="btn btn-warning fa fa-download"> Download Template</a>
+                                &nbsp;<a href="<?= base_url("karyawan1.xls"); ?>" class="btn btn-warning fa fa-download"> Download Template</a>
 
                             </form>
 
-                            <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
+                            <form method="post" class="form-inline col-3" action="" enctype="multipart/form-data">
                                 <div class="form-group mb-1">
-                                    <label for="excelkaryawan">Sisa Cuti:&nbsp;</label>
+                                    <label for="excelcuti">Sisa Cuti:&nbsp;</label>
                                     <input type="file" class="" name="excelcuti">
                                 </div>
                                 &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
                                 &nbsp;<a href="<?= base_url("sisacuti.xlsx"); ?>" class="btn btn-warning fa fa-download"> Download Template</a>
                             </form>
 
-                            <form method="post" class="form-inline col-4" action="" enctype="multipart/form-data">
+                            <form method="post" class="form-inline col-3" action="" enctype="multipart/form-data">
+                                <div class="form-group mb-1">
+                                    <label for="excelgaji">Update Gaji:&nbsp;</label>
+                                    <input type="file" class="" name="excelgaji">
+                                </div>
+                                &nbsp;<button type="submit" class="btn btn-success fa fa-file-excel-o"> Import</button>
+                                &nbsp;<a href="<?= base_url("datagaji1.xlsx"); ?>" class="btn btn-warning fa fa-download"> Download Template</a>
+                            </form>
+
+                            <form method="post" class="form-inline col-2" action="" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="excelkaryawan">Revisi Cuti:&nbsp;</label>
                                 </div>
