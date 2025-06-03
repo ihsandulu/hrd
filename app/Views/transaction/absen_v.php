@@ -108,7 +108,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12  mb-2 mt-2">
-                                                    <button value="OK" id="cari1" name="cari1" type="button" class="btn btn-block btn-primary" onclick="tarikdata()">Tarik Data</button>
+                                                    <button value="OK" id="cari2" name="cari2" type="button" class="btn btn-block btn-primary" onclick="tarikdata()">Tarik Data</button>
                                                 </div>
                                             </div>
                                         </form>
