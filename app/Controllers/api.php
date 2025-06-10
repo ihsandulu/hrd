@@ -715,8 +715,8 @@ class api extends BaseController
         $dari = $this->request->getGet("dari");
         $ke = $this->request->getGet("ke");
         $user_id = $this->request->getGet("user_id");
-        
 
+        $identity = $this->db->table("identity")->get()->getRow();
 
         //potongan inventaris
         $inventarist = $this->db
@@ -845,7 +845,7 @@ class api extends BaseController
             $input["gaji_tjabatan"] = $jabatan;
 
             //penghasilan tetap
-            $petetap=$absen->user_gapok+$jabatan;
+            $petetap = $absen->user_gapok + $jabatan;
             $input["gaji_petetap"] = $petetap;
 
             $input["gaji_ttransport"] = $transportasi;
@@ -861,7 +861,7 @@ class api extends BaseController
             $input["gaji_ot3jam"] = $absen->gaji_ot3jam;
             $input["gaji_ot3nominal"] = $absen->gaji_ot3nominal;
             $input["gaji_ot4jam"] = $absen->gaji_ot4jam;
-            $input["gaji_ot4nominal"] = $absen->gaji_ot4nominal;  
+            $input["gaji_ot4nominal"] = $absen->gaji_ot4nominal;
 
             //penghasilan tidak tetap
             $pettetap = $transportasi + $kehadiran + $makan + $insentif + $mlain + $absen->gaji_ot1nominal + $absen->gaji_ot2nominal + $absen->gaji_ot3nominal + $absen->gaji_ot4nominal;
@@ -906,7 +906,7 @@ class api extends BaseController
             $gbpjs = $input["gaji_pokok"] + $jabatan;
 
             //jika melebihi batas upah maksimal pensiun maka yg dipakai batas upah maksimal pensiun
-            $bupensiun = $this->db->table("identity")->get()->getRow()->identity_bupensiun;
+            $bupensiun = $identity->identity_bupensiun;
             $gbpjsp = 0;
             if ($gbpjs > $bupensiun) {
                 $gbpjsp = $bupensiun;
@@ -951,7 +951,7 @@ class api extends BaseController
             }
             $input["gaji_pbpjspensiun"] = ($arbpjs["JP"]["perusahaan"] / 100 * $gbpjsp) * $dJPp;
 
-            $penghasilanpbpjs = $input["gaji_pbpjskesehatan"]+
+            $penghasilanpbpjs = $input["gaji_pbpjskesehatan"] +
                 $input["gaji_pbpjsjht"] +
                 $input["gaji_pbpjsjkk"] +
                 $input["gaji_pbpjsjkm"] +
@@ -1014,7 +1014,7 @@ class api extends BaseController
                 ->where("ter_gakotawal <=", $input["gaji_bruto"])
                 ->where("ter_gakotakhir >", $input["gaji_bruto"])
                 ->get();
-                // echo $this->db->getLastQuery();die;
+            // echo $this->db->getLastQuery();die;
             $pph21 = 0;
             foreach ($ter->getResult() as $ter) {
                 $persen = $ter->ter_persen;
@@ -1041,8 +1041,15 @@ class api extends BaseController
 
             $gaji_total = $input["gaji_kotor"] - $input["gaji_potongantotal"];
 
-            $input["gaji_total"] = $gaji_total;            
-            $input["gaji_thp"] = $gaji_total+$pph21;
+            $input["gaji_total"] = $gaji_total;
+            //jika melebihi batas refund pph maka tidak di refund
+            $identity_batasrefundpph = $identity->identity_batasrefundpph;
+            if ($gaji_total < $identity_batasrefundpph) {
+                $gaji_thp = $gaji_total + $pph21;
+            } else {
+                $gaji_thp = $gaji_total;
+            }
+            $input["gaji_thp"] = ceil($gaji_thp);
             $input["gaji_print"] = date("Y-m-d");
         }
         return $this->response->setJSON($input);

@@ -141,6 +141,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="control-label col-sm-2" for="identity_batasrefundpph">Batas Refund PPH:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" autofocus class="form-control" id="identity_batasrefundpph" name="identity_batasrefundpph" placeholder="" value="<?= $identity_batasrefundpph; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="control-label col-sm-12" for="identity_logo">Logo: (Max 134 X 134)</label>
                                     <div class="col-sm-12">
                                         <input type="file" autofocus class="form-control" id="identity_logo" name="identity_logo" placeholder="" value="<?= $identity_logo; ?>">

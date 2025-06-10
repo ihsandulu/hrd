@@ -93,6 +93,8 @@ class gaji_m extends core_m
             $dari = $this->request->getPost("dari");
             $ke = $this->request->getPost("ke");
 
+            $identity = $this->db->table("identity")->get()->getRow();
+
             //delete periode tertentu
             $this->db
                 ->table("gaji")
@@ -142,7 +144,11 @@ class gaji_m extends core_m
                 $andpos = " AND";
             } else {
                 $position = "";
-                if($anddep!=""){$andpos = " AND";}else{$andpos = "";}                
+                if ($anddep != "") {
+                    $andpos = " AND";
+                } else {
+                    $andpos = "";
+                }
             }
 
             //user
@@ -152,7 +158,11 @@ class gaji_m extends core_m
                 $anduser = " ";
             } else {
                 $user = "";
-                if($anddep!="" || $andpos!=""){$anduser = " AND";}else{$anduser = "";}
+                if ($anddep != "" || $andpos != "") {
+                    $anduser = " AND";
+                } else {
+                    $anduser = "";
+                }
             }
 
             //tahun
@@ -220,7 +230,7 @@ class gaji_m extends core_m
                 $absen = $this->db->query($sql);
                 // echo $this->db->getLastQuery();die;
                 foreach ($absen->getResult() as $absen) {
-                    $user_id= $absen->user_id;
+                    $user_id = $absen->user_id;
                     //lain-lain
                     $mlain = 0;
                     $plain = 0;
@@ -337,7 +347,7 @@ class gaji_m extends core_m
                     $gbpjs = $input["gaji_pokok"] + $jabatan;
 
                     //jika melebihi batas upah maksimal pensiun maka yg dipakai batas upah maksimal pensiun
-                    $bupensiun = $this->db->table("identity")->get()->getRow()->identity_bupensiun;
+                    $bupensiun = $identity->identity_bupensiun;
                     $gbpjsp = 0;
                     if ($gbpjs > $bupensiun) {
                         $gbpjsp = $bupensiun;
@@ -442,8 +452,8 @@ class gaji_m extends core_m
                     $ter = $this->db
                         ->table("ter")
                         ->where("ter_jenis", $absen->user_tanggunganjenis)
-                        ->where("ter_gakotawal <=", $input["gaji_kotor"])
-                        ->where("ter_gakotakhir >", $input["gaji_kotor"])
+                        ->where("ter_gakotawal <=", $input["gaji_bruto"])
+                        ->where("ter_gakotakhir >", $input["gaji_bruto"])
                         ->get();
                     $pph21 = 0;
                     foreach ($ter->getResult() as $ter) {
@@ -472,7 +482,14 @@ class gaji_m extends core_m
                     $gaji_total = $input["gaji_kotor"] - $input["gaji_potongantotal"];
 
                     $input["gaji_total"] = $gaji_total;
-                    $input["gaji_thp"] = $gaji_total + $pph21;
+                    //jika melebihi batas refund pph maka tidak di refund
+                    $identity_batasrefundpph = $identity->identity_batasrefundpph;
+                    if ($gaji_total < $identity_batasrefundpph) {
+                        $gaji_thp = $gaji_total + $pph21;
+                    } else {
+                        $gaji_thp = $gaji_total;
+                    }
+                    $input["gaji_thp"]=ceil($gaji_thp);
                     $input["gaji_print"] = $this->request->getPost("gaji_print");
 
                     $builder = $this->db->table('gaji');
