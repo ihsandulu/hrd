@@ -1011,9 +1011,10 @@ class api extends BaseController
             $ter = $this->db
                 ->table("ter")
                 ->where("ter_jenis", $absen->user_tanggunganjenis)
-                ->where("ter_gakotawal <=", $input["gaji_kotor"])
-                ->where("ter_gakotakhir >", $input["gaji_kotor"])
+                ->where("ter_gakotawal <=", $input["gaji_bruto"])
+                ->where("ter_gakotakhir >", $input["gaji_bruto"])
                 ->get();
+                // echo $this->db->getLastQuery();die;
             $pph21 = 0;
             foreach ($ter->getResult() as $ter) {
                 $persen = $ter->ter_persen;
