@@ -37,6 +37,7 @@ $routes->add('/lembur', 'transaction\lembur::index');
 $routes->add('/cutihutang', 'transaction\cutihutang::index');
 $routes->add('/inventarist', 'transaction\inventarist::index');
 $routes->add('/gajiprint', 'transaction\gajiprint::index');
+$routes->add('/lain', 'transaction\lain::index');
 
 
 $routes->add('/rcutihutang', 'report\rcutihutang::index');

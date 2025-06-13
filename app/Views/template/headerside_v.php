@@ -332,6 +332,25 @@
                             <a class="<?= current_url(true)->getSegment(1) == 'lembur' ? 'active' : ''; ?>" href="<?= base_url("lembur"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Lembur</span></a>
                         </li>
                     <?php } ?>
+
+                     <?php
+                    if (
+                        (
+                            isset(session()->get("position_id")[0][0])
+                            && (
+                                session()->get("position_id") == "1"
+                                || session()->get("position_id") == "2"
+                            )
+                        ) ||
+                        (
+                            isset(session()->get("halaman")['97']['act_read'])
+                            && session()->get("halaman")['97']['act_read'] == "1"
+                        )
+                    ) { ?>
+                        <li>
+                            <a class="<?= current_url(true)->getSegment(1) == 'lain' ? 'active' : ''; ?>" href="<?= base_url("lain"); ?>" aria-expanded="false"><i class="fa fa-users"></i><span class="hide-menu">Lain-lain</span></a>
+                        </li>
+                    <?php } ?>
                     
                     <?php
                     if (
