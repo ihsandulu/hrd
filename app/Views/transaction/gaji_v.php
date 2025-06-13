@@ -212,7 +212,7 @@
 
                                                         $("#gaji_kotor").html(formatRupiah(data.gaji_kotor));
                                                         $("#totalpenghasilan").html(formatRupiah(data.gaji_kotor));
-                                                        
+
 
 
                                                         // potongan
@@ -223,7 +223,7 @@
                                                         $("#gaji_inventaris").html(formatRupiah(data.gaji_inventaris));
                                                         $("#gaji_plain").html(formatRupiah(data.gaji_plain));
 
-                                                        
+
                                                         $("#potongan").html(formatRupiah(data.gaji_potonganasli));
 
                                                         //potongan + penghasilan tetap
@@ -424,7 +424,7 @@
                                             <div class="col-5"></div>
                                             <hr />
 
-                                            
+
 
 
                                             <!-- BPJS Pekerja-->
@@ -472,7 +472,7 @@
                                             <div class="col-2 text-right text-success"><span id="gaji_pph21"></span> </div>
                                             <div class="col-5 text-success">(<span id="gaji_ter"></span>%)</div>
 
-                                            
+
 
                                             <hr />
                                             <div class="col-4  text-primary"><b>Total Penghasilan:</b> </div>
@@ -495,7 +495,7 @@
                                             <div class="col-5 text-primary"></div>
                                             <hr />
 
-                                            
+
 
                                             <hr />
                                             <div class="col-4  text-primary"><b>THP:</b> </div>
@@ -696,7 +696,7 @@
                                 <div class="row">
                                     <?php
                                     $gaji_bulan = date("m");
-                                    $gaji_tahun = date("Y");
+                                    $gaji_tahun = date("Y", strtotime("+1 years"));
                                     $departemen_id = 0;
                                     $position_id = 0;
                                     $user_id = 0;
