@@ -221,6 +221,7 @@
                                                         $("#gaji_pkehadiran").html(formatRupiah(data.gaji_pkehadiran));
                                                         $("#gaji_pmakan").html(formatRupiah(data.gaji_pmakan));
                                                         $("#gaji_inventaris").html(formatRupiah(data.gaji_inventaris));
+                                                        $("#gaji_plain").html(formatRupiah(data.gaji_plain));
 
                                                         
                                                         $("#potongan").html(formatRupiah(data.gaji_potonganasli));
@@ -401,6 +402,11 @@
                                             <div class="col-4">Pot. Inventaris: </div>
                                             <div class="col-1">Rp. </div>
                                             <div class="col-2 text-right"><span id="gaji_inventaris"></span> </div>
+                                            <div class="col-5"></div>
+
+                                            <div class="col-4">Pot. Lain-lain: </div>
+                                            <div class="col-1">Rp. </div>
+                                            <div class="col-2 text-right"><span id="gaji_plain"></span> </div>
                                             <div class="col-5"></div>
 
                                             <hr />

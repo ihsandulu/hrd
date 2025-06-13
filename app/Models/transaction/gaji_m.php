@@ -155,7 +155,7 @@ class gaji_m extends core_m
             if ($this->request->getPost("user_id") != "") {
                 $user_id = $this->request->getPost("user_id");
                 $user = $andpos . " absen.user_id = " . $user_id;
-                $anduser = " ";
+                $anduser = " AND";
             } else {
                 $user = "";
                 if ($anddep != "" || $andpos != "") {
@@ -246,7 +246,11 @@ class gaji_m extends core_m
                         $mlain = $lain->mlain;
                         $plain = $lain->plain;
                     }
-                    $input["gaji_lain"] = $mlain;
+
+                    //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramadlan maka diganti dengan uang 8rb
+                    $input["gaji_lain"] = $mlain + $absen->gaji_lain;
+
+                    //potongan lain-lain
                     $input["gaji_plain"] = $plain;
 
                     $input["user_payrolltype"] = $absen->user_payrolltype;
@@ -338,7 +342,7 @@ class gaji_m extends core_m
                     $input["gaji_serikatburuh"] = 0;
 
 
-                    $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"];
+                    $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"]+ $input["gaji_plain"];
                     $input["gaji_potonganasli"] = $potonganasli;
 
                     //bpjs
@@ -470,12 +474,6 @@ class gaji_m extends core_m
                     //pulang cepat
                     $input["gaji_pulangcepat"] = $absen->pulangcepat;
 
-                    //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramadlan maka diganti dengan uang 8rb
-                    $input["gaji_lain"] = $absen->gaji_lain;
-
-                    //potongan lain-lain
-                    $input["gaji_plain"] = 0;
-
                     $gaji_potongantotal = $input["gaji_potonganasli"] + $input["gaji_pph21"] + $input["gaji_potonganbpjs"];
                     $input["gaji_potongantotal"] = $gaji_potongantotal;
 
@@ -489,7 +487,7 @@ class gaji_m extends core_m
                     } else {
                         $gaji_thp = $gaji_total;
                     }
-                    $input["gaji_thp"]=ceil($gaji_thp);
+                    $input["gaji_thp"] = ceil($gaji_thp);
                     $input["gaji_print"] = $this->request->getPost("gaji_print");
 
                     $builder = $this->db->table('gaji');

@@ -802,11 +802,16 @@ class api extends BaseController
                 ->select("SUM(if(lain_type=1,lain_nominal,0))AS mlain, 
                           SUM(if(lain_type=2,lain_nominal,0))AS plain")
                 ->get();
+            // echo $this->db->getLastQuery();die;
             foreach ($lain->getResult() as $lain) {
                 $mlain = $lain->mlain;
                 $plain = $lain->plain;
             }
-            $input["gaji_lain"] = $mlain;
+
+            //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramadlan maka diganti dengan uang 8rb
+            $input["gaji_lain"] = $mlain+$absen->gaji_lain;
+
+            //potongan lain-lain
             $input["gaji_plain"] = $plain;
 
             $input["user_payrolltype"] = $absen->user_payrolltype;
@@ -896,7 +901,7 @@ class api extends BaseController
             $input["gaji_serikatburuh"] = 0;
 
 
-            $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"];
+            $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"] + $input["gaji_plain"];
             $input["gaji_potonganasli"] = $potonganasli;
 
 
@@ -1030,11 +1035,7 @@ class api extends BaseController
             //pulang cepat
             $input["gaji_pulangcepat"] = $absen->pulangcepat;
 
-            //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramadlan maka diganti dengan uang 8rb
-            $input["gaji_lain"] = $absen->gaji_lain;
-
-            //potongan lain-lain
-            $input["gaji_plain"] = 0;
+            
 
             $gaji_potongantotal = $input["gaji_potonganasli"] + $input["gaji_pph21"] + $input["gaji_potonganbpjs"];
             $input["gaji_potongantotal"] = $gaji_potongantotal;

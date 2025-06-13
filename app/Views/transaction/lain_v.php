@@ -271,8 +271,6 @@
                                                                         </form> -->
 
                                                                         <input class="cpilih0" type="checkbox" id="p<?= $usr->user_id; ?>" name="user_id[<?= $usr->user_id; ?>]" value="<?= $usr->user_id; ?>" />
-                                                                        <input type="hidden" name="hutangcuti[<?= $usr->user_id; ?>]" value="<?= $usr->lain_nominal; ?>" />
-                                                                        <input type="hidden" name="usercuti[<?= $usr->user_id; ?>]" value="<?= $usr->user_cuti; ?>" />
                                                                     <?php } ?>
                                                                 </td>
                                                             <?php } ?>

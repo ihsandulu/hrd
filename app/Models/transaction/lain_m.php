@@ -16,24 +16,11 @@ class lain_m extends core_m
 
         if ($this->request->getPost("delete") == "OK") {
             $user_ids = $this->request->getPost('user_id');
-            $hutangcutis = $this->request->getPost('hutangcuti');
-            $usercutis = $this->request->getPost('usercuti');
 
             if ($user_ids) {
                 $this->db->table("lain")
                     ->whereIn("user_id", array_keys($user_ids))
-                    ->delete();
-
-                foreach ($user_ids as $user_id => $val) {
-                    $hutangcuti = $hutangcutis[$user_id] ?? 0;
-                    $usercuti = $usercutis[$user_id] ?? 0;
-                    $new_cuti = $usercuti + $hutangcuti;
-
-                    $this->db->table("user")
-                        ->where("user_id", $user_id)
-                        ->update(["user_cuti" => $new_cuti]);
-                }
-
+                    ->delete(); 
                 $data['message'] = 'Delete Success';
             } else {
                 $data["message"] = "Tidak ada data dipilih!";
@@ -46,6 +33,7 @@ class lain_m extends core_m
             $lain_date = $this->request->getPost('lain_date');
             $lain_nominal = $this->request->getPost('lain_nominal');
             $lain_keterangan = $this->request->getPost('lain_keterangan');
+            $lain_type = $this->request->getPost('lain_type');
 
             if ($user_ids) {
                 //cari sisa hutang
@@ -60,19 +48,17 @@ class lain_m extends core_m
 
                 foreach ($user_ids as $uid) {
                     // Gunakan ON DUPLICATE KEY UPDATE (raw query)
-                    $sql = "INSERT INTO lain (user_id, lain_date, lain_nominal, lain_keterangan)
-                            VALUES (:user_id:, :lain_date:, :lain_nominal:, :lain_keterangan:)
-                            ON DUPLICATE KEY UPDATE  lain_nominal = :lain_nominal:, lain_keterangan = :lain_keterangan:";
+                    $sql = "INSERT INTO lain (user_id, lain_date, lain_nominal, lain_keterangan, lain_type)
+                            VALUES (:user_id:, :lain_date:, :lain_nominal:, :lain_keterangan:, :lain_type:)
+                            ON DUPLICATE KEY UPDATE  lain_nominal = :lain_nominal:, lain_keterangan = :lain_keterangan:, lain_type = :lain_type:";
 
                     $this->db->query($sql, [
                         'user_id' => $uid,
                         'lain_date' => $lain_date,
                         'lain_nominal' => $lain_nominal,
                         'lain_keterangan' => $lain_keterangan,
-                    ]);
-                    $this->db->table("user")->where("user_id", $uid)->update([
-                        "user_cuti" => $cutiuser[$uid] - $lain_nominal
-                    ]);
+                        'lain_type' => $lain_type,
+                    ]);                   
                 }
                 // echo $this->db->getLastQuery();die;
 
