@@ -133,12 +133,12 @@ foreach($identity->getResult() as $identity){
                     </span>
 
                     <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter NIK">
-                        <input autofocus class="input100" type="text" name="user_nik" placeholder="NIK">
+                        <input required autofocus class="input100" type="text" name="user_nik" placeholder="NIK">
                         <span class="focus-input100"></span>
                     </div>
 
                     <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter password">
-                        <input class="input100" type="password" name="password" placeholder="Password">
+                        <input required class="input100" type="password" name="password" placeholder="Password">
                         <span class="focus-input100"></span>
                     </div> 
                     

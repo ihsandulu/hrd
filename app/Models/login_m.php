@@ -18,7 +18,7 @@ class login_m extends core_m
         $identity = $this->db->table("identity")->get()->getRow();
         // dd($identity->identity_twitter);
 
-        if (isset($_POST["user_nik"]) && isset($_POST["password"])) {
+        if (isset($_POST["user_nik"]) && isset($_POST["password"]) && $_POST["password"]!="") {
             $builder = $this->db->table("user")
                 ->join("position", "position.position_id=user.position_id", "left")
                 ->where("user_nik", $this->request->getVar("user_nik"));
@@ -99,6 +99,8 @@ class login_m extends core_m
             } else {
                 $data["hasil"] = " NIK Salah !";
             }
+        }else{
+            $data["hasil"] = " Lengkapi Data Login !";
         }
 
         $this->session->setFlashdata('message', $data["hasil"]);
