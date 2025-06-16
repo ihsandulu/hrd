@@ -34,6 +34,7 @@ $routes->add('/synchron', 'transaction\synchron::index');
 $routes->add('/absen', 'transaction\absen::index');
 $routes->add('/gaji', 'transaction\gaji::index');
 $routes->add('/lembur', 'transaction\lembur::index');
+$routes->add('/kontrak', 'transaction\kontrak::index');
 $routes->add('/cutihutang', 'transaction\cutihutang::index');
 $routes->add('/inventarist', 'transaction\inventarist::index');
 $routes->add('/gajiprint', 'transaction\gajiprint::index');

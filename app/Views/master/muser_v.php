@@ -488,8 +488,46 @@
                                 &nbsp;<button type="submit" name="revisicuti" value="OK" class="btn btn-warning fa fa-flag-o"> Revisi</button>
                             </form>
                         </div>
+                        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabel">Data Kontrak <span id="modalUserName"></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="modalUserId">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="table-responsive m-t-40">
+                            <?php
+                            $build = $this->db->table("kontrak")
+                                ->join("user", "user.user_id=kontrak.user_id", "left")
+                                ->join("position", "position.position_id=user.position_id", "left")
+                                ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
+                                ->where("user.user_id !=", "10");
+
+                            $build->where("position.position_id !=", "1");
+
+                            $usr = $build->orderBy("departemen_name", "ASC")
+                                ->orderBy("position_name", "ASC")
+                                ->orderBy("user_nama", "ASC")
+                                ->get();
+                            $arkontrak = array();
+                            foreach ($usr->getResult() as $row) {
+                                $arkontrak[$row->user_id][] = [
+                                    "name" => $row->kontrak_name,
+                                    "from" => $row->kontrak_from,
+                                    "to" => $row->kontrak_to
+                                ];
+                            }
+                            // dd($arkontrak);
+                            ?>
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="">
                                     <tr>
@@ -571,6 +609,21 @@
                                                         <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
                                                     </form>
                                                     <?php } ?> -->
+                                                    <form method="post" class="btn-action" style="">
+                                                        <button type="button" onclick="kontrak(<?= $usr->user_id; ?>)" class="btn btn-sm btn-info show-modal" data-userid="<?= $usr->user_id; ?>">
+                                                            <span class="fa fa-address-book-o" style="color:white;"></span>
+                                                        </button>
+                                                        <input type="hidden" id="kontn<?= $usr->user_id; ?>" value="<?= $usr->user_nama; ?>" />
+                                                        <div id="kont<?= $usr->user_id; ?>" class="hide">
+                                                            <?php
+                                                            if (isset($arkontrak[$usr->user_id])) {
+                                                                foreach ($arkontrak[$usr->user_id] as $row) { ?>
+                                                                    <div class="mb-3"><span class="alert alert-success text-white mr-2 p-1"><?= $row["name"]; ?></span> <?= $row["from"]; ?> s/d <?= $row["to"]; ?></div>
+                                                            <?php }
+                                                            }
+                                                            ?>
+                                                        </div>
+                                                    </form>
 
                                                     <?php
                                                     if (
@@ -660,6 +713,13 @@
     </div>
 </div>
 <script>
+    function kontrak(id) {
+        var userId = $("#kont" + id).html();
+        var userName = $("#kontn" + id).val();
+        $('#modalUserName').html(userName);
+        $('#modalUserId').html(userId);
+        $('#userModal').modal('show'); // tampilkan modal
+    }
     $('.select').select2();
     var title = "Master Karyawan";
     $("title").text(title);
