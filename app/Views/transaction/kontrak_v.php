@@ -296,6 +296,11 @@
                                                 } else {
                                                     $iposition = "";
                                                 }
+                                                if (isset($_POST["user_nik"])) {
+                                                    $iuser = $_POST["user_nik"];
+                                                } else {
+                                                    $iuser = "";
+                                                }
                                                 ?>
                                                 <div class="col-4 row mb-2">
                                                     <div class="col-3">
@@ -327,7 +332,15 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-4 mb-2">
+                                                <div class="col-4 row mb-2">
+                                                    <div class="col-3">
+                                                        <label class="text-dark">NIK :</label>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <input class="form-control " name="user_nik">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 mb-2">
                                                     <button type="submit" class="btn btn-block btn-primary">Search</button>
                                                 </div>
                                             </div>
@@ -465,10 +478,14 @@
                                                         $position_id = $_POST["position_id"];
                                                         $build->where("user.position_id", $position_id);
                                                     }
-                                                    if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"])) {
+                                                    if (isset($_POST["user_nik"]) && $_POST["user_nik"] != "" && $_POST["user_nik"] != "all") {
+                                                        $user_nik = $_POST["user_nik"];
+                                                        $build->like("user.user_nik", $user_nik,"BOTH");
+                                                    }
+                                                    if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"]) && !isset($_POST["user_nik"])) {
                                                         $build->where("user.position_id", "0");
                                                     }
-                                                    if ((isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "")) {
+                                                    if ((isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "") && (isset($_POST["user_nik"]) && $_POST["user_nik"] == "")) {
                                                         $build->where("user.position_id", "0");
                                                     }
                                                     $usr = $build->orderBy("departemen_name", "ASC")
