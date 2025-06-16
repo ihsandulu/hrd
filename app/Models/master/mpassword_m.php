@@ -42,7 +42,25 @@ class mpassword_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
-            $input["user_password"] = password_hash($this->request->getPost("user_password"), PASSWORD_DEFAULT);
+            // password yang diketik user di form
+            $plain_password = $this->request->getPost("user_password");
+
+            // Key dan metode
+            $key = "ihsandulu123456"; // Simpan ini di .env di produksi
+            $method = "AES-256-CBC";
+            $iv_length = openssl_cipher_iv_length($method);
+
+            // Buat IV acak sepanjang 16 byte
+            $iv = openssl_random_pseudo_bytes($iv_length);
+
+            // Enkripsi password
+            $encrypted = openssl_encrypt($plain_password, $method, $key, 0, $iv);
+
+            // Gabungkan IV + encrypted string
+            $final_password = base64_encode($iv . $encrypted); // ← Simpan ini ke database
+
+            // Simpan ke database, misalnya:
+            $input["user_password"] = $final_password;
             $this->db->table('user')->update($input, array("user_id" => $this->request->getPost("user_id")));
             $data["message"] = "Update Success";
             //echo $this->db->last_query();die;
