@@ -37,26 +37,12 @@ class kontrak_m extends core_m
             $kontrak_name = $this->request->getPost('kontrak_name');
 
             if ($user_ids) {
-                //cari sisa hutang
-                $user = $this->db->table("user")
-                    ->whereIn("user_id", $user_ids)
-                    ->get();
-                $cutiuser = array();
-                foreach ($user->getResult() as $row) {
-                    $cutiuser[$row->user_id] = $row->user_cuti;
-                }
-                // echo "<pre>";print_r($cutiuser);die;
-
                 foreach ($user_ids as $uid) {
                     // Gunakan ON DUPLICATE KEY UPDATE (raw query)                            
                     $sql = "INSERT IGNORE INTO kontrak (user_id, kontrak_from, kontrak_to, kontrak_name) VALUES (?, ?, ?, ?)";
-                    $this->db->query($sql, [$uid, $kontrak_from, $kontrak_to, $kontrak_name]);
-                    $this->db->table("user")->where("user_id", $uid)->update([
-                        "user_cuti" => $cutiuser[$uid] + 1
-                    ]);
+                    $this->db->query($sql, [$uid, $kontrak_from, $kontrak_to, $kontrak_name]);                   
                 }
                 // echo $this->db->getLastQuery();die;
-
                 $data["message"] = "Data berhasil disimpan/diupdate!";
             } else {
                 $data["message"] = "Tidak ada data dipilih!";

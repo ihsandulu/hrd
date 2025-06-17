@@ -586,7 +586,7 @@
                                     $no = 1;
                                     $aktif = ["Tidak Aktif", "Aktif"];
                                     $lembur = ["Tidak", "Perjam", "Insentif"];
-                                    $statusbpjs=["Non Aktif","Aktif"];
+                                    $statusbpjs = ["Non Aktif", "Aktif"];
                                     foreach ($usr->getResult() as $usr) {
                                     ?>
                                         <tr>
@@ -675,16 +675,25 @@
                                                 </td>
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
-                                            <td style="white-space: nowrap;"><?= $statusbpjs[$usr->user_bpjsstatus]; ?>
+                                            <?php
+                                            if ($usr->user_bpjsstatus == 0) {
+                                                $bgtd = "danger";
+                                                $colotd = "white";
+                                            } else {
+                                                $bgtd = "success";
+                                                $colotd = "white";
+                                            } ?>
+                                            <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
+                                                <?= $statusbpjs[$usr->user_bpjsstatus]; ?>
                                                 <?php
-                                                if($usr->user_bpjsstatus==0){
-                                                    $colo="success";
-                                                    $fa="check";
-                                                    $sbpjs=1;
-                                                }else{
-                                                    $colo="danger";
-                                                    $fa="times";
-                                                    $sbpjs=0;
+                                                if ($usr->user_bpjsstatus == 0) {
+                                                    $colo = "success";
+                                                    $fa = "check";
+                                                    $sbpjs = 1;
+                                                } else {
+                                                    $colo = "danger";
+                                                    $fa = "times";
+                                                    $sbpjs = 0;
                                                 }
                                                 if (
                                                     (
@@ -700,7 +709,7 @@
                                                     )
                                                 ) { ?>
                                                     <form method="post" class="btn-action" style="">
-                                                        <button class="btn btn-sm btn-<?=$colo;?> " name="bpjsstatus" value="OK"><span class="fa fa-<?=$fa;?>" style="color:white;"></span> </button>
+                                                        <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatus" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
                                                         <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
                                                         <input type="hidden" name="user_bpjsstatus" value="<?= $sbpjs; ?>" />
                                                     </form>

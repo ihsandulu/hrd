@@ -4,7 +4,7 @@ namespace App\Models\transaction;
 
 use App\Models\core_m;
 
-class lembur_m extends core_m
+class bpjsstatus_m extends core_m
 {
     public function data()
     {
@@ -15,11 +15,11 @@ class lembur_m extends core_m
 
 
         if ($this->request->getPost("delete") == "OK") {
-            $lembur_ids = $this->request->getPost("lembur_id");
-            // dd($lembur_ids);
-            if ($lembur_ids) {
-                $this->db->table("lembur")
-                    ->whereIn("lembur_id", array_keys($lembur_ids))
+            $bpjsstatus_ids = $this->request->getPost("bpjsstatus_id");
+            // dd($bpjsstatus_ids);
+            if ($bpjsstatus_ids) {
+                $this->db->table("bpjsstatus")
+                    ->whereIn("bpjsstatus_id", array_keys($bpjsstatus_ids))
                     ->delete();
 
                 $data['message'] = 'Delete Success';
@@ -28,24 +28,28 @@ class lembur_m extends core_m
             }
         }
 
-
-
         if ($this->request->getPost("create") == "OK") {
             $user_ids = $this->request->getPost('user_id');
-            $lembur_date = $this->request->getPost('lembur_date');
+            $bpjsstatus_date = date("Y-m-d");
+            $bpjsstatus_status = $this->request->getPost('bpjsstatus_status');
 
-            if ($user_ids) {   
+            if ($user_ids) {  
                 foreach ($user_ids as $uid) {
                     // Gunakan ON DUPLICATE KEY UPDATE (raw query)                            
-                    $sql = "INSERT IGNORE INTO lembur (user_id, lembur_date) VALUES (?, ?)";
-                    $this->db->query($sql, [$uid, $lembur_date]);
+                    $sql = "INSERT IGNORE INTO bpjsstatus (user_id, bpjsstatus_date, bpjsstatus_status) VALUES (?, ?, ?)";
+                    $this->db->query($sql, [$uid, $bpjsstatus_date, $bpjsstatus_status]); 
+                    
+                    $this->db->table("user")->where("user_id", $uid)->update([
+                        "user_bpjsstatus" => $bpjsstatus_status
+                    ]);
                 }
                 // echo $this->db->getLastQuery();die;
                 $data["message"] = "Data berhasil disimpan/diupdate!";
             } else {
                 $data["message"] = "Tidak ada data dipilih!";
             }
-        }        
+        }
+        //echo $_POST["create"];die;     
         return $data;
     }
 }
