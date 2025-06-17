@@ -532,9 +532,10 @@
                                 <thead class="">
                                     <tr>
                                         <?php if (!isset($_GET["report"])) { ?>
-                                            <th>__Action__</th>
+                                            <th>Action</th>
                                         <?php } ?>
                                         <th>No.</th>
+                                        <th>Status BPJS</th>
                                         <th>Sisa Cuti</th>
                                         <th>Tgl.Masuk</th>
                                         <th>Departemen</th>
@@ -556,7 +557,7 @@
                                         <th>No Rek:</th>
                                         <th>Nama Ibu</th>
                                         <th>Pendidikan</th>
-                                        <th>&nbsp;&nbsp;&nbsp;Tgl&nbsp;Lahir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th style="white-space: nowrap;">Tgl Lahir </th>
                                         <th>Tempat Lahir</th>
                                         <th>L/P</th>
                                         <th>Status Tanggungan</th>
@@ -585,11 +586,12 @@
                                     $no = 1;
                                     $aktif = ["Tidak Aktif", "Aktif"];
                                     $lembur = ["Tidak", "Perjam", "Insentif"];
+                                    $statusbpjs=["Non Aktif","Aktif"];
                                     foreach ($usr->getResult() as $usr) {
                                     ?>
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
-                                                <td style="padding-left:0px; padding-right:0px;">
+                                                <td style="padding-left:0px; padding-right:0px; white-space: nowrap;">
                                                     <!-- <?php
                                                             if (
                                                                 (
@@ -609,6 +611,10 @@
                                                         <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
                                                     </form>
                                                     <?php } ?> -->
+
+
+
+
                                                     <form method="post" class="btn-action" style="">
                                                         <button type="button" onclick="kontrak(<?= $usr->user_id; ?>)" class="btn btn-sm btn-info show-modal" data-userid="<?= $usr->user_id; ?>">
                                                             <span class="fa fa-address-book-o" style="color:white;"></span>
@@ -624,6 +630,8 @@
                                                             ?>
                                                         </div>
                                                     </form>
+
+
 
                                                     <?php
                                                     if (
@@ -667,8 +675,39 @@
                                                 </td>
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
+                                            <td style="white-space: nowrap;"><?= $statusbpjs[$usr->user_bpjsstatus]; ?>
+                                                <?php
+                                                if($usr->user_bpjsstatus==0){
+                                                    $colo="success";
+                                                    $fa="check";
+                                                    $sbpjs=1;
+                                                }else{
+                                                    $colo="danger";
+                                                    $fa="times";
+                                                    $sbpjs=0;
+                                                }
+                                                if (
+                                                    (
+                                                        isset(session()->get("position_id")[0][0])
+                                                        && (
+                                                            session()->get("position_id") == "1"
+                                                            || session()->get("position_id") == "2"
+                                                        )
+                                                    ) ||
+                                                    (
+                                                        isset(session()->get("halaman")['88']['act_update'])
+                                                        && session()->get("halaman")['88']['act_update'] == "1"
+                                                    )
+                                                ) { ?>
+                                                    <form method="post" class="btn-action" style="">
+                                                        <button class="btn btn-sm btn-<?=$colo;?> " name="bpjsstatus" value="OK"><span class="fa fa-<?=$fa;?>" style="color:white;"></span> </button>
+                                                        <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
+                                                        <input type="hidden" name="user_bpjsstatus" value="<?= $sbpjs; ?>" />
+                                                    </form>
+                                                <?php } ?>
+                                            </td>
                                             <td><?= $usr->user_cuti; ?></td>
-                                            <td><?= $usr->user_masuk; ?></td>
+                                            <td style="white-space: nowrap;"><?= $usr->user_masuk; ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
                                             <td><?= $usr->user_nik; ?></td>
