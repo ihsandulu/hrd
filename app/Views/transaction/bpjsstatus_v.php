@@ -188,7 +188,8 @@
                                                         <th>Tanggal</th>
                                                         <th>Posisi</th>
                                                         <th>Nama</th>
-                                                        <th>Status</th>
+                                                        <th>Status TK</th>
+                                                        <th>Status Kesehatan</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -263,7 +264,7 @@
                                                                 <?= $usr->user_nama; ?> (<?= $usr->user_nik; ?>)
                                                             </td>
                                                             <?php
-                                                            if ($usr->bpjsstatus_status == 0) {
+                                                            if ($usr->bpjsstatus_statustk == 0) {
                                                                 $bg = "danger";
                                                                 $colo = "white";
                                                                 $fa = "check";
@@ -274,7 +275,20 @@
                                                                 $fa = "times";
                                                                 $sbpjs = 0;
                                                             } ?>
-                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"> <?= $statusbpjs[$usr->bpjsstatus_status]; ?></td>
+                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"> <?= $statusbpjs[$usr->bpjsstatus_statustk]; ?></td>
+                                                            <?php
+                                                            if ($usr->bpjsstatus_statusk == 0) {
+                                                                $bg = "danger";
+                                                                $colo = "white";
+                                                                $fa = "check";
+                                                                $sbpjs = 1;
+                                                            } else {
+                                                                $bg = "success";
+                                                                $colo = "dark";
+                                                                $fa = "times";
+                                                                $sbpjs = 0;
+                                                            } ?>
+                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"> <?= $statusbpjs[$usr->bpjsstatus_statusk]; ?></td>
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>
@@ -367,10 +381,21 @@
                                         <div class="row">
                                             <div class="col-4 row mb-2">
                                                 <div class="col-4">
-                                                    <label class="text-dark">Status BPJS</label>
+                                                    <label class="text-dark">Status BPJS TK</label>
                                                 </div>
                                                 <div class="col-8">
-                                                    <select required class="form-control" name="bpjsstatus_status">
+                                                    <select required class="form-control" name="bpjsstatus_statustk">
+                                                        <option value="0">Non Aktif</option>
+                                                        <option value="1">Aktif</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-4 row mb-2">
+                                                <div class="col-4">
+                                                    <label class="text-dark">Status BPJS Kesehatan</label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <select required class="form-control" name="bpjsstatus_statusk">
                                                         <option value="0">Non Aktif</option>
                                                         <option value="1">Aktif</option>
                                                     </select>
@@ -415,7 +440,8 @@
                                                         <th>Pilih</th>
                                                         <th>Posisi</th>
                                                         <th>Name</th>
-                                                        <th>Status</th>
+                                                        <th>Status TK</th>
+                                                        <th>Status Kesehatan</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -455,7 +481,7 @@
                                                         <td><?= $usr->departemen_name; ?> - <?= $usr->position_name; ?></td>
                                                         <td><?= $usr->user_nama; ?> (<?= $usr->user_nik; ?>)</td>
                                                         <?php
-                                                            if ($usr->user_bpjsstatus == 0) {
+                                                            if ($usr->user_bpjsstatustk == 0) {
                                                                 $bg = "danger";
                                                                 $colo = "white";
                                                                 $fa = "check";
@@ -466,7 +492,20 @@
                                                                 $fa = "times";
                                                                 $sbpjs = 0;
                                                             } ?>
-                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatus]; ?></td>
+                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatustk]; ?></td>
+                                                            <?php
+                                                            if ($usr->user_bpjsstatusk == 0) {
+                                                                $bg = "danger";
+                                                                $colo = "white";
+                                                                $fa = "check";
+                                                                $sbpjs = 1;
+                                                            } else {
+                                                                $bg = "success";
+                                                                $colo = "dark";
+                                                                $fa = "times";
+                                                                $sbpjs = 0;
+                                                            } ?>
+                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatusk]; ?></td>
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>
