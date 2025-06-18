@@ -285,10 +285,24 @@ class muser_m extends core_m
             //echo $this->db->last_query();die;
         }
 
-        //update status bpjs
-        if ($this->request->getPost("bpjsstatus") == "OK") {
+        //update status bpjs tk
+        if ($this->request->getPost("bpjsstatustk") == "OK") {
             foreach ($this->request->getPost() as $e => $f) {
-                if ($e != 'bpjsstatus') {
+                if ($e != 'bpjsstatustk') {
+                    $inputu[$e] = $this->request->getPost($e);
+                }
+            }
+            $this->db->table('user')
+                ->where("user_id", $inputu["user_id"])
+                ->update($inputu);
+            $data["message"] = "Update Success";
+            //echo $this->db->last_query();die;
+        }
+
+         //update status bpjs kesehatan
+        if ($this->request->getPost("bpjsstatusk") == "OK") {
+            foreach ($this->request->getPost() as $e => $f) {
+                if ($e != 'bpjsstatusk') {
                     $inputu[$e] = $this->request->getPost($e);
                 }
             }

@@ -535,7 +535,8 @@
                                             <th>Action</th>
                                         <?php } ?>
                                         <th>No.</th>
-                                        <th>Status BPJS</th>
+                                        <th>Status BPJS TK</th>
+                                        <th>Status BPJS Kes</th>
                                         <th>Sisa Cuti</th>
                                         <th>Tgl.Masuk</th>
                                         <th>Departemen</th>
@@ -676,7 +677,7 @@
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
                                             <?php
-                                            if ($usr->user_bpjsstatus == 0) {
+                                            if ($usr->user_bpjsstatustk == 0) {
                                                 $bgtd = "danger";
                                                 $colotd = "white";
                                             } else {
@@ -684,9 +685,9 @@
                                                 $colotd = "white";
                                             } ?>
                                             <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
-                                                <?= $statusbpjs[$usr->user_bpjsstatus]; ?>
+                                                <?= $statusbpjs[$usr->user_bpjsstatustk]; ?>
                                                 <?php
-                                                if ($usr->user_bpjsstatus == 0) {
+                                                if ($usr->user_bpjsstatustk == 0) {
                                                     $colo = "success";
                                                     $fa = "check";
                                                     $sbpjs = 1;
@@ -709,9 +710,49 @@
                                                     )
                                                 ) { ?>
                                                     <form method="post" class="btn-action" style="">
-                                                        <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatus" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
+                                                        <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatustk" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
                                                         <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
-                                                        <input type="hidden" name="user_bpjsstatus" value="<?= $sbpjs; ?>" />
+                                                        <input type="hidden" name="user_bpjsstatustk" value="<?= $sbpjs; ?>" />
+                                                    </form>
+                                                <?php } ?>
+                                            </td>
+                                            <?php
+                                            if ($usr->user_bpjsstatusk == 0) {
+                                                $bgtd = "danger";
+                                                $colotd = "white";
+                                            } else {
+                                                $bgtd = "success";
+                                                $colotd = "white";
+                                            } ?>
+                                            <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
+                                                <?= $statusbpjs[$usr->user_bpjsstatusk]; ?>
+                                                <?php
+                                                if ($usr->user_bpjsstatusk == 0) {
+                                                    $colo = "success";
+                                                    $fa = "check";
+                                                    $sbpjs = 1;
+                                                } else {
+                                                    $colo = "danger";
+                                                    $fa = "times";
+                                                    $sbpjs = 0;
+                                                }
+                                                if (
+                                                    (
+                                                        isset(session()->get("position_id")[0][0])
+                                                        && (
+                                                            session()->get("position_id") == "1"
+                                                            || session()->get("position_id") == "2"
+                                                        )
+                                                    ) ||
+                                                    (
+                                                        isset(session()->get("halaman")['88']['act_update'])
+                                                        && session()->get("halaman")['88']['act_update'] == "1"
+                                                    )
+                                                ) { ?>
+                                                    <form method="post" class="btn-action" style="">
+                                                        <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatusk" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
+                                                        <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
+                                                        <input type="hidden" name="user_bpjsstatusk" value="<?= $sbpjs; ?>" />
                                                     </form>
                                                 <?php } ?>
                                             </td>
