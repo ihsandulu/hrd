@@ -40,6 +40,7 @@ $routes->add('/inventarist', 'transaction\inventarist::index');
 $routes->add('/gajiprint', 'transaction\gajiprint::index');
 $routes->add('/lain', 'transaction\lain::index');
 $routes->add('/bpjsstatus', 'transaction\bpjsstatus::index');
+$routes->add('/bpjsdata', 'transaction\bpjsdata::index');
 
 
 $routes->add('/rcutihutang', 'report\rcutihutang::index');
