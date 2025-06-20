@@ -261,7 +261,7 @@
                                                             <td><?= $usr->bpjsstatus_date; ?></td>
                                                             <td class="text-left"><?= $usr->departemen_name; ?> - <?= $usr->position_name; ?></td>
                                                             <td class="text-left">
-                                                                <?= $usr->user_nama; ?> (<?= $usr->user_nik; ?>)
+                                                                <?= $usr->user_nama; ?> (<?= $usr->user_nik; ?> | <?= $usr->user_ktp; ?>)
                                                             </td>
                                                             <?php
                                                             if ($usr->bpjsstatus_statustk == 0) {
@@ -311,7 +311,7 @@
                             <div id="collapseTwo" class="collapse <?= $panel2['collapseClass'] ?>" aria-labelledby="headingTwo" data-parent="#faqAccordion">
                                 <div class="card-body">
                                     <div class="alert alert-info">
-                                        <form method="post" action="<?= base_url("bpjsstatus"); ?>">
+                                        <form class="form-inline" method="post" action="<?= base_url("bpjsstatus"); ?>">
                                             <div class="row">
                                                 <?php
                                                 if (isset($_POST["departemen_id"])) {
@@ -330,47 +330,33 @@
                                                     $iuser = "";
                                                 }
                                                 ?>
-                                                <div class="col-4 row mb-2">
-                                                    <div class="col-3">
-                                                        <label class="text-dark">Dept. :</label>
-                                                    </div>
-                                                    <div class="col-9">
-                                                        <select class="form-control " name="departemen_id">
-                                                            <option value="">Departemen</option>
-                                                            <option value="all">All</option>
-                                                            <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
-                                                            foreach ($departemen->getResult() as $departemen) { ?>
-                                                                <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>
+                                                <div class="col mb-2">
+                                                    <select class="form-control " name="departemen_id">
+                                                        <option value="">Departemen</option>
+                                                        <option value="all">All</option>
+                                                        <?php $departemen = $this->db->table("departemen")->orderBy("departemen_name")->get();
+                                                        foreach ($departemen->getResult() as $departemen) { ?>
+                                                            <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
-                                                <div class="col-4 row mb-2">
-                                                    <div class="col-3">
-                                                        <label class="text-dark">Posisi :</label>
-                                                    </div>
-                                                    <div class="col-9">
-                                                        <select class="form-control " name="position_id">
-                                                            <option value="">Position</option>
-                                                            <option value="all">All</option>
-                                                            <?php $position = $this->db->table("position")->orderBy("position_name")->get();
-                                                            foreach ($position->getResult() as $position) { ?>
-                                                                <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>
+                                                <div class="col mb-2">
+                                                    <select class="form-control " name="position_id">
+                                                        <option value="">Position</option>
+                                                        <option value="all">All</option>
+                                                        <?php $position = $this->db->table("position")->orderBy("position_name")->get();
+                                                        foreach ($position->getResult() as $position) { ?>
+                                                            <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
-                                                <div class="col-4 row mb-2">
-                                                    <div class="col-3">
-                                                        <label class="text-dark">NIK :</label>
-                                                    </div>
-                                                    <div class="col-9">
-                                                        <input class="form-control " name="user_nik">
-                                                    </div>
+                                                <div class="col mb-2">
+                                                    <input class="form-control " name="user_nik" placeholder="NIK">
                                                 </div>
-                                                <div class="col-12 mb-2">
-                                                    <button type="submit" class="btn btn-block btn-primary">Search</button>
+                                                <div class="col mb-2">
+                                                    <input class="form-control " name="user_ktp" placeholder="KTP">
                                                 </div>
+                                                <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
                                         </form>
                                     </div>
@@ -433,7 +419,7 @@
                                         <?php if (session()->getFlashdata('error')): ?>
                                             <div class="alert alert-warning"><?= session()->getFlashdata('error'); ?></div>
                                         <?php endif; ?>
-                                        <div class="table-responsive m-t-1">                                            
+                                        <div class="table-responsive m-t-1">
                                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead class="">
                                                     <tr>
@@ -463,6 +449,10 @@
                                                         $user_nik = $_POST["user_nik"];
                                                         $build->like("user.user_nik", $user_nik, "BOTH");
                                                     }
+                                                    if (isset($_POST["user_ktp"]) && $_POST["user_ktp"] != "" && $_POST["user_ktp"] != "all") {
+                                                        $user_ktp = $_POST["user_ktp"];
+                                                        $build->like("user.user_ktp", $user_ktp, "BOTH");
+                                                    }
                                                     if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"]) && !isset($_POST["user_nik"])) {
                                                         $build->where("user.position_id", "0");
                                                     }
@@ -479,33 +469,33 @@
                                                     foreach ($usr->getResult() as $usr) { ?>
                                                         <td><input class="cpilih" type="checkbox" id="p<?= $usr->user_id; ?>" name="user_id[]" value="<?= $usr->user_id; ?>" /></td>
                                                         <td><?= $usr->departemen_name; ?> - <?= $usr->position_name; ?></td>
-                                                        <td><?= $usr->user_nama; ?> (<?= $usr->user_nik; ?>)</td>
+                                                        <td><?= $usr->user_nama; ?> (<?= $usr->user_nik; ?> | <?= $usr->user_ktp; ?>)</td>
                                                         <?php
-                                                            if ($usr->user_bpjsstatustk == 0) {
-                                                                $bg = "danger";
-                                                                $colo = "white";
-                                                                $fa = "check";
-                                                                $sbpjs = 1;
-                                                            } else {
-                                                                $bg = "success";
-                                                                $colo = "dark";
-                                                                $fa = "times";
-                                                                $sbpjs = 0;
-                                                            } ?>
-                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatustk]; ?></td>
-                                                            <?php
-                                                            if ($usr->user_bpjsstatusk == 0) {
-                                                                $bg = "danger";
-                                                                $colo = "white";
-                                                                $fa = "check";
-                                                                $sbpjs = 1;
-                                                            } else {
-                                                                $bg = "success";
-                                                                $colo = "dark";
-                                                                $fa = "times";
-                                                                $sbpjs = 0;
-                                                            } ?>
-                                                            <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatusk]; ?></td>
+                                                        if ($usr->user_bpjsstatustk == 0) {
+                                                            $bg = "danger";
+                                                            $colo = "white";
+                                                            $fa = "check";
+                                                            $sbpjs = 1;
+                                                        } else {
+                                                            $bg = "success";
+                                                            $colo = "dark";
+                                                            $fa = "times";
+                                                            $sbpjs = 0;
+                                                        } ?>
+                                                        <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatustk]; ?></td>
+                                                        <?php
+                                                        if ($usr->user_bpjsstatusk == 0) {
+                                                            $bg = "danger";
+                                                            $colo = "white";
+                                                            $fa = "check";
+                                                            $sbpjs = 1;
+                                                        } else {
+                                                            $bg = "success";
+                                                            $colo = "dark";
+                                                            $fa = "times";
+                                                            $sbpjs = 0;
+                                                        } ?>
+                                                        <td class="bg-<?= $bg; ?> text-<?= $colo; ?>"><?= $statusbpjs[$usr->user_bpjsstatusk]; ?></td>
                                                         </tr>
                                                     <?php } ?>
                                                 </tbody>
