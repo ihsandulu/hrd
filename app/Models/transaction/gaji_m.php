@@ -535,7 +535,7 @@ class gaji_m extends core_m
 
                     $builder = $this->db->table('gaji');
                     $builder->insert($input);
-                    /* echo $this->db->getLastQuery();die; */
+                    echo $this->db->getLastQuery();die;
                     $gaji_id = $this->db->insertID();
 
                     $data["message"] = "Insert Data Success";
