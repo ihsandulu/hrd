@@ -927,6 +927,7 @@ class api extends BaseController
                 $bpjsstatus_statustk = $row->bpjsstatus_statustk;
                 $bpjsstatus_statusk = $row->bpjsstatus_statusk;
             }
+            
             //Premi Asuransi Pemberi Kerja
             //kesehatan
             if ($arbpjs["Kesehatan"]["perdiskon"] > 0) {

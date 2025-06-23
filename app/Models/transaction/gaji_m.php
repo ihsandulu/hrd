@@ -342,7 +342,7 @@ class gaji_m extends core_m
                     $input["gaji_serikatburuh"] = 0;
 
 
-                    $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"]+ $input["gaji_plain"];
+                    $potonganasli = $absen->gaji_alphanominal + $absen->gaji_ptransportasi + $absen->gaji_pkehadiran + $absen->gaji_pmakan + $gaji_inventaris + $input["gaji_serikatburuh"] + $input["gaji_plain"];
                     $input["gaji_potonganasli"] = $potonganasli;
 
                     //bpjs
@@ -359,6 +359,15 @@ class gaji_m extends core_m
                         $gbpjsp = $gbpjs;
                     }
 
+                    //cek status aktif bpjs
+                    $bpjsstatus_statustk = 0;
+                    $bpjsstatus_statusk = 0;
+                    $bpjsstatus = $this->db->table("bpjsstatus")->where("user_id", $absen->user_id)->get();
+                    foreach ($bpjsstatus->getResult() as $row) {
+                        $bpjsstatus_statustk = $row->bpjsstatus_statustk;
+                        $bpjsstatus_statusk = $row->bpjsstatus_statusk;
+                    }
+
                     //Premi Asuransi Pemberi Kerja
                     //kesehatan
                     if ($arbpjs["Kesehatan"]["perdiskon"] > 0) {
@@ -366,35 +375,52 @@ class gaji_m extends core_m
                     } else {
                         $dkesehatanp = 1;
                     }
-                    $input["gaji_pbpjskesehatan"] = ($arbpjs["Kesehatan"]["perusahaan"] / 100 * $gbpjs) * $dkesehatanp;
+
                     //jht
                     if ($arbpjs["JHT"]["perdiskon"] > 0) {
                         $dJHTp = $arbpjs["JHT"]["perdiskon"] / 100;
                     } else {
                         $dJHTp = 1;
                     }
-                    $input["gaji_pbpjsjht"] = ($arbpjs["JHT"]["perusahaan"] / 100 * $gbpjs) * $dJHTp;
+
                     //jkk
                     if ($arbpjs["JKK"]["perdiskon"] > 0) {
                         $dJKKp = $arbpjs["JKK"]["perdiskon"] / 100;
                     } else {
                         $dJKKp = 1;
                     }
-                    $input["gaji_pbpjsjkk"] = ($arbpjs["JKK"]["perusahaan"] / 100 * $gbpjs) * $dJKKp;
+
                     //jkm
                     if ($arbpjs["JKM"]["perdiskon"] > 0) {
                         $dJKMp = $arbpjs["JKM"]["perdiskon"] / 100;
                     } else {
                         $dJKMp = 1;
                     }
-                    $input["gaji_pbpjsjkm"] = ($arbpjs["JKM"]["perusahaan"] / 100 * $gbpjs) * $dJKMp;
+
                     //pensiun
                     if ($arbpjs["JP"]["perdiskon"] > 0) {
                         $dJPp = $arbpjs["JP"]["perdiskon"] / 100;
                     } else {
                         $dJPp = 1;
                     }
-                    $input["gaji_pbpjspensiun"] = ($arbpjs["JP"]["perusahaan"] / 100 * $gbpjsp) * $dJPp;
+
+
+                    if ($bpjsstatus_statusk == 1) {
+                        $input["gaji_pbpjskesehatan"] = ($arbpjs["Kesehatan"]["perusahaan"] / 100 * $gbpjs) * $dkesehatanp;
+                    } else {
+                        $input["gaji_pbpjskesehatan"] = 0;
+                    }
+                    if ($bpjsstatus_statustk == 1) {
+                        $input["gaji_pbpjsjht"] = ($arbpjs["JHT"]["perusahaan"] / 100 * $gbpjs) * $dJHTp;
+                        $input["gaji_pbpjsjkk"] = ($arbpjs["JKK"]["perusahaan"] / 100 * $gbpjs) * $dJKKp;
+                        $input["gaji_pbpjsjkm"] = ($arbpjs["JKM"]["perusahaan"] / 100 * $gbpjs) * $dJKMp;
+                        $input["gaji_pbpjspensiun"] = ($arbpjs["JP"]["perusahaan"] / 100 * $gbpjsp) * $dJPp;
+                    } else {
+                        $input["gaji_pbpjsjht"] = 0;
+                        $input["gaji_pbpjsjkk"] = 0;
+                        $input["gaji_pbpjsjkm"] = 0;
+                        $input["gaji_pbpjspensiun"] = 0;
+                    }
 
                     $penghasilanpbpjs = $input["gaji_pbpjskesehatan"] +
                         $input["gaji_pbpjsjht"] +
@@ -413,35 +439,52 @@ class gaji_m extends core_m
                     } else {
                         $dkesehatan = 1;
                     }
-                    $input["gaji_bpjskesehatan"] = ($arbpjs["Kesehatan"]["pekerja"] / 100 * $gbpjs) * $dkesehatan;
+                    
                     //jht
                     if ($arbpjs["JHT"]["pekdiskon"] > 0) {
                         $dJHT = $arbpjs["JHT"]["pekdiskon"] / 100;
                     } else {
                         $dJHT = 1;
                     }
-                    $input["gaji_bpjsjht"] = ($arbpjs["JHT"]["pekerja"] / 100 * $gbpjs) * $dJHT;
+                    
                     //jkk
                     if ($arbpjs["JKK"]["pekdiskon"] > 0) {
                         $dJKK = $arbpjs["JKK"]["pekdiskon"] / 100;
                     } else {
                         $dJKK = 1;
                     }
-                    $input["gaji_bpjsjkk"] = ($arbpjs["JKK"]["pekerja"] / 100 * $gbpjs) * $dJKK;
+                    
                     //jkm
                     if ($arbpjs["JKM"]["pekdiskon"] > 0) {
                         $dJKM = $arbpjs["JKM"]["pekdiskon"] / 100;
                     } else {
                         $dJKM = 1;
                     }
-                    $input["gaji_bpjsjkm"] = ($arbpjs["JKM"]["pekerja"] / 100 * $gbpjs) * $dJKM;
+                    
                     //pensiun
                     if ($arbpjs["JP"]["pekdiskon"] > 0) {
                         $dJP = $arbpjs["JP"]["pekdiskon"] / 100;
                     } else {
                         $dJP = 1;
                     }
-                    $input["gaji_bpjspensiun"] = ($arbpjs["JP"]["pekerja"] / 100 * $gbpjsp) * $dJP;
+                    
+
+                    if ($bpjsstatus_statusk == 1) {
+                        $input["gaji_bpjskesehatan"] = ($arbpjs["Kesehatan"]["pekerja"] / 100 * $gbpjs) * $dkesehatan;
+                    } else {
+                        $input["gaji_bpjskesehatan"] = 0;
+                    }
+                    if ($bpjsstatus_statustk == 1) {
+                        $input["gaji_bpjsjht"] = ($arbpjs["JHT"]["pekerja"] / 100 * $gbpjs) * $dJHT;
+                        $input["gaji_bpjsjkk"] = ($arbpjs["JKK"]["pekerja"] / 100 * $gbpjs) * $dJKK;
+                        $input["gaji_bpjsjkm"] = ($arbpjs["JKM"]["pekerja"] / 100 * $gbpjs) * $dJKM;
+                        $input["gaji_bpjspensiun"] = ($arbpjs["JP"]["pekerja"] / 100 * $gbpjsp) * $dJP;
+                    } else {
+                        $input["gaji_bpjsjht"] = 0;
+                        $input["gaji_bpjsjkk"] = 0;
+                        $input["gaji_bpjsjkm"] = 0;
+                        $input["gaji_bpjspensiun"] = 0;
+                    }
 
                     $potonganbpjs = $input["gaji_bpjskesehatan"] +
                         $input["gaji_bpjsjht"] +
