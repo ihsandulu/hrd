@@ -532,7 +532,7 @@ class gaji_m extends core_m
                     }
                     $input["gaji_thp"] = ceil($gaji_thp);
                     $input["gaji_print"] = $this->request->getPost("gaji_print");
-                    dd($input);
+                    // dd($input);
                     $builder = $this->db->table('gaji');
                     $builder->insert($input);
                     /* echo $this->db->getLastQuery();die; */
