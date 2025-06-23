@@ -439,35 +439,35 @@ class gaji_m extends core_m
                     } else {
                         $dkesehatan = 1;
                     }
-                    
+
                     //jht
                     if ($arbpjs["JHT"]["pekdiskon"] > 0) {
                         $dJHT = $arbpjs["JHT"]["pekdiskon"] / 100;
                     } else {
                         $dJHT = 1;
                     }
-                    
+
                     //jkk
                     if ($arbpjs["JKK"]["pekdiskon"] > 0) {
                         $dJKK = $arbpjs["JKK"]["pekdiskon"] / 100;
                     } else {
                         $dJKK = 1;
                     }
-                    
+
                     //jkm
                     if ($arbpjs["JKM"]["pekdiskon"] > 0) {
                         $dJKM = $arbpjs["JKM"]["pekdiskon"] / 100;
                     } else {
                         $dJKM = 1;
                     }
-                    
+
                     //pensiun
                     if ($arbpjs["JP"]["pekdiskon"] > 0) {
                         $dJP = $arbpjs["JP"]["pekdiskon"] / 100;
                     } else {
                         $dJP = 1;
                     }
-                    
+
 
                     if ($bpjsstatus_statusk == 1) {
                         $input["gaji_bpjskesehatan"] = ($arbpjs["Kesehatan"]["pekerja"] / 100 * $gbpjs) * $dkesehatan;
@@ -532,10 +532,10 @@ class gaji_m extends core_m
                     }
                     $input["gaji_thp"] = ceil($gaji_thp);
                     $input["gaji_print"] = $this->request->getPost("gaji_print");
-
+                    dd($input);
                     $builder = $this->db->table('gaji');
                     $builder->insert($input);
-                    echo $this->db->getLastQuery();die;
+                    /* echo $this->db->getLastQuery();die; */
                     $gaji_id = $this->db->insertID();
 
                     $data["message"] = "Insert Data Success";
