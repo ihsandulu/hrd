@@ -243,8 +243,8 @@ class gaji_m extends core_m
                           SUM(if(lain_type=2,lain_nominal,0))AS plain")
                         ->get();
                     foreach ($lain->getResult() as $lain) {
-                        $mlain = $lain->mlain;
-                        $plain = $lain->plain;
+                        $mlain = $lain->mlain ?? 0;
+                        $plain = $lain->plain ?? 0;
                     }
 
                     //jika lembur sabtu atau hari libur maka dikasih makan, tapi jika Ramadlan maka diganti dengan uang 8rb
