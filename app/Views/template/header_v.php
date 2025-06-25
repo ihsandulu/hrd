@@ -139,6 +139,9 @@ foreach($identity->getResult() as $identity){
         .container-fluid{
             padding:5px;
             margin:0px;
+            width: 100%;
+            position: relative;
+            top: -8px;
         }
         .page-titles{
             margin-bottom:-13px;
@@ -193,7 +196,7 @@ foreach($identity->getResult() as $identity){
         <!-- Page wrapper  -->
         <div class="page-wrapper">
             <!-- Bread crumb -->
-            <div class="row page-titles">
+            <!-- <div class="row page-titles">
                 <div class="col-md-5 align-self-center">
                     <h3 class="green" id="page-title">Dashboard</h3>
                 </div>
@@ -203,7 +206,7 @@ foreach($identity->getResult() as $identity){
                         <li class="breadcrumb-item active" id="page-title-link">Dashboard</li>
                     </ol>
                 </div>
-            </div>
+            </div> -->
             <!-- End Bread crumb -->
             <!-- Container fluid  -->
             <div class="container-fluid">

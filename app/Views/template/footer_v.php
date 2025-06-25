@@ -19,6 +19,11 @@
     </div>
 </div>
 <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
     function showmessage(a) {
         //alert('<?= (isset($_GET['message'])) ? $_GET['message'] : $this->session->getFlashdata("message"); ?>');
         <?php
@@ -265,14 +270,16 @@
 <script src="js/lib/toastr/toastr.init.js"></script>
 
 <script>
-$(document).ready(function () {
-    var activeLink = $('.scroll-sidebar a.active');
-    if (activeLink.length) {
-        var container = $('.scroll-sidebar');
-        var scrollPosition = activeLink.offset().top - container.offset().top + container.scrollTop() - 100;
-        container.animate({ scrollTop: scrollPosition }, 500);
-    }
-});
+    $(document).ready(function() {
+        var activeLink = $('.scroll-sidebar a.active');
+        if (activeLink.length) {
+            var container = $('.scroll-sidebar');
+            var scrollPosition = activeLink.offset().top - container.offset().top + container.scrollTop() - 100;
+            container.animate({
+                scrollTop: scrollPosition
+            }, 500);
+        }
+    });
 </script>
 
 </body>
