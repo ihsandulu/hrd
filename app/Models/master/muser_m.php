@@ -12,8 +12,8 @@ class muser_m extends core_m
         $data = array();
         $data["message"] = "";
         //cek user
-        if ($this->request->getVar("user_id")) {
-            $userd["user_id"] = $this->request->getVar("user_id");
+        if ($this->request->getPost("user_id")) {
+            $userd["user_id"] = $this->request->getPost("user_id");
         } else {
             $userd["user_id"] = -1;
         }
@@ -39,11 +39,16 @@ class muser_m extends core_m
                 $encrypted_data = substr($datak, openssl_cipher_iv_length($method));
                 $decrypted = openssl_decrypt($encrypted_data, $method, $key, 0, $iv_dec);
                 $data["user_password"] = $decrypted;
+
+                if ($data["user_temp"] == "") {
+                    $data["user_temp"] = date("YmdHis");
+                }
             }
         } else {
             foreach ($this->db->getFieldNames('user') as $field) {
                 $data[$field] = "";
             }
+            $data["user_temp"] = date("YmdHis");
         }
 
         //export excel karyawan
@@ -224,18 +229,13 @@ class muser_m extends core_m
         //delete
         if ($this->request->getPost("delete") == "OK") {
             $user_id = $this->request->getPost("user_id");
-            $cek = $this->db->table("placement")
-                ->where("user_id", $user_id)
-                ->get()
-                ->getNumRows();
-            if ($cek > 0) {
-                $data["message"] = "User masih dipakai di data 'Placement'!";
-            } else {
-                $this->db
-                    ->table("user")
-                    ->delete(array("user_id" =>  $user_id));
-                $data["message"] = "Delete Success";
-            }
+            $this->db
+                ->table("user")
+                ->delete(array("user_id" =>  $user_id));
+            $this->db
+                ->table("kontrak")
+                ->delete(array("user_id" =>  $user_id));
+            $data["message"] = "Delete Success";
         }
 
         //insert
@@ -259,6 +259,11 @@ class muser_m extends core_m
             $this->db->table('user')->insert($inputu);
             /* echo $this->db->getLastQuery();
             die; */
+
+            // dd($inputu);
+            $this->db->table("kontrak")->where("user_temp", $inputu["user_temp"])->update(array(
+                "user_id" => $this->db->insertID()
+            ));
             $data["message"] = "Insert Data Success";
         }
         //echo $_POST["create"];die;
@@ -282,6 +287,10 @@ class muser_m extends core_m
                 ->where("user_id", $inputu["user_id"])
                 ->update($inputu);
             $data["message"] = "Update Success";
+
+            $this->db->table("kontrak")->where("user_temp", $inputu["user_temp"])->update(array(
+                "user_id" => $inputu["user_id"]
+            ));
             //echo $this->db->last_query();die;
         }
 
@@ -299,7 +308,7 @@ class muser_m extends core_m
             //echo $this->db->last_query();die;
         }
 
-         //update status bpjs kesehatan
+        //update status bpjs kesehatan
         if ($this->request->getPost("bpjsstatusk") == "OK") {
             foreach ($this->request->getPost() as $e => $f) {
                 if ($e != 'bpjsstatusk') {

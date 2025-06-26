@@ -317,7 +317,7 @@ class api extends BaseController
                     <img src="<?= $blob_data; ?>" class="col-12" />
                 </div>
             </div>
-<?php }
+        <?php }
     }
 
 
@@ -927,7 +927,7 @@ class api extends BaseController
                 $bpjsstatus_statustk = $row->bpjsstatus_statustk;
                 $bpjsstatus_statusk = $row->bpjsstatus_statusk;
             }
-            
+
             //Premi Asuransi Pemberi Kerja
             //kesehatan
             if ($arbpjs["Kesehatan"]["perdiskon"] > 0) {
@@ -1131,5 +1131,85 @@ class api extends BaseController
             $status = $statustarikdata->statustarikdata_status;
         }
         echo $status;
+    }
+    public function listkontrak()
+    {
+        $inputu["user_temp"] = $this->request->getGet("user_temp");
+        ?>
+        <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead class="">
+                <tr>
+                    <th>Action</th>
+                    <th>Nama Kontrak</th>
+                    <th>Tanggal Awal Kontrak</th>
+                    <th>Tanggal Akhir Kontrak</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $kontrak = $this->db->table("kontrak")->where("user_temp", $inputu["user_temp"])->get();
+                foreach ($kontrak->getResult() as $usr) {
+                ?>
+                    <tr>
+                        <td style="padding-left:0px; padding-right:0px; white-space: nowrap;">
+                            <!-- <form method="post" class="btn-action" style="">
+                                <button type="button" title="Edit" data-bs-toggle="tooltip" data-bs-placement="top" class="btn btn-sm btn-warning " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
+                                <input type="hidden" id="kontrak_id" name="kontrak_id" value="<?= $usr->kontrak_id; ?>" />
+                            </form> -->
+                            <form method="post" class="btn-action" style="">
+                                <button type="button" title="Delete" data-bs-toggle="tooltip" data-bs-placement="top" class="btn btn-sm btn-danger delete" onclick="konfirmasiHapus(this);" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
+                                <input type="hidden" id="kontrak_id" name="kontrak_id" value="<?= $usr->kontrak_id; ?>" />
+                            </form>
+                        </td>
+                        <td style="white-space: nowrap;"><?= $usr->kontrak_name; ?></td>
+                        <td><?= $usr->kontrak_from; ?></td>
+                        <td><?= $usr->kontrak_to; ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <script>
+            function konfirmasiHapus(button) {
+                if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                    deletekontrak(button);
+                }
+            }
+            function deletekontrak(button) {
+                $.get("<?= base_url('api/deletekontrak'); ?>", {
+                        kontrak_id: $(button).closest('form').find('input[name="kontrak_id"]').val()
+                    })
+                    .done(function(data) {
+                        listkontrak();
+                    });
+            }
+        </script>
+<?php
+    }
+
+    public function deletekontrak()
+    {
+        foreach ($this->request->getGet() as $e => $f) {
+            if ($e != 'create') {
+                $inputu[$e] = $this->request->getGet($e);
+            }
+        }
+        // dd($inputu);
+        $this->db->table('kontrak')->delete($inputu);
+    }
+
+    public function datakontrak()
+    {
+        foreach ($this->request->getGet() as $e => $f) {
+            if ($e != 'create') {
+                $inputu[$e] = $this->request->getGet($e);
+            }
+        }
+        // dd($inputu);
+        $this->db->table('kontrak')->insert($inputu);
+        if ($inputu["user_id"] != 0) {
+            $where["user_id"] = $inputu["user_id"];
+            $inputa["user_temp"] = $inputu["user_temp"];
+            $this->db->table('user')->where($where)->update($inputa);
+        }
     }
 }

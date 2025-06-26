@@ -31,7 +31,30 @@
     .nowrap {
         white-space: nowrap;
     }
-    .card-title{background-color: rgba(3, 150, 23, 0.5); padding: 5px; font-size: 15px; border-radius: 5px; color: white;}
+
+    .card-title {
+        background-color: rgba(3, 150, 23, 0.5);
+        padding: 5px;
+        font-size: 15px;
+        border-radius: 5px;
+        color: white;
+    }
+
+    .sub-title {
+        background-color: rgba(150, 189, 72, 0.5);
+        padding: 5px;
+        font-size: 15px;
+        border-radius: 5px;
+        color: white;
+        margin-bottom: 5px;
+    }
+
+    .blok {
+        border: rgba(174, 168, 168, 0.5) solid 2px;
+        border-radius: 5px;
+        margin: 5px;
+        padding: 10px;
+    }
 </style>
 <div class='container-fluid'>
     <div class='row'>
@@ -107,387 +130,323 @@
                                 $user_namabutton = 'name="create"';
                                 $ketuser_password = "Jangan dikosongkan!";
                             } ?>
-                            <form class="form-horizontal row" method="post" enctype="multipart/form-data">
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_status">Status:</label>
-                                    <div class="col-12">
-                                        <select required class="form-control" id="user_status" name="user_status">
-                                            <option value="1" <?= ($user_status == 1) ? "selected" : ""; ?>>Aktif</option>
-                                            <option value="0" <?= ($user_status == 0) ? "selected" : ""; ?>>Tidak Aktif</option>
-                                        </select>
+                            <form class="form-horizontal " method="post" enctype="multipart/form-data">
+                                <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                    <div class="blok row ">
+                                        <div class="sub-title col-12">* HR Recruitment</div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <select autofocus title="Status" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control" id="user_status" name="user_status">
+                                                    <option value="1" <?= ($user_status == 1) ? "selected" : ""; ?>>Aktif</option>
+                                                    <option value="0" <?= ($user_status == 0) ? "selected" : ""; ?>>Tidak Aktif</option>
+                                                </select>
 
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <?php
+                                                $departemen = $this->db->table("departemen")->orderBy("departemen_name", "ASC")
+                                                    ->get();
+                                                //echo $this->db->getLastQuery();
+                                                ?>
+                                                <select title="Departemen" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control select" id="departemen_id" name="departemen_id">
+                                                    <option value="" <?= ($departemen_id == "") ? "selected" : ""; ?>>Pilih Departemen</option>
+                                                    <?php
+                                                    foreach ($departemen->getResult() as $departemen) { ?>
+                                                        <option value="<?= $departemen->departemen_id; ?>" <?= ($departemen_id == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <?php
+                                                $base = $this->db->table("position");
+                                                if (session()->get("position_id") != "1") {
+                                                    $base->where("position_id!=", "1");
+                                                }
+                                                $position = $base->orderBy("position_name", "ASC")
+                                                    ->get();
+                                                //echo $this->db->getLastQuery();
+                                                ?>
+                                                <select title="Jabatan" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control select" id="position_id" name="position_id">
+                                                    <option value="" <?= ($position_id == "") ? "selected" : ""; ?>>Pilih Jabatan</option>
+                                                    <?php
+                                                    foreach ($position->getResult() as $position) { ?>
+                                                        <option value="<?= $position->position_id; ?>" <?= ($position_id == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nama Lengkap" data-bs-toggle="tooltip" data-bs-placement="top" required type="text" class="form-control" id="user_nama" name="user_nama" placeholder="Nama Lengkap" value="<?= $user_nama; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="NIK" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_nik" name="user_nik" placeholder="NIK" value="<?= $user_nik; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="KTP" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_ktp" name="user_ktp" placeholder="KTP" value="<?= $user_ktp; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="ETAG" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_etag" name="user_etag" placeholder="ETAG" value="<?= $user_etag; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Tgl Masuk" data-bs-toggle="tooltip" data-bs-placement="top" required type="date" class="form-control" id="user_masuk" name="user_masuk" placeholder="Tgl Masuk" value="<?= $user_masuk; ?>">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Tgl Keluar" data-bs-toggle="tooltip" data-bs-placement="top" type="date" class="form-control" id="user_keluar" name="user_keluar" placeholder="Tgl Keluar" value="<?= $user_keluar; ?>">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Whatsapp" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_wa" name="user_wa" placeholder="Whatsapp" value="<?= $user_wa; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="NPWP" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_npwp" name="user_npwp" placeholder="NPWP" value="<?= $user_npwp; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nomor BPJS TK" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_bpjstk" name="user_bpjstk" placeholder="Nomor BPJS TK" value="<?= $user_bpjstk; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nomor BPJS Kesehatan" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_bpjskesehatan" name="user_bpjskesehatan" placeholder="Nomor BPJS Kesehatan" value="<?= $user_bpjskesehatan; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Alamat" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_address" name="user_address" placeholder="Alamat" value="<?= $user_address; ?>">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Kartu Keluarga" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_kk" name="user_kk" placeholder="Kartu Keluarga" value="<?= $user_kk; ?>">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <select title="Bank" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_bank" name="user_bank">
+                                                    <option value="MANDIRI" <?= ($user_bank == "MANDIRI") ? "selected" : ""; ?>>MANDIRI</option>
+                                                    <option value="BCA" <?= ($user_bank == "BCA") ? "selected" : ""; ?>>BCA</option>
+                                                    <option value="BNI" <?= ($user_bank == "BNI") ? "selected" : ""; ?>>BNI</option>
+                                                    <option value="BRI" <?= ($user_bank == "BRI") ? "selected" : ""; ?>>BRI</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="No Rek" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_norek" name="user_norek" placeholder="No Rek" value="<?= $user_norek; ?>">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nama Ibu" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_ibu" name="user_ibu" placeholder="Nama Ibu" value="<?= $user_ibu; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <select title="Pendidikan" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_pendidikan" name="user_pendidikan">
+                                                    <option value="SD" <?= ($user_pendidikan == "SD") ? "selected" : ""; ?>>SD</option>
+                                                    <option value="SMP" <?= ($user_pendidikan == "SMP") ? "selected" : ""; ?>>SMP</option>
+                                                    <option value="SMA" <?= ($user_pendidikan == "SMA") ? "selected" : ""; ?>>SMA</option>
+                                                    <option value="D1" <?= ($user_pendidikan == "D1") ? "selected" : ""; ?>>D1</option>
+                                                    <option value="D2" <?= ($user_pendidikan == "D2") ? "selected" : ""; ?>>D2</option>
+                                                    <option value="D3" <?= ($user_pendidikan == "D3") ? "selected" : ""; ?>>D3</option>
+                                                    <option value="S1" <?= ($user_pendidikan == "S1") ? "selected" : ""; ?>>S1</option>
+                                                    <option value="S2" <?= ($user_pendidikan == "S2") ? "selected" : ""; ?>>S2</option>
+                                                    <option value="S3" <?= ($user_pendidikan == "S3") ? "selected" : ""; ?>>S3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Tgl Lahir" data-bs-toggle="tooltip" data-bs-placement="top" type="date" class="form-control" id="user_borndate" name="user_borndate" placeholder="Tgl Lahir" value="<?= $user_borndate; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Tempat Lahir" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_borncity" name="user_borncity" placeholder="Tempat Lahir" value="<?= $user_borncity; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <select title="L/P" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_gender" name="user_gender">
+                                                    <option value="" <?= ($user_gender == "") ? "selected" : ""; ?>>Pilih Gender</option>
+                                                    <option value="L" <?= ($user_gender == "L") ? "selected" : ""; ?>>L</option>
+                                                    <option value="P" <?= ($user_gender == "P") ? "selected" : ""; ?>>P</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <select title="Status Tanggungan" data-bs-toggle="tooltip" data-bs-placement="top" onchange="pph()" class="form-control" id="user_tanggungan" name="user_tanggungan">
+                                                    <option value="" <?= ($user_tanggungan == "") ? "selected" : ""; ?>>Pilih Status</option>
+                                                    <?php $tanggungan = $this->db->table("tanggungan")->get();
+                                                    foreach ($tanggungan->getResult() as $tanggungan) { ?>
+                                                        <option value="<?= $tanggungan->tanggungan_jenis; ?>" data-ter="<?= $tanggungan->tanggungan_ter; ?>" <?= ($user_tanggungan == $tanggungan->tanggungan_jenis) ? "selected" : ""; ?>><?= $tanggungan->tanggungan_jenis; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            function pph() {
+                                                let ter = $("#user_tanggungan option:selected").attr("data-ter");
+                                                $("#user_tanggunganjenis").val(ter);
+                                            }
+                                        </script>
+
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Jenis Tanggungan" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_tanggunganjenis" name="user_tanggunganjenis" placeholder="Jenis Tanggungan" value="<?= $user_tanggunganjenis; ?>">
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="position_id">Departemen:</label>
-                                    <div class="col-12">
-                                        <?php
-                                        $departemen = $this->db->table("departemen")->orderBy("departemen_name", "ASC")
-                                            ->get();
-                                        //echo $this->db->getLastQuery();
-                                        ?>
-                                        <select autofocus required class="form-control select" id="departemen_id" name="departemen_id">
-                                            <option value="" <?= ($departemen_id == "") ? "selected" : ""; ?>>Pilih Departemen</option>
-                                            <?php
-                                            foreach ($departemen->getResult() as $departemen) { ?>
-                                                <option value="<?= $departemen->departemen_id; ?>" <?= ($departemen_id == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
-                                            <?php } ?>
-                                        </select>
+                                <?php } ?>
 
+                                <div class="blok row ">
+                                    <div class="sub-title col-12">* HR General</div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Password" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_password" name="user_password" placeholder="<?= $ketuser_password; ?>" value="<?= $user_password; ?>">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="position_id">Jabatan:</label>
-                                    <div class="col-12">
-                                        <?php
-                                        $base = $this->db->table("position");
-                                        if (session()->get("position_id") != "1") {
-                                            $base->where("position_id!=", "1");
-                                        }
-                                        $position = $base->orderBy("position_name", "ASC")
-                                            ->get();
-                                        //echo $this->db->getLastQuery();
-                                        ?>
-                                        <select required class="form-control select" id="position_id" name="position_id">
-                                            <option value="" <?= ($position_id == "") ? "selected" : ""; ?>>Pilih Jabatan</option>
-                                            <?php
-                                            foreach ($position->getResult() as $position) { ?>
-                                                <option value="<?= $position->position_id; ?>" <?= ($position_id == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
-                                            <?php } ?>
-                                        </select>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Email" data-bs-toggle="tooltip" data-bs-placement="top" type="email" class="form-control" id="user_email" name="user_email" placeholder="Email" value="<?= $user_email; ?>">
+
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_nama">Nama Lengkap:</label>
-                                    <div class="col-12">
-                                        <input required type="text" class="form-control" id="user_nama" name="user_nama" placeholder="" value="<?= $user_nama; ?>">
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Sisa Cuti" data-bs-toggle="tooltip" data-bs-placement="top" type="number" class="form-control" id="user_cuti" name="user_cuti" placeholder="Sisa Cuti" value="<?= $user_cuti; ?>">
+
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_nik">NIK:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_nik" name="user_nik" placeholder="" value="<?= $user_nik; ?>">
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <select title="Tipe Penggajian" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_payrolltype" name="user_payrolltype">
+                                                <option value="bulanan" <?= ($user_payrolltype == "bulanan") ? "selected" : ""; ?>>Bulanan</option>
+                                                <option value="harian" <?= ($user_payrolltype == "harian") ? "selected" : ""; ?>>Harian</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_ktp">KTP:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_ktp" name="user_ktp" placeholder="" value="<?= $user_ktp; ?>">
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <select title="Lembur" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_lembur" name="user_lembur">
+                                                <option value="0" <?= ($user_lembur == "0") ? "selected" : ""; ?>>Tidak</option>
+                                                <option value="1" <?= ($user_lembur == "1") ? "selected" : ""; ?>>Perjam</option>
+                                                <option value="2" <?= ($user_lembur == "2") ? "selected" : ""; ?>>Insentif</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_etag">ETAG:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_etag" name="user_etag" placeholder="" value="<?= $user_etag; ?>">
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Gaji Kotor" data-bs-toggle="tooltip" data-bs-placement="top" onchange="tlain()" type="text" class="form-control" id="user_gakot" name="user_gakot" placeholder="Gaji Kotor" value="<?= $user_gakot; ?>">
+                                        </div>
                                     </div>
-                                </div>
 
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_password">Password:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_password" name="user_password" placeholder="<?= $ketuser_password; ?>" value="<?= $user_password; ?>">
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_masuk">Tgl Masuk:</label>
-                                    <div class="col-12">
-                                        <input required type="date" class="form-control" id="user_masuk" name="user_masuk" placeholder="" value="<?= $user_masuk; ?>">
-
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_keluar">Tgl Keluar:</label>
-                                    <div class="col-12">
-                                        <input type="date" class="form-control" id="user_keluar" name="user_keluar" placeholder="" value="<?= $user_keluar; ?>">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_email">Email:</label>
-                                    <div class="col-12">
-                                        <input type="email" class="form-control" id="user_email" name="user_email" placeholder="" value="<?= $user_email; ?>">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_cuti">Sisa Cuti:</label>
-                                    <div class="col-12">
-                                        <input type="number" class="form-control" id="user_cuti" name="user_cuti" placeholder="" value="<?= $user_cuti; ?>">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_wa">Whatsapp:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_wa" name="user_wa" placeholder="" value="<?= $user_wa; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_npwp">NPWP:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_npwp" name="user_npwp" placeholder="" value="<?= $user_npwp; ?>">
-
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_bpjstk">Nomor BPJS TK:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_bpjstk" name="user_bpjstk" placeholder="" value="<?= $user_bpjstk; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_bpjskesehatan">Nomor BPJS Kesehatan:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_bpjskesehatan" name="user_bpjskesehatan" placeholder="" value="<?= $user_bpjskesehatan; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_address">Alamat:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_address" name="user_address" placeholder="" value="<?= $user_address; ?>">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_kk">Kartu Keluarga:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_kk" name="user_kk" placeholder="" value="<?= $user_kk; ?>">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_bank">Bank:</label>
-                                    <div class="col-12">
-                                        <select class="form-control" id="user_bank" name="user_bank">
-                                            <option value="MANDIRI" <?= ($user_bank == "MANDIRI") ? "selected" : ""; ?>>MANDIRI</option>
-                                            <option value="BCA" <?= ($user_bank == "BCA") ? "selected" : ""; ?>>BCA</option>
-                                            <option value="BNI" <?= ($user_bank == "BNI") ? "selected" : ""; ?>>BNI</option>
-                                            <option value="BRI" <?= ($user_bank == "BRI") ? "selected" : ""; ?>>BRI</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_norek">No Rek:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_norek" name="user_norek" placeholder="" value="<?= $user_norek; ?>">
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_ibu">Nama Ibu:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_ibu" name="user_ibu" placeholder="" value="<?= $user_ibu; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_pendidikan">Pendidikan:</label>
-                                    <div class="col-12">
-                                        <select class="form-control" id="user_pendidikan" name="user_pendidikan">
-                                            <option value="SD" <?= ($user_pendidikan == "SD") ? "selected" : ""; ?>>SD</option>
-                                            <option value="SMP" <?= ($user_pendidikan == "SMP") ? "selected" : ""; ?>>SMP</option>
-                                            <option value="SMA" <?= ($user_pendidikan == "SMA") ? "selected" : ""; ?>>SMA</option>
-                                            <option value="D1" <?= ($user_pendidikan == "D1") ? "selected" : ""; ?>>D1</option>
-                                            <option value="D2" <?= ($user_pendidikan == "D2") ? "selected" : ""; ?>>D2</option>
-                                            <option value="D3" <?= ($user_pendidikan == "D3") ? "selected" : ""; ?>>D3</option>
-                                            <option value="S1" <?= ($user_pendidikan == "S1") ? "selected" : ""; ?>>S1</option>
-                                            <option value="S2" <?= ($user_pendidikan == "S2") ? "selected" : ""; ?>>S2</option>
-                                            <option value="S3" <?= ($user_pendidikan == "S3") ? "selected" : ""; ?>>S3</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_borndate">Tgl Lahir:</label>
-                                    <div class="col-12">
-                                        <input type="date" class="form-control" id="user_borndate" name="user_borndate" placeholder="" value="<?= $user_borndate; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_borncity">Tempat Lahir:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_borncity" name="user_borncity" placeholder="" value="<?= $user_borncity; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_gender">L/P:</label>
-                                    <div class="col-12">
-                                        <select class="form-control" id="user_gender" name="user_gender">
-                                            <option value="" <?= ($user_gender == "") ? "selected" : ""; ?>>Pilih Gender</option>
-                                            <option value="L" <?= ($user_gender == "L") ? "selected" : ""; ?>>L</option>
-                                            <option value="P" <?= ($user_gender == "P") ? "selected" : ""; ?>>P</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_tanggungan">Status Tanggungan:</label>
-                                    <div class="col-12">
-                                        <select onchange="pph()" class="form-control" id="user_tanggungan" name="user_tanggungan">
-                                            <option value="" <?= ($user_tanggungan == "") ? "selected" : ""; ?>>Pilih Status</option>
-                                            <?php $tanggungan = $this->db->table("tanggungan")->get();
-                                            foreach ($tanggungan->getResult() as $tanggungan) { ?>
-                                                <option value="<?= $tanggungan->tanggungan_jenis; ?>" data-ter="<?= $tanggungan->tanggungan_ter; ?>" <?= ($user_tanggungan == $tanggungan->tanggungan_jenis) ? "selected" : ""; ?>><?= $tanggungan->tanggungan_jenis; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <script>
-                                    function pph() {
-                                        let ter = $("#user_tanggungan option:selected").attr("data-ter");
-                                        $("#user_tanggunganjenis").val(ter);
-                                    }
-                                </script>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_tanggunganjenis">Jenis Tanggungan:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_tanggunganjenis" name="user_tanggunganjenis" placeholder="" value="<?= $user_tanggunganjenis; ?>">
-                                    </div>
-                                </div>
-
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_payrolltype">Tipe Penggajian:</label>
-                                    <div class="col-12">
-                                        <select class="form-control" id="user_payrolltype" name="user_payrolltype">
-                                            <option value="bulanan" <?= ($user_payrolltype == "bulanan") ? "selected" : ""; ?>>Bulanan</option>
-                                            <option value="harian" <?= ($user_payrolltype == "harian") ? "selected" : ""; ?>>Harian</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_lembur">Lembur:</label>
-                                    <div class="col-12">
-                                        <select class="form-control" id="user_lembur" name="user_lembur">
-                                            <option value="0" <?= ($user_lembur == "0") ? "selected" : ""; ?>>Tidak</option>
-                                            <option value="1" <?= ($user_lembur == "1") ? "selected" : ""; ?>>Perjam</option>
-                                            <option value="2" <?= ($user_lembur == "2") ? "selected" : ""; ?>>Insentif</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_gakot">Gaji Kotor:</label>
-                                    <div class="col-12">
-                                        <input onchange="tlain()" type="text" class="form-control" id="user_gakot" name="user_gakot" placeholder="" value="<?= $user_gakot; ?>">
-                                    </div>
-                                </div>
-
-                                <script>
-                                    function tlain() {
-                                        let identity_tunjanganlain = "<?= session()->get("identity_tunjanganlain"); ?>";
-                                        let identity_persentjabatan = "<?= session()->get("identity_persentjabatan"); ?>";
-                                        let user_payrolltype = $("#user_payrolltype").val();
-                                        if (user_payrolltype == "bulanan") {
-                                            let user_gakot = $("#user_gakot").val();
-                                            let tlainlain = user_gakot * identity_tunjanganlain / 100;
-                                            // alert("<?= base_url("api/tlain"); ?>?tlainlain="+tlainlain);
-                                            $.get("<?= base_url("api/tlain"); ?>", {
-                                                    tlainlain: tlainlain
-                                                })
-                                                .done(function(data) {
-                                                    $("#user_ttransport").val(data.transport);
-                                                    $("#user_thadir").val(data.hadir);
-                                                    $("#user_tmakan").val(data.makan);
-                                                });
-
-
-                                            let user_tjabatan = (user_gakot - tlainlain) * (identity_persentjabatan / 100);
-                                            // alert(identity_persentjabatan);
-                                            $("#user_tjabatan").val(user_tjabatan);
-                                            let user_gapok = user_gakot - (tlainlain + user_tjabatan);
-                                            $("#user_gapok").val(user_gapok);
-                                        }
-                                    }
-                                </script>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_ttransport">Tunjangan Transport:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_ttransport" name="user_ttransport" placeholder="" value="<?= $user_ttransport; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_thadir">Tunjangan Kehadiran:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_thadir" name="user_thadir" placeholder="" value="<?= $user_thadir; ?>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_tmakan">Tunjangan Makan:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_tmakan" name="user_tmakan" placeholder="" value="<?= $user_tmakan; ?>">
-                                    </div>
-                                </div>
-
-
-
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_gapok">Gaji Pokok:</label>
-                                    <div class="col-12">
-                                        <input onchange="rgapok()" type="text" class="form-control" id="user_gapok" name="user_gapok" placeholder="" value="<?= $user_gapok; ?>">
-                                    </div>
                                     <script>
-                                        function rgapok() {
+                                        function tlain() {
+                                            let identity_tunjanganlain = "<?= session()->get("identity_tunjanganlain"); ?>";
+                                            let identity_persentjabatan = "<?= session()->get("identity_persentjabatan"); ?>";
                                             let user_payrolltype = $("#user_payrolltype").val();
                                             if (user_payrolltype == "bulanan") {
-                                                let user_gapok = $("#user_gapok").val();
-                                                let user_tjabatan = $("#user_tjabatan").val();
-                                                let user_ttransport = $("#user_ttransport").val();
-                                                let user_thadir = $("#user_thadir").val();
-                                                let user_tmakan = $("#user_tmakan").val();
-                                                let user_insentif = $("#user_insentif").val();
-                                                let user_gakot = parseFloat(user_gapok) + parseFloat(user_tjabatan) + parseFloat(user_ttransport) + parseFloat(user_thadir) + parseFloat(user_tmakan) + parseFloat(user_insentif);
-                                                $("#user_gakot").val(user_gakot);
+                                                let user_gakot = $("#user_gakot").val();
+                                                let tlainlain = user_gakot * identity_tunjanganlain / 100;
+                                                // alert("<?= base_url("api/tlain"); ?>?tlainlain="+tlainlain);
+                                                $.get("<?= base_url("api/tlain"); ?>", {
+                                                        tlainlain: tlainlain
+                                                    })
+                                                    .done(function(data) {
+                                                        $("#user_ttransport").val(data.transport);
+                                                        $("#user_thadir").val(data.hadir);
+                                                        $("#user_tmakan").val(data.makan);
+                                                    });
+
+
+                                                let user_tjabatan = (user_gakot - tlainlain) * (identity_persentjabatan / 100);
+                                                // alert(identity_persentjabatan);
+                                                $("#user_tjabatan").val(user_tjabatan);
+                                                let user_gapok = user_gakot - (tlainlain + user_tjabatan);
+                                                $("#user_gapok").val(user_gapok);
                                             }
                                         }
                                     </script>
-                                </div>
 
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_tjabatan">Tunjangan Jabatan:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_tjabatan" name="user_tjabatan" placeholder="" value="<?= $user_tjabatan; ?>">
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Tunjangan Transport" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_ttransport" name="user_ttransport" placeholder="Tunjangan Transport" value="<?= $user_ttransport; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Tunjangan Kehadiran" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_thadir" name="user_thadir" placeholder="Tunjangan Kehadiran" value="<?= $user_thadir; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Tunjangan Makan" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_tmakan" name="user_tmakan" placeholder="Tunjangan Makan" value="<?= $user_tmakan; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Gaji Pokok" data-bs-toggle="tooltip" data-bs-placement="top" onchange="rgapok()" type="text" class="form-control" id="user_gapok" name="user_gapok" placeholder="Gaji Pokok" value="<?= $user_gapok; ?>">
+                                        </div>
+                                        <script>
+                                            function rgapok() {
+                                                let user_payrolltype = $("#user_payrolltype").val();
+                                                if (user_payrolltype == "bulanan") {
+                                                    let user_gapok = $("#user_gapok").val();
+                                                    let user_tjabatan = $("#user_tjabatan").val();
+                                                    let user_ttransport = $("#user_ttransport").val();
+                                                    let user_thadir = $("#user_thadir").val();
+                                                    let user_tmakan = $("#user_tmakan").val();
+                                                    let user_insentif = $("#user_insentif").val();
+                                                    let user_gakot = parseFloat(user_gapok) + parseFloat(user_tjabatan) + parseFloat(user_ttransport) + parseFloat(user_thadir) + parseFloat(user_tmakan) + parseFloat(user_insentif);
+                                                    $("#user_gakot").val(user_gakot);
+                                                }
+                                            }
+                                        </script>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Tunjangan Jabatan" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_tjabatan" name="user_tjabatan" placeholder="Tunjangan Jabatan" value="<?= $user_tjabatan; ?>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Insentif" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_insentif" name="user_insentif" placeholder="Insentif" value="<?= $user_insentif; ?>">
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-3 ">
-                                    <label class="control-label col-12" for="user_insentif">Insentif:</label>
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" id="user_insentif" name="user_insentif" placeholder="" value="<?= $user_insentif; ?>">
-                                    </div>
-                                </div>
-
+                                <input type="hidden" name="user_temp" value="<?= $user_temp; ?>" />
                                 <input type="hidden" name="user_id" value="<?= $user_id; ?>" />
                                 <div class="form-group col-3 ">
                                     <div class="col-sm-offset-2 col-12">
@@ -496,6 +455,87 @@
                                     </div>
                                 </div>
                             </form>
+
+                            <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                <div class="blok">
+                                    <div class="sub-title col-12">* Data Kontrak</div>
+                                    <form class="form-horizontal row" id="formKontrak">
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nama Kontrak" data-bs-toggle="tooltip" data-bs-placement="top" required type="text" class="form-control" placeholder="Nama Kontrak" id="kontrak_name" name="kontrak_name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Awal Kontrak" data-bs-toggle="tooltip" data-bs-placement="top" required type="date" class="form-control" placeholder="Awal Kontrak" id="kontrak_from" name="kontrak_from">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Akhir Kontrak" data-bs-toggle="tooltip" data-bs-placement="top" required type="date" class="form-control" placeholder="Akhir Kontrak" id="kontrak_to" name="kontrak_to">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-sm-offset-2 col-12">
+                                                <button onclick="datakontrak()" type="button" class="btn btn-primary col-12">Submit</button>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            function clearForm(formId) {
+                                                const form = document.getElementById(formId);
+                                                if (!form) return;
+
+                                                const inputs = form.querySelectorAll("input, textarea, select");
+
+                                                inputs.forEach(input => {
+                                                    if (input.type === "checkbox" || input.type === "radio") {
+                                                        input.checked = false;
+                                                    } else if (input.tagName.toLowerCase() === "select") {
+                                                        input.selectedIndex = 0; // pilih opsi pertama
+                                                    } else {
+                                                        input.value = "";
+                                                    }
+                                                });
+                                            }
+                                            function datakontrak() {
+                                                let kontrak_name = $("#kontrak_name").val();
+                                                let kontrak_from = $("#kontrak_from").val();
+                                                let kontrak_to = $("#kontrak_to").val();
+                                                let user_id = '<?= $user_id; ?>';
+                                                let user_temp = '<?= $user_temp; ?>';
+                                                $("#test").val("<?= base_url("api/datakontrak"); ?>?kontrak_name=" + kontrak_name + "&kontrak_from=" + kontrak_from + "&kontrak_to=" + kontrak_to + "&user_temp=" + user_temp);
+                                                $.get("<?= base_url("api/datakontrak"); ?>", {
+                                                        kontrak_name: kontrak_name,
+                                                        kontrak_from: kontrak_from,
+                                                        kontrak_to: kontrak_to,
+                                                        user_temp: user_temp,
+                                                        user_id: user_id
+                                                    })
+                                                    .done(function(data) {
+                                                        listkontrak();
+                                                    });
+                                            }
+
+                                            function listkontrak() {
+                                                let user_temp = <?= $user_temp; ?>;
+                                                $("#test").val("<?= base_url("api/listkontrak"); ?>?user_temp=" + user_temp);
+                                                $.get("<?= base_url("api/listkontrak"); ?>", {
+                                                        user_temp: user_temp
+                                                    })
+                                                    .done(function(data) {
+                                                        $("#listkontrak").html(data);
+                                                        clearForm('formKontrak');
+                                                    });
+                                            }
+                                            $().ready(function() {
+                                                listkontrak();
+                                            });
+                                        </script>
+                                    </form>
+                                    <div id="listkontrak" class="table-responsive m-t-0"></div>
+                                </div>
+                                <input id="test" type="hidden" />
+                            <?php } ?>
                         </div>
                     <?php } else { ?>
                         <?php if ($message != "") { ?>
