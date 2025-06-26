@@ -246,16 +246,20 @@ class muser_m extends core_m
                 }
             }
 
-            // Kunci dan metode enkripsi
-            $key = "ihsandulu123456"; // Kunci rahasia (jangan hardcode di produksi)
-            $method = "AES-256-CBC";
-            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
 
-            // Enkripsi
-            $password = $inputu["user_password"];
-            $encrypted = openssl_encrypt($password, $method, $key, 0, $iv);
-            $encrypted = base64_encode($iv . $encrypted); // Gabungkan IV agar bisa didekripsi nanti
-            $inputu["user_password"] = $encrypted;
+            if (isset($inputu["user_password"])) {
+                // Kunci dan metode enkripsi
+                $key = "ihsandulu123456"; // Kunci rahasia (jangan hardcode di produksi)
+                $method = "AES-256-CBC";
+                $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
+
+                // Enkripsi
+                $password = $inputu["user_password"];
+                $encrypted = openssl_encrypt($password, $method, $key, 0, $iv);
+                $encrypted = base64_encode($iv . $encrypted); // Gabungkan IV agar bisa didekripsi nanti
+                $inputu["user_password"] = $encrypted;
+            }
+
             $this->db->table('user')->insert($inputu);
             /* echo $this->db->getLastQuery();
             die; */
@@ -274,15 +278,19 @@ class muser_m extends core_m
                     $inputu[$e] = $this->request->getPost($e);
                 }
             }
-            // Kunci dan metode enkripsi
-            $key = "ihsandulu123456"; // Kunci rahasia (jangan hardcode di produksi)
-            $method = "AES-256-CBC";
-            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
-            // Enkripsi
-            $password = $inputu["user_password"];
-            $encrypted = openssl_encrypt($password, $method, $key, 0, $iv);
-            $encrypted = base64_encode($iv . $encrypted); // Gabungkan IV agar bisa didekripsi nanti
-            $inputu["user_password"] = $encrypted;
+
+            if (isset($inputu["user_password"])) {
+                // Kunci dan metode enkripsi
+                $key = "ihsandulu123456"; // Kunci rahasia (jangan hardcode di produksi)
+                $method = "AES-256-CBC";
+                $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
+                // Enkripsi
+                // dd($inputu);
+                $password = $inputu["user_password"];
+                $encrypted = openssl_encrypt($password, $method, $key, 0, $iv);
+                $encrypted = base64_encode($iv . $encrypted); // Gabungkan IV agar bisa didekripsi nanti
+                $inputu["user_password"] = $encrypted;
+            }
             $this->db->table('user')
                 ->where("user_id", $inputu["user_id"])
                 ->update($inputu);
