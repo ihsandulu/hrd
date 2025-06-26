@@ -452,12 +452,8 @@
                                 <input type="hidden" name="user_id" value="<?= $user_id; ?>" />
 
                                 <div class="row pl-4 pr-4 mb-4 mt-3">
-                                    <div class="col-6 pl-2 pr-2">
-                                        <button type="submit" id="submit" class="btn btn-primary btn-block" <?= $user_namabutton; ?> value="OK">Submit</button>
-                                    </div>
-                                    <div class="col-6 pl-2 pr-2">
-                                        <a class="btn btn-warning btn-block" href="<?= base_url("muser"); ?>">Back</a>
-                                    </div>
+                                    <button type="submit" id="submit" class="btn btn-primary " <?= $user_namabutton; ?> value="OK">Submit</button>
+                                    <a class="btn btn-warning ml-2" href="<?= base_url("muser"); ?>">Back</a>
                                 </div>
 
                             </form>
