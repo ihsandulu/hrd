@@ -131,7 +131,7 @@
                                 $ketuser_password = "Jangan dikosongkan!";
                             } ?>
                             <form class="form-horizontal " method="post" enctype="multipart/form-data">
-                                <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                     <div class="blok row ">
                                         <div class="sub-title col-12">* HR Recruitment</div>
                                         <div class="form-group col-3 ">
@@ -336,7 +336,7 @@
                                     </div>
                                 <?php } ?>
 
-                                <?php if (session()->get("position_id") != "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                     <div class="blok row ">
                                         <div class="sub-title col-12">* HR General</div>
                                         <div class="form-group col-3 ">
@@ -680,10 +680,18 @@
                                             <th>Action</th>
                                         <?php } ?>
                                         <th>No.</th>
-                                        <th>Status BPJS TK</th>
-                                        <th>Status BPJS Kes</th>
-                                        <th>Sisa Cuti</th>
+                                        <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                            <th>Status BPJS TK</th>
+                                            <th>Status BPJS Kes</th>
+                                        <?php } ?>
+                                        <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                            <th>Sisa Cuti</th>
+                                        <?php } ?>
                                         <th>Tgl.Masuk</th>
+                                        <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                            <th>Masa Kontrak</th>
+                                            <th>Tgl.Retire</th>
+                                        <?php } ?>
                                         <th>Departemen</th>
                                         <th>Posisi</th>
                                         <th>NIK</th>
@@ -693,7 +701,6 @@
                                         <th>Name</th>
                                         <th>Alamat</th>
                                         <th>Email</th>
-                                        <th>Sisa Cuti</th>
                                         <th>Whatsapp</th>
                                         <th>NPWP</th>
                                         <th>Status</th>
@@ -709,20 +716,24 @@
                                         <th>L/P</th>
                                         <th>Status Tanggungan</th>
                                         <th>Tipe Penggajian</th>
-                                        <th>Lembur</th>
-                                        <th>Gapok</th>
-                                        <th>Gakot</th>
-                                        <th>T.Transport</th>
-                                        <th>T.Kehadiran</th>
-                                        <th>T.Makan</th>
-                                        <th>T.Jabatan</th>
-                                        <th>Insentif</th>
+                                        <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                            <th>Lembur</th>
+                                            <th>Gapok</th>
+                                            <th>Gakot</th>
+                                            <th>T.Transport</th>
+                                            <th>T.Kehadiran</th>
+                                            <th>T.Makan</th>
+                                            <th>T.Jabatan</th>
+                                            <th>Insentif</th>
+                                        <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $build = $this->db
                                         ->table("user")
+                                        ->join("(SELECT *, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY kontrak_from DESC) AS rn
+    FROM kontrak)kontrak_terbaru", "user.user_id = kontrak_terbaru.user_id AND kontrak_terbaru.rn = 1", "left")
                                         ->join("position", "position.position_id=user.position_id", "left")
                                         ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
                                         ->where("position.position_id !=", "1");
@@ -837,88 +848,97 @@
                                                 </td>
                                             <?php } ?>
                                             <td><?= $no++; ?></td>
-                                            <?php
-                                            if ($usr->user_bpjsstatustk == 0) {
-                                                $bgtd = "danger";
-                                                $colotd = "white";
-                                            } else {
-                                                $bgtd = "success";
-                                                $colotd = "white";
-                                            } ?>
-                                            <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
-                                                <?= $statusbpjs[$usr->user_bpjsstatustk]; ?>
+
+                                            <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                                 <?php
                                                 if ($usr->user_bpjsstatustk == 0) {
-                                                    $colo = "success";
-                                                    $fa = "check";
-                                                    $sbpjs = 1;
+                                                    $bgtd = "danger";
+                                                    $colotd = "white";
                                                 } else {
-                                                    $colo = "danger";
-                                                    $fa = "times";
-                                                    $sbpjs = 0;
-                                                }
-                                                if (
-                                                    (
-                                                        isset(session()->get("position_id")[0][0])
-                                                        && (
-                                                            session()->get("position_id") == "1"
-                                                            || session()->get("position_id") == "2"
+                                                    $bgtd = "success";
+                                                    $colotd = "white";
+                                                } ?>
+                                                <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
+                                                    <?= $statusbpjs[$usr->user_bpjsstatustk]; ?>
+                                                    <?php
+                                                    if ($usr->user_bpjsstatustk == 0) {
+                                                        $colo = "success";
+                                                        $fa = "check";
+                                                        $sbpjs = 1;
+                                                    } else {
+                                                        $colo = "danger";
+                                                        $fa = "times";
+                                                        $sbpjs = 0;
+                                                    }
+                                                    if (
+                                                        (
+                                                            isset(session()->get("position_id")[0][0])
+                                                            && (
+                                                                session()->get("position_id") == "1"
+                                                                || session()->get("position_id") == "2"
+                                                            )
+                                                        ) ||
+                                                        (
+                                                            isset(session()->get("halaman")['88']['act_update'])
+                                                            && session()->get("halaman")['88']['act_update'] == "1"
                                                         )
-                                                    ) ||
-                                                    (
-                                                        isset(session()->get("halaman")['88']['act_update'])
-                                                        && session()->get("halaman")['88']['act_update'] == "1"
-                                                    )
-                                                ) { ?>
-                                                    <form method="post" class="btn-action" style="">
-                                                        <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatustk" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
-                                                        <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
-                                                        <input type="hidden" name="user_bpjsstatustk" value="<?= $sbpjs; ?>" />
-                                                    </form>
-                                                <?php } ?>
-                                            </td>
-                                            <?php
-                                            if ($usr->user_bpjsstatusk == 0) {
-                                                $bgtd = "danger";
-                                                $colotd = "white";
-                                            } else {
-                                                $bgtd = "success";
-                                                $colotd = "white";
-                                            } ?>
-                                            <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
-                                                <?= $statusbpjs[$usr->user_bpjsstatusk]; ?>
+                                                    ) { ?>
+                                                        <form method="post" class="btn-action" style="">
+                                                            <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatustk" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
+                                                            <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
+                                                            <input type="hidden" name="user_bpjsstatustk" value="<?= $sbpjs; ?>" />
+                                                        </form>
+                                                    <?php } ?>
+                                                </td>
                                                 <?php
                                                 if ($usr->user_bpjsstatusk == 0) {
-                                                    $colo = "success";
-                                                    $fa = "check";
-                                                    $sbpjs = 1;
+                                                    $bgtd = "danger";
+                                                    $colotd = "white";
                                                 } else {
-                                                    $colo = "danger";
-                                                    $fa = "times";
-                                                    $sbpjs = 0;
-                                                }
-                                                if (
-                                                    (
-                                                        isset(session()->get("position_id")[0][0])
-                                                        && (
-                                                            session()->get("position_id") == "1"
-                                                            || session()->get("position_id") == "2"
+                                                    $bgtd = "success";
+                                                    $colotd = "white";
+                                                } ?>
+                                                <td style="white-space: nowrap;" class="bg-<?= $bgtd; ?> text-<?= $colotd; ?>">
+                                                    <?= $statusbpjs[$usr->user_bpjsstatusk]; ?>
+                                                    <?php
+                                                    if ($usr->user_bpjsstatusk == 0) {
+                                                        $colo = "success";
+                                                        $fa = "check";
+                                                        $sbpjs = 1;
+                                                    } else {
+                                                        $colo = "danger";
+                                                        $fa = "times";
+                                                        $sbpjs = 0;
+                                                    }
+                                                    if (
+                                                        (
+                                                            isset(session()->get("position_id")[0][0])
+                                                            && (
+                                                                session()->get("position_id") == "1"
+                                                                || session()->get("position_id") == "2"
+                                                            )
+                                                        ) ||
+                                                        (
+                                                            isset(session()->get("halaman")['88']['act_update'])
+                                                            && session()->get("halaman")['88']['act_update'] == "1"
                                                         )
-                                                    ) ||
-                                                    (
-                                                        isset(session()->get("halaman")['88']['act_update'])
-                                                        && session()->get("halaman")['88']['act_update'] == "1"
-                                                    )
-                                                ) { ?>
-                                                    <form method="post" class="btn-action" style="">
-                                                        <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatusk" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
-                                                        <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
-                                                        <input type="hidden" name="user_bpjsstatusk" value="<?= $sbpjs; ?>" />
-                                                    </form>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?= $usr->user_cuti; ?></td>
+                                                    ) { ?>
+                                                        <form method="post" class="btn-action" style="">
+                                                            <button class="btn btn-sm btn-<?= $colo; ?> " name="bpjsstatusk" value="OK"><span class="fa fa-<?= $fa; ?>" style="color:white;"></span> </button>
+                                                            <input type="hidden" name="user_id" value="<?= $usr->user_id; ?>" />
+                                                            <input type="hidden" name="user_bpjsstatusk" value="<?= $sbpjs; ?>" />
+                                                        </form>
+                                                    <?php } ?>
+                                                </td>
+                                            <?php } ?>
+                                            <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                                <td><?= $usr->user_cuti; ?></td>
+                                            <?php } ?>
                                             <td style="white-space: nowrap;"><?= $usr->user_masuk; ?></td>
+                                            <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                                <td style="white-space: nowrap;"><?= $usr->kontrak_to; ?></td>
+                                                <td style="white-space: nowrap;"><?= $usr->user_keluar; ?></td>
+                                            <?php } ?>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
                                             <td><?= $usr->user_nik; ?></td>
@@ -928,7 +948,6 @@
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_nama); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_address); ?></td>
                                             <td class="text-left"><?= $usr->user_email; ?></td>
-                                            <td><?= $usr->user_cuti; ?></td>
                                             <td><?= $usr->user_wa; ?></td>
                                             <td><?= $usr->user_npwp; ?></td>
                                             <td><?= $aktif[$usr->user_status]; ?></td>
@@ -944,14 +963,16 @@
                                             <td><?= $usr->user_gender; ?></td>
                                             <td><?= $usr->user_tanggungan; ?></td>
                                             <td><?= $usr->user_payrolltype; ?></td>
-                                            <td><?= $lembur[$usr->user_lembur]; ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_gapok, 0, ",", "."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_gakot, 0, ",", "."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_ttransport, 0, ",", "."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_thadir, 0, ",", "."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_tmakan, 0, ",", "."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_tjabatan, 0, ",", "."); ?></td>
-                                            <td class="text-right"><?= number_format($usr->user_insentif, 0, ",", "."); ?></td>
+                                            <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                                <td><?= $lembur[$usr->user_lembur]; ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_gapok, 0, ",", "."); ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_gakot, 0, ",", "."); ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_ttransport, 0, ",", "."); ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_thadir, 0, ",", "."); ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_tmakan, 0, ",", "."); ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_tjabatan, 0, ",", "."); ?></td>
+                                                <td class="text-right"><?= number_format($usr->user_insentif, 0, ",", "."); ?></td>
+                                            <?php } ?>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
