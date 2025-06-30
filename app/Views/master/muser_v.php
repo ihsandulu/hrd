@@ -732,6 +732,7 @@
                                     <?php
                                     $build = $this->db
                                         ->table("user")
+                                        ->select("*, user.user_id as user_id")
                                         ->join("(SELECT *, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY kontrak_from DESC) AS rn
     FROM kontrak)kontrak_terbaru", "user.user_id = kontrak_terbaru.user_id AND kontrak_terbaru.rn = 1", "left")
                                         ->join("position", "position.position_id=user.position_id", "left")
