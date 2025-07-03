@@ -1174,6 +1174,7 @@ class api extends BaseController
                     deletekontrak(button);
                 }
             }
+
             function deletekontrak(button) {
                 $.get("<?= base_url('api/deletekontrak'); ?>", {
                         kontrak_id: $(button).closest('form').find('input[name="kontrak_id"]').val()
@@ -1185,7 +1186,71 @@ class api extends BaseController
         </script>
 <?php
     }
+    public function romadlon()
+    {
+        $input["ramadlan_date"] = $this->request->getGet("tgl");
+        $kalender_id = $this->request->getGet("kalender_id");
+        $tr = $this->request->getGet("tr");
+        if ($tr == 1) {
+            $this->db->table("ramadlan")->insert($input);
+        } else {
+            $this->db->table("ramadlan")->where($input)->delete();
+        }
 
+        $inputkalender["kalender_romadlon"] = $tr;
+        $this->db->table("kalender")->where("kalender_id", $kalender_id)->update($inputkalender);
+    }
+    public function klibur()
+    {
+        $kalender_id = $this->request->getGet("kalender_id");
+        $kalender_name = $this->request->getGet("kalender_name");
+        $tgl = $this->request->getGet("tgl");
+        $tr = $this->request->getGet("tr");
+        $xx = $this->request->getGet("libur_hari");
+
+        $input["libur_date"] = $tgl;
+        $input["libur_hari"] = $xx;
+        if ($tr == 1) {
+            //cari di table libur apakah sudah ada
+            $build = $this->db->table("libur")
+                ->where("libur_date", "0000-00-00")
+                ->where("libur_hari", $xx);
+            $libur = $build->get();
+            foreach ($libur->getResult() as $row) {
+                $input["kalender_tipe"] = $row->libur_id;
+                $input["kalender_table"] = "libur";
+                $input["kalender_name"] = "Libur";
+            }
+
+            $this->db->table("libur")->insert($input);
+        } else {
+            $this->db->table("libur")->where($input)->delete();
+        }
+
+
+        $xx = date('w', strtotime($tgl));
+
+        //cari di table jamkerja
+        $build = $this->db->table("jamkerja")
+            ->where("jamkerja_type", "normal")
+            ->where("jamkerja_hari !=", "")
+            ->where("jamkerja_ramadlan", "0")
+            ->where("FIND_IN_SET('" . $xx . "', jamkerja_hari)", null, false);
+        $jamkerja = $build->get();
+        $input["kalender_tipe"] = "";
+        $input["kalender_table"] = "";
+        foreach ($jamkerja->getResult() as $row) {
+            $input["kalender_tipe"] = $row->jamkerja_id;
+            $input["kalender_table"] = "jamkerja";
+            $input["kalender_name"] = $row->jamkerja_name;
+        }
+
+
+
+        $inputkalender["kalender_libur"] = $tr;
+        $inputkalender["kalender_name"] = $kalender_name;
+        $this->db->table("kalender")->where("kalender_id", $kalender_id)->update($inputkalender);
+    }
     public function deletekontrak()
     {
         foreach ($this->request->getGet() as $e => $f) {

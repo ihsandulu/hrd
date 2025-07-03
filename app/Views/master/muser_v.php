@@ -131,6 +131,83 @@
                                 $ketuser_password = "Jangan dikosongkan!";
                             } ?>
                             <form class="form-horizontal " method="post" enctype="multipart/form-data">
+                                <div class="blok row ">
+                                    <div class="sub-title col-12">* General</div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <?php
+                                            $departemen = $this->db->table("departemen")->orderBy("departemen_name", "ASC")
+                                                ->get();
+                                            //echo $this->db->getLastQuery();
+                                            ?>
+                                            <select title="Departemen" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control select" id="departemen_id" name="departemen_id">
+                                                <option value="" <?= ($departemen_id == "") ? "selected" : ""; ?>>Pilih Departemen</option>
+                                                <?php
+                                                foreach ($departemen->getResult() as $departemen) { ?>
+                                                    <option value="<?= $departemen->departemen_id; ?>" <?= ($departemen_id == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
+                                                <?php } ?>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <?php
+                                            $base = $this->db->table("position");
+                                            if (session()->get("position_id") != "1") {
+                                                $base->where("position_id!=", "1");
+                                            }
+                                            $position = $base->orderBy("position_name", "ASC")
+                                                ->get();
+                                            //echo $this->db->getLastQuery();
+                                            ?>
+                                            <select title="Jabatan" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control select" id="position_id" name="position_id">
+                                                <option value="" <?= ($position_id == "") ? "selected" : ""; ?>>Pilih Jabatan</option>
+                                                <?php
+                                                foreach ($position->getResult() as $position) { ?>
+                                                    <option value="<?= $position->position_id; ?>" <?= ($position_id == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="Nama Lengkap" data-bs-toggle="tooltip" data-bs-placement="top" required type="text" class="form-control" id="user_nama" name="user_nama" placeholder="Nama Lengkap" value="<?= $user_nama; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="NIK" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_nik" name="user_nik" placeholder="NIK" value="<?= $user_nik; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="KTP" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_ktp" name="user_ktp" placeholder="KTP" value="<?= $user_ktp; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="ETAG" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_etag" name="user_etag" placeholder="ETAG" value="<?= $user_etag; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <select title="Bank" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_bank" name="user_bank">
+                                                <option value="MANDIRI" <?= ($user_bank == "MANDIRI") ? "selected" : ""; ?>>MANDIRI</option>
+                                                <option value="BCA" <?= ($user_bank == "BCA") ? "selected" : ""; ?>>BCA</option>
+                                                <option value="BNI" <?= ($user_bank == "BNI") ? "selected" : ""; ?>>BNI</option>
+                                                <option value="BRI" <?= ($user_bank == "BRI") ? "selected" : ""; ?>>BRI</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <div class="col-12">
+                                            <input title="No Rek" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_norek" name="user_norek" placeholder="No Rek" value="<?= $user_norek; ?>">
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                     <div class="blok row ">
                                         <div class="sub-title col-12">* HR Recruitment</div>
@@ -143,63 +220,7 @@
 
                                             </div>
                                         </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <?php
-                                                $departemen = $this->db->table("departemen")->orderBy("departemen_name", "ASC")
-                                                    ->get();
-                                                //echo $this->db->getLastQuery();
-                                                ?>
-                                                <select title="Departemen" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control select" id="departemen_id" name="departemen_id">
-                                                    <option value="" <?= ($departemen_id == "") ? "selected" : ""; ?>>Pilih Departemen</option>
-                                                    <?php
-                                                    foreach ($departemen->getResult() as $departemen) { ?>
-                                                        <option value="<?= $departemen->departemen_id; ?>" <?= ($departemen_id == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
 
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <?php
-                                                $base = $this->db->table("position");
-                                                if (session()->get("position_id") != "1") {
-                                                    $base->where("position_id!=", "1");
-                                                }
-                                                $position = $base->orderBy("position_name", "ASC")
-                                                    ->get();
-                                                //echo $this->db->getLastQuery();
-                                                ?>
-                                                <select title="Jabatan" data-bs-toggle="tooltip" data-bs-placement="top" required class="form-control select" id="position_id" name="position_id">
-                                                    <option value="" <?= ($position_id == "") ? "selected" : ""; ?>>Pilih Jabatan</option>
-                                                    <?php
-                                                    foreach ($position->getResult() as $position) { ?>
-                                                        <option value="<?= $position->position_id; ?>" <?= ($position_id == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <input title="Nama Lengkap" data-bs-toggle="tooltip" data-bs-placement="top" required type="text" class="form-control" id="user_nama" name="user_nama" placeholder="Nama Lengkap" value="<?= $user_nama; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <input title="NIK" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_nik" name="user_nik" placeholder="NIK" value="<?= $user_nik; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <input title="KTP" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_ktp" name="user_ktp" placeholder="KTP" value="<?= $user_ktp; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <input title="ETAG" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_etag" name="user_etag" placeholder="ETAG" value="<?= $user_etag; ?>">
-                                            </div>
-                                        </div>
                                         <div class="form-group col-3 ">
                                             <div class="col-12">
                                                 <input title="Tgl Masuk" data-bs-toggle="tooltip" data-bs-placement="top" required type="date" class="form-control" id="user_masuk" name="user_masuk" placeholder="Tgl Masuk" value="<?= $user_masuk; ?>">
@@ -224,16 +245,6 @@
                                         </div>
                                         <div class="form-group col-3 ">
                                             <div class="col-12">
-                                                <input title="Nomor BPJS TK" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_bpjstk" name="user_bpjstk" placeholder="Nomor BPJS TK" value="<?= $user_bpjstk; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <input title="Nomor BPJS Kesehatan" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_bpjskesehatan" name="user_bpjskesehatan" placeholder="Nomor BPJS Kesehatan" value="<?= $user_bpjskesehatan; ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
                                                 <input title="Alamat" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_address" name="user_address" placeholder="Alamat" value="<?= $user_address; ?>">
 
                                             </div>
@@ -244,23 +255,7 @@
 
                                             </div>
                                         </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <select title="Bank" data-bs-toggle="tooltip" data-bs-placement="top" class="form-control" id="user_bank" name="user_bank">
-                                                    <option value="MANDIRI" <?= ($user_bank == "MANDIRI") ? "selected" : ""; ?>>MANDIRI</option>
-                                                    <option value="BCA" <?= ($user_bank == "BCA") ? "selected" : ""; ?>>BCA</option>
-                                                    <option value="BNI" <?= ($user_bank == "BNI") ? "selected" : ""; ?>>BNI</option>
-                                                    <option value="BRI" <?= ($user_bank == "BRI") ? "selected" : ""; ?>>BRI</option>
-                                                </select>
 
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-3 ">
-                                            <div class="col-12">
-                                                <input title="No Rek" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_norek" name="user_norek" placeholder="No Rek" value="<?= $user_norek; ?>">
-
-                                            </div>
-                                        </div>
                                         <div class="form-group col-3 ">
                                             <div class="col-12">
                                                 <input title="Nama Ibu" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_ibu" name="user_ibu" placeholder="Nama Ibu" value="<?= $user_ibu; ?>">
@@ -335,10 +330,25 @@
                                         </div>
                                     </div>
                                 <?php } ?>
+                                <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                    <div class="blok row ">
+                                        <div class="sub-title col-12">* BPJS</div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nomor BPJS TK" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_bpjstk" name="user_bpjstk" placeholder="Nomor BPJS TK" value="<?= $user_bpjstk; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
+                                                <input title="Nomor BPJS Kesehatan" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_bpjskesehatan" name="user_bpjskesehatan" placeholder="Nomor BPJS Kesehatan" value="<?= $user_bpjskesehatan; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
 
                                 <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                     <div class="blok row ">
-                                        <div class="sub-title col-12">* HR General</div>
+                                        <div class="sub-title col-12">* HR Finance</div>
                                         <div class="form-group col-3 ">
                                             <div class="col-12">
                                                 <input title="Password" data-bs-toggle="tooltip" data-bs-placement="top" type="text" class="form-control" id="user_password" name="user_password" placeholder="<?= $ketuser_password; ?>" value="<?= $user_password; ?>">
@@ -673,13 +683,13 @@
                             }
                             // dd($arkontrak);
                             ?>
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                            <table id="data1" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead class="">
                                     <tr>
                                         <?php if (!isset($_GET["report"])) { ?>
                                             <th>Action</th>
                                         <?php } ?>
-                                        <th>No.</th>
+                                        <!-- <th>No.</th> -->
                                         <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                             <th>Status BPJS TK</th>
                                             <th>Status BPJS Kes</th>
@@ -687,6 +697,8 @@
                                         <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                             <th>Sisa Cuti</th>
                                         <?php } ?>
+                                        <th>NIK</th>
+                                        <th>Name</th>
                                         <th>Tgl.Masuk</th>
                                         <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                             <th>Masa Kontrak</th>
@@ -694,11 +706,9 @@
                                         <?php } ?>
                                         <th>Departemen</th>
                                         <th>Posisi</th>
-                                        <th>NIK</th>
                                         <th>KTP</th>
                                         <th>ETAG</th>
                                         <!-- <th>Username</th> -->
-                                        <th>Name</th>
                                         <th>Alamat</th>
                                         <th>Email</th>
                                         <th>Whatsapp</th>
@@ -848,7 +858,7 @@
                                                     <?php } ?>
                                                 </td>
                                             <?php } ?>
-                                            <td><?= $no++; ?></td>
+                                            <!-- <td><?= $no++; ?></td> -->
 
                                             <?php if (session()->get("position_id") == "110" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                                 <?php
@@ -935,6 +945,8 @@
                                             <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                                 <td><?= $usr->user_cuti; ?></td>
                                             <?php } ?>
+                                            <td><?= $usr->user_nik; ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_nama); ?></td>
                                             <td style="white-space: nowrap;"><?= $usr->user_masuk; ?></td>
                                             <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                                 <td style="white-space: nowrap;"><?= $usr->kontrak_to; ?></td>
@@ -942,11 +954,8 @@
                                             <?php } ?>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
-                                            <td><?= $usr->user_nik; ?></td>
                                             <td><?= $usr->user_ktp; ?></td>
                                             <td><?= $usr->user_etag; ?></td>
-                                            <!-- <td><?= $usr->user_name; ?></td> -->
-                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_nama); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_address); ?></td>
                                             <td class="text-left"><?= $usr->user_email; ?></td>
                                             <td><?= $usr->user_wa; ?></td>
@@ -1020,5 +1029,33 @@
         ]
     });
 </script>
+<script>
+    $(document).ready(function() {
+        $('#data1').DataTable({
+            order: [
+                [6, 'asc'], // kolom ke-2
+                [7, 'asc'], // kolom ke-6
+                [4, 'asc'] // kolom ke-7
+            ],
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'excelHtml5',
+                    text: 'Export ke Excel',
+                    exportOptions: {
+                        columns: ':not(:lt(3))'
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: 'Print',
+                    exportOptions: {
+                        columns: ':not(:lt(3))'
+                    }
+                }
+            ]
+        });
+    });
+</script>
+
 
 <?php echo  $this->include("template/footer_v"); ?>

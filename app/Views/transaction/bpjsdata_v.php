@@ -185,28 +185,30 @@
                                                 ->join("position", "position.position_id=user.position_id", "left")
                                                 ->join("departemen", "departemen.departemen_id=user.departemen_id", "left")
                                                 ->where("user.user_id !=", "10");
-
-                                            if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
-                                                $departemen_id = $_POST["departemen_id"];
-                                                $build->where("user.departemen_id", $departemen_id);
-                                            }
-                                            if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
-                                                $position_id = $_POST["position_id"];
-                                                $build->where("user.position_id", $position_id);
-                                            }
-                                            if (isset($_POST["user_nik"]) && $_POST["user_nik"] != "" && $_POST["user_nik"] != "all") {
-                                                $user_nik = $_POST["user_nik"];
-                                                $build->like("user.user_nik", $user_nik, "BOTH");
-                                            }
-                                            if (isset($_POST["user_ktp"]) && $_POST["user_ktp"] != "" && $_POST["user_ktp"] != "all") {
-                                                $user_ktp = $_POST["user_ktp"];
-                                                $build->like("user.user_ktp", $user_ktp, "BOTH");
-                                            }
-                                            if (!isset($_POST["departemen_id"]) && !isset($_POST["position_id"]) && !isset($_POST["user_nik"])) {
+                                            if (
+                                                (isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") &&
+                                                (isset($_POST["position_id"]) && $_POST["position_id"] == "") &&
+                                                (isset($_POST["user_nik"]) && $_POST["user_nik"] == "") &&
+                                                (isset($_POST["user_ktp"]) && $_POST["user_ktp"] == "")
+                                            ) {
                                                 $build->where("user.position_id", "0");
-                                            }
-                                            if ((isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "") && (isset($_POST["user_nik"]) && $_POST["user_nik"] == "")) {
-                                                $build->where("user.position_id", "0");
+                                            } else {
+                                                if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
+                                                    $departemen_id = $_POST["departemen_id"];
+                                                    $build->where("user.departemen_id", $departemen_id);
+                                                }
+                                                if (isset($_POST["position_id"]) && $_POST["position_id"] != "" && $_POST["position_id"] != "all") {
+                                                    $position_id = $_POST["position_id"];
+                                                    $build->where("user.position_id", $position_id);
+                                                }
+                                                if (isset($_POST["user_nik"]) && $_POST["user_nik"] != "" && $_POST["user_nik"] != "all") {
+                                                    $user_nik = $_POST["user_nik"];
+                                                    $build->like("user.user_nik", $user_nik, "BOTH");
+                                                }
+                                                if (isset($_POST["user_ktp"]) && $_POST["user_ktp"] != "" && $_POST["user_ktp"] != "all") {
+                                                    $user_ktp = $_POST["user_ktp"];
+                                                    $build->like("user.user_ktp", $user_ktp, "BOTH");
+                                                }
                                             }
                                             $usr = $build->orderBy("departemen_name", "ASC")
                                                 ->orderBy("position_name", "ASC")

@@ -29,6 +29,7 @@ $routes->add('/minventaris', 'master\minventaris::index');
 $routes->add('/mter', 'master\mter::index');
 $routes->add('/mapk', 'master\mapk::index');
 $routes->add('/mpositionandroid', 'master\mpositionandroid::index');
+$routes->add('/mkalender', 'master\mkalender::index');
 
 $routes->add('/synchron', 'transaction\synchron::index');
 $routes->add('/absen', 'transaction\absen::index');

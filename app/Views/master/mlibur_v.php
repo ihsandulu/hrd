@@ -62,6 +62,14 @@
                             </div>
                             <form class="form-horizontal" method="post" enctype="multipart/form-data">
 
+
+                                <div class="form-group ">
+                                    <label class="control-label col-sm-12" for="libur_name">Nama Hari Libur:</label>
+                                    <div class="col-sm-10">
+                                        <input  type="text" class="form-control " id="libur_name" name="libur_name" placeholder="" value="<?= $libur_name; ?>">
+                                    </div>
+                                </div>
+
                                 <div class="form-group ">
                                     <label class="control-label col-sm-2" for="libur_date">Tanggal:</label>
                                     <div class="col-sm-10">
@@ -71,7 +79,7 @@
 
 
                                 <div class="form-group awalakhir">
-                                    <label class="control-label col-sm-2" for="libur_hari">Hari:</label>
+                                    <label class="control-label col-sm-12" for="libur_hari">Hari:<br /><i>**Dipilih hanya jika anda titak memilih tanggal tertentu dan hanya ingin menerapkan lbur di setiap hari tertentu setiap minggunya!</i></label>
                                     <div class="col-sm-10">
                                         <select onchange="kosongtanggal()" class="form-control select iawalakhir" id="libur_hari" name="libur_hari">
                                             <?php
@@ -98,7 +106,7 @@
 
                                 <script>
                                     function kosongtanggal() {
-                                        $("#libur_date").val("");
+                                        $("#libur_date").val("0000-00-00");
                                     }
 
                                     function kosonghari() {
@@ -136,6 +144,7 @@
                                         <!-- <th>No.</th> -->
                                         <th>Tanggal</th>
                                         <th>Libur Hari</th>
+                                        <th>Libur Nama</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -208,6 +217,7 @@
                                             <!-- <td><?= $no++; ?></td> -->
                                             <td class=""><?= $usr->libur_date; ?></td>
                                             <td class=""><?= $hariList[$usr->libur_hari]; ?></td>
+                                            <td class=""><?= $usr->libur_name; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
