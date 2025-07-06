@@ -52,10 +52,13 @@ class mlibur_m extends core_m
             foreach ($this->request->getPost() as $e => $f) {
                 if ($e != 'create' && $e != 'libur_id') {
                     $input[$e] = $this->request->getPost($e);
-                    if($e == 'libur_hari'){
+                    if ($e == 'libur_hari') {
                         $input[$e] = is_array($f) ? implode(",", $f) : $f;
                     }
                 }
+            }
+            if ($input["libur_date"] > "0000-00-00") {
+                $input["libur_hari"] = date("w", strtotime($input["libur_date"]));
             }
             // print_r($input);die;
             $builder = $this->db->table('libur');
@@ -73,10 +76,13 @@ class mlibur_m extends core_m
             foreach ($this->request->getPost() as $e => $f) {
                 if ($e != 'change' && $e != 'libur_picture') {
                     $input[$e] = $this->request->getPost($e);
-                    if($e == 'libur_hari'){
+                    if ($e == 'libur_hari') {
                         $input[$e] = is_array($f) ? implode(",", $f) : $f;
                     }
                 }
+            }
+            if ($input["libur_date"] > "0000-00-00") {
+                $input["libur_hari"] = date("w", strtotime($input["libur_date"]));
             }
             // print_r($input);die;
             $this->db->table('libur')->update($input, array("libur_id" => $this->request->getPost("libur_id")));

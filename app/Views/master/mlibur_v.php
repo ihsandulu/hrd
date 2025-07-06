@@ -79,7 +79,7 @@
 
 
                                 <div class="form-group awalakhir">
-                                    <label class="control-label col-sm-12" for="libur_hari">Hari:<br /><i>**Dipilih hanya jika anda titak memilih tanggal tertentu dan hanya ingin menerapkan lbur di setiap hari tertentu setiap minggunya!</i></label>
+                                    <label class="control-label col-sm-12" for="libur_hari">Hari:<br /><i>**Dipilih hanya jika anda tidak memilih tanggal tertentu dan hanya ingin menerapkan lbur di setiap hari tertentu setiap minggunya!</i></label>
                                     <div class="col-sm-10">
                                         <select onchange="kosongtanggal()" class="form-control select iawalakhir" id="libur_hari" name="libur_hari">
                                             <?php
@@ -151,7 +151,7 @@
                                     <?php
                                     $usr = $this->db
                                         ->table("libur")
-                                        ->orderBy("libur_hari ASC, libur_date ASC")
+                                        ->orderBy("libur_date ASC, libur_hari ASC")
                                         ->get();
                                     //echo $this->db->getLastquery();
                                     $no = 1;

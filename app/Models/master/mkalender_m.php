@@ -56,6 +56,7 @@ class mkalender_m extends core_m
             if ($jkalender == 0) {
                 $tahun = date('Y'); // bisa diganti sesuai kebutuhan, misal $tahun = 2025;
                 $bulan = $this->request->getPost("kalender_bulan");
+                $buland = str_pad($bulan, 2, "0", STR_PAD_LEFT);
                 $jhari = [
                     0  => 0,    // Tidak digunakan
                     1  => 31,   // Januari
@@ -71,6 +72,13 @@ class mkalender_m extends core_m
                     11 => 30,   // November
                     12 => 31,   // Desember
                 ];
+
+                //delete di table libur semua tgl libur selain libur mingguan
+                $this->db->table("libur")
+                    ->where("libur_date >", "0000-00-00")
+                    ->where("SUBSTR(libur_date,1,7)", $tahun . "-" . $buland)
+                    ->delete();
+                // echo $this->db->getLastQuery(); die;
                 for ($x = 1; $x <= $jhari[$bulan]; $x++) {
                     $input["kalender_bulan"] = $bulan;
                     $input["kalender_tgl"] = $x;
@@ -86,7 +94,7 @@ class mkalender_m extends core_m
                     $input["kalender_liburk"] =  $liburk;
                     $input["kalender_year"] = date("Y");
 
-                    $tgl = $tahun . "-" . $bulan . "-" . $x;
+                    $tgl = $tahun . "-" . $buland . "-" . $x;
                     $xx = date('w', strtotime($tgl));
 
                     //cari di table jamkerja
@@ -104,6 +112,7 @@ class mkalender_m extends core_m
                         $input["kalender_name"] = $row->jamkerja_name;
                     }
 
+
                     //cari di table libur
                     $build = $this->db->table("libur")
                         ->where("libur_date", "0000-00-00")
@@ -113,6 +122,7 @@ class mkalender_m extends core_m
                         $input["kalender_tipe"] = $row->libur_id;
                         $input["kalender_table"] = "libur";
                         $input["kalender_name"] = $row->libur_name;
+                        $input["kalender_liburk"] = $row->libur_name;
                     }
                     $input["kalender_nhari"] = $xx;
 

@@ -109,9 +109,14 @@
                                     <tr id="tr<?= $usr->kalender_id; ?>" class="<?= $bg; ?> <?= $tx; ?>">
                                         <td class=""><?= $usr->kalender_tgl; ?></td>
                                         <td class="text-left"><?= $usr->kalender_hari; ?></td>
-                                        <td class=""><?= $usr->kalender_name; ?></td>
+                                        <td id="name<?= $usr->kalender_id; ?>" class=""><?= $usr->kalender_name; ?></td>
                                         <td class="">
-                                            <input id="rm<?= $usr->kalender_id; ?>" onclick="romadlon('<?= $usr->kalender_year; ?>-<?= $usr->kalender_bulan; ?>-<?= $usr->kalender_tgl; ?>','<?= $usr->kalender_id; ?>');" type="checkbox" value="1" <?= ($usr->kalender_romadlon == 1) ? "checked" : ""; ?> />
+                                            <?php if ($usr->kalender_libur == 0) {
+                                                $nonen = "inline";
+                                            } else {
+                                                $nonen = "none";
+                                            } ?>
+                                            <input style="display:<?= $nonen; ?>;" id="rm<?= $usr->kalender_id; ?>" onclick="klibur('<?= $usr->kalender_year; ?>-<?= $usr->kalender_bulan; ?>-<?= $usr->kalender_tgl; ?>','<?= $usr->kalender_id; ?>','<?= $usr->kalender_nhari; ?>');" type="checkbox" value="1" <?= ($usr->kalender_romadlon == 1) ? "checked" : ""; ?> />
                                         </td>
                                         <td class="">
                                             <select onchange="klibur('<?= $usr->kalender_year; ?>-<?= $usr->kalender_bulan; ?>-<?= $usr->kalender_tgl; ?>','<?= $usr->kalender_id; ?>','<?= $usr->kalender_nhari; ?>')" class="form-control" name="kalender_libur" id="kalender_libur<?= $usr->kalender_id; ?>">
@@ -130,7 +135,7 @@
                                                     <div class="col">
                                                         <input class="form-control" id="lk<?= $usr->kalender_id; ?>" type="text" value="<?= $usr->kalender_liburk; ?>" />
                                                     </div>
-                                                    <button class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>');"><i class="fa fa-check"></i></button>
+                                                    <button type="button" class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>','<?= $usr->kalender_tgl; ?>');"><i class="fa fa-check"></i></button>
                                                 </div>
                                             </form>
                                         </td>
@@ -145,45 +150,57 @@
     </div>
 </div>
 <script>
+    function liburk(kalender_id, libur_date) {
+        let kalender_liburk = $("#lk" + kalender_id).val();
+        // alert("<?= base_url("api/liburk"); ?>?kalender_id=" + kalender_id + "&kalender_liburk=" + kalender_liburk + "&libur_date=" + libur_date);
+        $.get("<?= base_url("api/liburk"); ?>", {
+                kalender_id: kalender_id,
+                kalender_liburk: kalender_liburk,
+                libur_date: libur_date
+            })
+            .done(function(data) {
+                alert(data);
+            });
+    }
+
     function klibur(tgl, id, libur_hari) {
         let lid = $("#kalender_libur" + id).val();
+        let rm = $("#rm" + id).is(":checked");
         let tr;
         if (lid == 1) {
+            $("#rm" + id).hide().removeAttr("checked");
             $("#flk" + id).show().val('');
             tr = 1;
-            $("#tr" + id).addClass("bg-danger");
+            $("#tr" + id).addClass("bg-danger").addClass("text-white").removeClass("text-dark");
         } else {
+            $("#rm" + id).show();
             $("#flk" + id).hide();
             tr = 0;
-            $("#tr" + id).removeClass("bg-danger");
+            $("#tr" + id).removeClass("bg-danger").addClass("text-dark").removeClass("text-white");
         }
         $.get("<?= base_url("api/klibur"); ?>", {
                 tgl: tgl,
                 tr: tr,
                 kalender_id: id,
-                libur_hari: libur_hari
-            })
-            .done(function(data) {});
-    }
-
-    function romadlon(tgl, id) {
-        let kalender_id = id;
-        let isChecked = $("#rm" + id).is(":checked");
-        let tr;
-        if (isChecked) {
-            tr = 1;
-        } else {
-            tr = 0;
-        }
-        $.get("<?= base_url("api/romadlon"); ?>", {
-                tgl: tgl,
-                tr: tr,
-                kalender_id: kalender_id
+                libur_hari: libur_hari,
+                rm: rm
             })
             .done(function(data) {
+                $("#name" + id).html(data);
+                if (lid == 1) {
+                    if (data != "Libur") {
+                        $("#lk" + id).val(data);
+                    }
 
+                } else {
+                    $("#lk" + id).val("");
+                }
             });
+
+        // alert("<?= base_url("api/klibur"); ?>?tgl="+tgl+"&tr="+tr+"&kalender_id="+id+"&libur_hari="+libur_hari+"&rm="+rm);
     }
+
+
     $('.select').select2();
     var title = "Master Kalender";
     $("title").text(title);

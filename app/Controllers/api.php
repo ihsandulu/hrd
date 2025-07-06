@@ -1186,70 +1186,138 @@ class api extends BaseController
         </script>
 <?php
     }
-    public function romadlon()
-    {
-        $input["ramadlan_date"] = $this->request->getGet("tgl");
-        $kalender_id = $this->request->getGet("kalender_id");
-        $tr = $this->request->getGet("tr");
-        if ($tr == 1) {
-            $this->db->table("ramadlan")->insert($input);
-        } else {
-            $this->db->table("ramadlan")->where($input)->delete();
-        }
 
-        $inputkalender["kalender_romadlon"] = $tr;
-        $this->db->table("kalender")->where("kalender_id", $kalender_id)->update($inputkalender);
+    public function liburk(){
+        $kalender_id = $this->request->getGet("kalender_id");
+        $namalibur = $this->request->getGet("kalender_liburk");
+        $libur_date = $this->request->getGet("libur_date");
+
+        $input1["kalender_liburk"]=$namalibur;
+        $this->db->table("kalender")->where("kalender_id",$kalender_id)->update($input1);
+
+        
+        $input2["libur_name"]=$namalibur;
+        $this->db->table("libur")->where("libur_date",$libur_date)->update($input2);
+
+        echo "Update Success!";
     }
+
     public function klibur()
     {
         $kalender_id = $this->request->getGet("kalender_id");
-        $kalender_name = $this->request->getGet("kalender_name");
         $tgl = $this->request->getGet("tgl");
         $tr = $this->request->getGet("tr");
         $xx = $this->request->getGet("libur_hari");
+        $rm1 = $this->request->getGet("rm");
+        if ($rm1 == "true") {
+            $rm = 1;
+        } else {
+            $rm = 0;
+        }
+        // echo $rm;die;
+        $hari = [
+            0 => 'Minggu',
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu'
+        ];
 
         $input["libur_date"] = $tgl;
         $input["libur_hari"] = $xx;
+        $inputkalender["kalender_libur"] = $tr;
         if ($tr == 1) {
             //cari di table libur apakah sudah ada
             $build = $this->db->table("libur")
+                ->groupStart()
                 ->where("libur_date", "0000-00-00")
-                ->where("libur_hari", $xx);
+                ->where("libur_hari", $xx)
+                ->groupEnd()
+                ->orWhere("libur_date", $tgl);
             $libur = $build->get();
-            foreach ($libur->getResult() as $row) {
-                $input["kalender_tipe"] = $row->libur_id;
-                $input["kalender_table"] = "libur";
-                $input["kalender_name"] = "Libur";
-            }
+            // echo $this->db->getLastQuery();
+            if ($libur->getNumRows() > 0) {
+                foreach ($libur->getResult() as $row) {
+                    $inputkalender["kalender_tipe"] = $row->libur_id;
+                    $inputkalender["kalender_table"] = "libur";
+                    $inputkalender["kalender_name"] = $row->libur_name;
+                    $inputkalender["kalender_liburk"] = $row->libur_name;
+                }
+                $where["kalender_id"] = $kalender_id;
+                $this->db->table("kalender")->where($where)->update($inputkalender);
+            } else {
+                $this->db->table("libur")->insert($input);
+                $libur_id = $this->db->insertID();
 
-            $this->db->table("libur")->insert($input);
+                $inputkalender["kalender_tipe"] = $libur_id;
+                $inputkalender["kalender_table"] = "libur";
+                $inputkalender["kalender_name"] = "Libur";
+                $where["kalender_id"] = $kalender_id;
+                $this->db->table("kalender")->where($where)->update($inputkalender);
+            }
         } else {
             $this->db->table("libur")->where($input)->delete();
+            $inputkalender["kalender_liburk"] = "";
+
+            //cari di table jamkerja
+            $build = $this->db->table("jamkerja")
+                ->where("jamkerja_type", "normal")
+                ->where("jamkerja_hari !=", "")
+                ->where("jamkerja_ramadlan", $rm)
+                ->where("FIND_IN_SET('" . $xx . "', jamkerja_hari)", null, false);
+            $jamkerja = $build->get();
+            // echo $this->db->getLastQuery();
+            if ($jamkerja->getNumRows() > 0) {
+                foreach ($jamkerja->getResult() as $row) {
+                    $inputkalender["kalender_tipe"] = $row->jamkerja_id;
+                    $inputkalender["kalender_table"] = "jamkerja";
+                    $inputkalender["kalender_name"] = $row->jamkerja_name;
+                    $idjamkerja = $row->jamkerja_id;
+                }
+                $where["kalender_id"] = $kalender_id;
+                $this->db->table("kalender")->where($where)->update($inputkalender);
+            } else {
+                //input jam kerja baru
+                $inputjamkerja["jamkerja_name"] = $hari[$xx];
+                $inputjamkerja["jamkerja_type"] = "normal";
+                $inputjamkerja["jamkerja_awal"] = "06:30";
+                $inputjamkerja["jamkerja_akhir"] = "15:30";
+                if ($rm == 0) {
+                    $inputjamkerja["jamkerja_istirahat"] = 1.0;
+                } else {
+                    $inputjamkerja["jamkerja_istirahat"] = 0.5;
+                }
+                $inputjamkerja["jamkerja_ramadlan"] = $rm;
+                $inputjamkerja["jamkerja_hari"] = $xx;
+                $this->db->table("jamkerja")->insert($inputjamkerja);
+                $idjamkerja = $this->db->insertID();
+
+
+                $inputkalender["kalender_tipe"] = $idjamkerja;
+                $inputkalender["kalender_table"] = "jamkerja";
+                if ($rm == 1) {
+                    $inputkalender["kalender_name"] = "Ramadlan " . $hari[$xx];
+                } else {
+                    $inputkalender["kalender_name"] = $hari[$xx];
+                }
+            }
+            //table romadlon
+            $inputramadlan["ramadlan_date"] = $tgl;
+            if ($rm == 1) {
+                $this->db->table("ramadlan")->insert($inputramadlan);
+            } else {
+                $this->db->table("ramadlan")->where($inputramadlan)->delete();
+            }
+
+            //update kalender
+            $inputkalender["kalender_romadlon"] = $rm;
+            $where["kalender_id"] = $kalender_id;
+            $this->db->table("kalender")->where($where)->update($inputkalender);
+            // echo $this->db->getLastQuery();die;
         }
-
-
-        $xx = date('w', strtotime($tgl));
-
-        //cari di table jamkerja
-        $build = $this->db->table("jamkerja")
-            ->where("jamkerja_type", "normal")
-            ->where("jamkerja_hari !=", "")
-            ->where("jamkerja_ramadlan", "0")
-            ->where("FIND_IN_SET('" . $xx . "', jamkerja_hari)", null, false);
-        $jamkerja = $build->get();
-        $input["kalender_tipe"] = "";
-        $input["kalender_table"] = "";
-        foreach ($jamkerja->getResult() as $row) {
-            $input["kalender_tipe"] = $row->jamkerja_id;
-            $input["kalender_table"] = "jamkerja";
-            $input["kalender_name"] = $row->jamkerja_name;
-        }
-
-
-
-        $inputkalender["kalender_libur"] = $tr;
-        $inputkalender["kalender_name"] = $kalender_name;
-        $this->db->table("kalender")->where("kalender_id", $kalender_id)->update($inputkalender);
+        echo $inputkalender["kalender_name"];
     }
     public function deletekontrak()
     {
