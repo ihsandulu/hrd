@@ -1229,6 +1229,8 @@ class api extends BaseController
         $input["libur_hari"] = $xx;
         $inputkalender["kalender_libur"] = $tr;
         if ($tr == 1) {
+            //delete ramadlan
+            $this->db->table("ramadlan")->where("ramadlan_date",$tgl)->delete();
             //cari di table libur apakah sudah ada
             $build = $this->db->table("libur")
                 ->groupStart()
