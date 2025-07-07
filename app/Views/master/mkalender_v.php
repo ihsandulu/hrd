@@ -135,7 +135,7 @@
                                                     <div class="col">
                                                         <input class="form-control" id="lk<?= $usr->kalender_id; ?>" type="text" value="<?= $usr->kalender_liburk; ?>" />
                                                     </div>
-                                                    <button type="button" class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>','<?= $usr->kalender_tgl; ?>');"><i class="fa fa-check"></i></button>
+                                                    <button type="button" class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>','<?= date("Y-".str_pad($usr->kalender_bulan,2,"0",STR_PAD_LEFT)."-".str_pad($usr->kalender_tgl,2,"0",STR_PAD_LEFT)); ?>','<?= $usr->kalender_nhari; ?>');"><i class="fa fa-check"></i></button>
                                                 </div>
                                             </form>
                                         </td>
@@ -150,13 +150,14 @@
     </div>
 </div>
 <script>
-    function liburk(kalender_id, libur_date) {
+    function liburk(kalender_id, libur_date, libur_hari) {
         let kalender_liburk = $("#lk" + kalender_id).val();
-        // alert("<?= base_url("api/liburk"); ?>?kalender_id=" + kalender_id + "&kalender_liburk=" + kalender_liburk + "&libur_date=" + libur_date);
+        // alert("<?= base_url("api/liburk"); ?>?kalender_id=" + kalender_id + "&kalender_liburk=" + kalender_liburk + "&libur_date=" + libur_date + "&libur_hari=" + libur_hari);
         $.get("<?= base_url("api/liburk"); ?>", {
                 kalender_id: kalender_id,
                 kalender_liburk: kalender_liburk,
-                libur_date: libur_date
+                libur_date: libur_date,
+                libur_hari: libur_hari
             })
             .done(function(data) {
                 alert(data);

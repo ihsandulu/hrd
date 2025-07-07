@@ -1187,18 +1187,28 @@ class api extends BaseController
 <?php
     }
 
-    public function liburk(){
+    public function liburk()
+    {
         $kalender_id = $this->request->getGet("kalender_id");
         $namalibur = $this->request->getGet("kalender_liburk");
         $libur_date = $this->request->getGet("libur_date");
+        $libur_hari = $this->request->getGet("libur_hari");
 
-        $input1["kalender_liburk"]=$namalibur;
-        $this->db->table("kalender")->where("kalender_id",$kalender_id)->update($input1);
+        $input1["kalender_liburk"] = $namalibur;
+        $this->db->table("kalender")->where("kalender_id", $kalender_id)->update($input1);
 
-        
-        $input2["libur_name"]=$namalibur;
-        $this->db->table("libur")->where("libur_date",$libur_date)->update($input2);
-
+        //cari libur mingguan
+        $libur = $this->db->table("libur")->where("libur_date", "0000-00-00")
+            ->where("libur_hari", $libur_hari)->get()->getNumRows();
+        if ($libur > 0) {
+            $wherel["libur_hari"] = $libur_hari;
+        } else {
+            $wherel["libur_hari"] = $libur_hari;
+            $wherel["libur_date"] = $libur_date;
+        }
+        $input2["libur_name"] = $namalibur;
+        $this->db->table("libur")->where($wherel)->update($input2);
+        // echo $this->db->getLastQuery();die;
         echo "Update Success!";
     }
 
@@ -1230,7 +1240,7 @@ class api extends BaseController
         $inputkalender["kalender_libur"] = $tr;
         if ($tr == 1) {
             //delete ramadlan
-            $this->db->table("ramadlan")->where("ramadlan_date",$tgl)->delete();
+            $this->db->table("ramadlan")->where("ramadlan_date", $tgl)->delete();
             //cari di table libur apakah sudah ada
             $build = $this->db->table("libur")
                 ->groupStart()
