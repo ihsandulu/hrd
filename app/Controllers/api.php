@@ -1252,6 +1252,7 @@ class api extends BaseController
             // echo $this->db->getLastQuery();
             if ($libur->getNumRows() > 0) {
                 foreach ($libur->getResult() as $row) {
+                    $inputkalender["kalender_romadlon"] = 0;
                     $inputkalender["kalender_tipe"] = $row->libur_id;
                     $inputkalender["kalender_table"] = "libur";
                     $inputkalender["kalender_name"] = $row->libur_name;
@@ -1263,6 +1264,7 @@ class api extends BaseController
                 $this->db->table("libur")->insert($input);
                 $libur_id = $this->db->insertID();
 
+                $inputkalender["kalender_romadlon"] = 0;
                 $inputkalender["kalender_tipe"] = $libur_id;
                 $inputkalender["kalender_table"] = "libur";
                 $inputkalender["kalender_name"] = "Libur";
