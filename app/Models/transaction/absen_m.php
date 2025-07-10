@@ -40,7 +40,7 @@ class absen_m extends core_m
 
         //delete
         if ($this->request->getPost("delete") == "OK") {
-             $absen_ids = $this->request->getPost("absen_id");
+            $absen_ids = $this->request->getPost("absen_id");
             // dd($absen_ids);
             if ($absen_ids) {
                 $this->db->table("absen")
@@ -101,7 +101,7 @@ class absen_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
-
+            // dd($_POST);
 
 
 

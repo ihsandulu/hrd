@@ -22,4 +22,11 @@ class absen extends BaseController
         $data = $data->data();
         return view('transaction/absen_v', $data);
     }
+
+    public function index2()
+    {
+        $data = new \App\Models\transaction\absen_m();
+        $data = $data->data();
+        return view('transaction/absen2_v', $data);
+    }
 }

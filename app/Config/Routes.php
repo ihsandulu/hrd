@@ -33,6 +33,7 @@ $routes->add('/mkalender', 'master\mkalender::index');
 
 $routes->add('/synchron', 'transaction\synchron::index');
 $routes->add('/absen', 'transaction\absen::index');
+$routes->add('/absen2', 'transaction\absen::index2');
 $routes->add('/gaji', 'transaction\gaji::index');
 $routes->add('/lembur', 'transaction\lembur::index');
 $routes->add('/kontrak', 'transaction\kontrak::index');
