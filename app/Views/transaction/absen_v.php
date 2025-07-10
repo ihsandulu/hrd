@@ -283,10 +283,18 @@
                                             $build->where("TIME($table.absen_masuk) !=", "00:00:00");
                                             break;
                                         case "late":
+                                            //cek ramdlan bukan
+                                            $rm = $this->db->table("ramadlan")->where("ramadlan_date", $_POST["tanggal"])->get()->getNumRows();
+                                            
                                             //cari jadwal masuk
                                             $hari = date("w", strtotime($_POST["tanggal"]));
-                                            $jamkerja = $this->db->table("jamkerja")
-                                                ->where("jamkerja_type", "normal")
+                                            $build = $this->db->table("jamkerja");
+                                            if ($rm > 0) {
+                                                $build->where("jamkerja_ramadlan", 1);
+                                            }else{
+                                                $build->where("jamkerja_ramadlan", 0);
+                                            }
+                                            $jamkerja = $build->where("jamkerja_type", "normal")
                                                 ->where("FIND_IN_SET(" . $hari . ",jamkerja_hari) !=", "0")
                                                 ->get();
                                             // echo $this->db->getlastQuery();
