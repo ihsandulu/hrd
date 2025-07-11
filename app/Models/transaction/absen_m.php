@@ -36,8 +36,6 @@ class absen_m extends core_m
             }
         }
 
-
-
         //delete
         if ($this->request->getPost("delete") == "OK") {
             $absen_ids = $this->request->getPost("absen_id");

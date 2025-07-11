@@ -89,7 +89,7 @@ class gaji_m extends core_m
         }
 
         //generate
-        if ($this->request->getPost("generate") == "OK") {
+        if ($this->request->getPost("submit") == "generate") {
             $dari = $this->request->getPost("dari");
             $ke = $this->request->getPost("ke");
 
