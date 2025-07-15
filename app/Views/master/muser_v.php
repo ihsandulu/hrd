@@ -267,6 +267,7 @@
                                                     <option value="SD" <?= ($user_pendidikan == "SD") ? "selected" : ""; ?>>SD</option>
                                                     <option value="SMP" <?= ($user_pendidikan == "SMP") ? "selected" : ""; ?>>SMP</option>
                                                     <option value="SMA" <?= ($user_pendidikan == "SMA") ? "selected" : ""; ?>>SMA</option>
+                                                    <option value="SMK" <?= ($user_pendidikan == "SMK") ? "selected" : ""; ?>>SMK</option>
                                                     <option value="D1" <?= ($user_pendidikan == "D1") ? "selected" : ""; ?>>D1</option>
                                                     <option value="D2" <?= ($user_pendidikan == "D2") ? "selected" : ""; ?>>D2</option>
                                                     <option value="D3" <?= ($user_pendidikan == "D3") ? "selected" : ""; ?>>D3</option>
@@ -699,33 +700,33 @@
                                         <?php } ?>
                                         <th>NIK</th>
                                         <th>Name</th>
-                                        <th>Tgl.Masuk</th>
-                                        <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
-                                            <th>Masa Kontrak</th>
-                                            <th>Tgl.Retire</th>
-                                        <?php } ?>
                                         <th>Departemen</th>
                                         <th>Posisi</th>
-                                        <th>KTP</th>
                                         <th>ETAG</th>
-                                        <!-- <th>Username</th> -->
-                                        <th>Alamat</th>
-                                        <th>Email</th>
+                                        <th>Tgl.Masuk</th>
+                                        <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                            <th>Tgl.Retire</th>
+                                            <th>Masa Kontrak</th>
+                                        <?php } ?>
+                                        <th>KTP</th>
+                                        <th>Kartu Keluarga</th>
                                         <th>Whatsapp</th>
+                                        <th>Pendidikan</th>
+                                        <th>Nama Ibu</th>
                                         <th>NPWP</th>
-                                        <th>Status</th>
                                         <th>BPJS TK</th>
                                         <th>BPJS Kesehatan</th>
-                                        <th>Kartu Keluarga</th>
                                         <th>Bank</th>
                                         <th>No Rek:</th>
-                                        <th>Nama Ibu</th>
-                                        <th>Pendidikan</th>
-                                        <th style="white-space: nowrap;">Tgl Lahir </th>
                                         <th>Tempat Lahir</th>
+                                        <th style="white-space: nowrap;">Tgl Lahir </th>
                                         <th>L/P</th>
-                                        <th>Status Tanggungan</th>
+                                        <th>Alamat</th>
+                                        <th>Email</th>
                                         <th>Tipe Penggajian</th>
+                                        <th>Status Tanggungan</th>
+                                        <th>Status</th>
+                                        <!-- <th>Username</th> -->
                                         <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                             <th>Lembur</th>
                                             <th>Gapok</th>
@@ -947,32 +948,32 @@
                                             <?php } ?>
                                             <td><?= $usr->user_nik; ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_nama); ?></td>
-                                            <td style="white-space: nowrap;"><?= $usr->user_masuk; ?></td>
-                                            <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
-                                                <td style="white-space: nowrap;"><?= $usr->kontrak_to; ?></td>
-                                                <td style="white-space: nowrap;"><?= $usr->user_keluar; ?></td>
-                                            <?php } ?>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->departemen_name); ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->position_name); ?></td>
-                                            <td><?= $usr->user_ktp; ?></td>
                                             <td><?= $usr->user_etag; ?></td>
-                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_address); ?></td>
-                                            <td class="text-left"><?= $usr->user_email; ?></td>
+                                            <td style="white-space: nowrap;"><?= $usr->user_masuk; ?></td>
+                                            <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
+                                                <td style="white-space: nowrap;"><?= $usr->user_keluar; ?></td>
+                                                <td style="white-space: nowrap;"><?= $usr->kontrak_to; ?></td>
+                                            <?php } ?>
+                                            <td><?= $usr->user_ktp; ?></td>
+                                            <td><?= $usr->user_kk; ?></td>
                                             <td><?= $usr->user_wa; ?></td>
+                                            <td><?= $usr->user_pendidikan; ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_ibu); ?></td>
                                             <td><?= $usr->user_npwp; ?></td>
-                                            <td><?= $aktif[$usr->user_status]; ?></td>
                                             <td><?= $usr->user_bpjstk; ?></td>
                                             <td><?= $usr->user_bpjskesehatan; ?></td>
-                                            <td><?= $usr->user_kk; ?></td>
                                             <td><?= $usr->user_bank; ?></td>
                                             <td><?= $usr->user_norek; ?></td>
-                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_ibu); ?></td>
-                                            <td><?= $usr->user_pendidikan; ?></td>
-                                            <td><?= $usr->user_borndate; ?></td>
                                             <td><?= $usr->user_borncity; ?></td>
+                                            <td><?= $usr->user_borndate; ?></td>
                                             <td><?= $usr->user_gender; ?></td>
-                                            <td><?= $usr->user_tanggungan; ?></td>
+                                            <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_address); ?></td>
+                                            <td class="text-left"><?= $usr->user_email; ?></td>
                                             <td><?= $usr->user_payrolltype; ?></td>
+                                            <td><?= $usr->user_tanggungan; ?></td>
+                                            <td><?= $aktif[$usr->user_status]; ?></td>
                                             <?php if (session()->get("position_id") == "109" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                                 <td><?= $lembur[$usr->user_lembur]; ?></td>
                                                 <td class="text-right"><?= number_format($usr->user_gapok, 0, ",", "."); ?></td>
