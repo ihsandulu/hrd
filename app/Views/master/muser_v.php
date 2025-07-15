@@ -61,7 +61,8 @@
         <div class='col-12'>
             <div class="card">
                 <div class="card-body">
-
+<?php 
+    echo session()->get("position_id");?>
 
                     <div class="row">
                         <?php if (!isset($_GET['user_id']) && !isset($_POST['new']) && !isset($_POST['edit'])) {
@@ -1031,6 +1032,20 @@
     });
 </script>
 <script>
+    <?php
+    $lt=1;
+    if (session()->get("position_id") == "109") {
+        $lt = 1;
+    } else if (session()->get("position_id") == "110") {
+        $lt = 1;
+    } else if (session()->get("position_id") == "111") {
+        $lt = 1;
+    } else if (session()->get("position_id") == "112") {
+        $lt = 1;
+    }else{
+        $lt = 1;
+    }
+    ?>
     $(document).ready(function() {
         $('#data1').DataTable({
             order: [
@@ -1043,14 +1058,14 @@
                     extend: 'excelHtml5',
                     text: 'Export ke Excel',
                     exportOptions: {
-                        columns: ':not(:lt(3))'
+                        columns: ':not(:lt(<?=$lt;?>))'
                     }
                 },
                 {
                     extend: 'print',
                     text: 'Print',
                     exportOptions: {
-                        columns: ':not(:lt(3))'
+                        columns: ':not(:lt(<?=$lt;?>))'
                     }
                 }
             ]
