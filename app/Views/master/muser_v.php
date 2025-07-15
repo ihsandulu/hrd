@@ -61,8 +61,7 @@
         <div class='col-12'>
             <div class="card">
                 <div class="card-body">
-<?php 
-    echo session()->get("position_id");?>
+
 
                     <div class="row">
                         <?php if (!isset($_GET['user_id']) && !isset($_POST['new']) && !isset($_POST['edit'])) {
