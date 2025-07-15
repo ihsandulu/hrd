@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 
 
-class utama extends BaseController
+class utama extends baseController
 {
 
     protected $sesi_user;
