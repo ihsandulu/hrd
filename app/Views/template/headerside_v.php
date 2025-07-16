@@ -110,6 +110,25 @@
                             )
                         ) ||
                         (
+                            isset(session()->get("halaman")['102']['act_read'])
+                            && session()->get("halaman")['102']['act_read'] == "1"
+                        )
+                    ) { ?>
+                        <li>
+                            <a class="<?= current_url(true)->getSegment(1) == 'mworkplace' ? 'active' : ''; ?>" href="<?= base_url("mworkplace"); ?>" aria-expanded="false"><i class="fa fa-building"></i><span class="hide-menu">Workplace</span></a>
+                        </li>
+                    <?php } ?>
+                    
+                    <?php
+                    if (
+                        (
+                            isset(session()->get("position_id")[0][0])
+                            && (
+                                session()->get("position_id") == "1"
+                                || session()->get("position_id") == "2"
+                            )
+                        ) ||
+                        (
                             isset(session()->get("halaman")['50']['act_read'])
                             && session()->get("halaman")['50']['act_read'] == "1"
                         )

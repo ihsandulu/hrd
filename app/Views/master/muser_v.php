@@ -299,6 +299,18 @@
 
                                         <div class="form-group col-3 ">
                                             <div class="col-12">
+                                                <select title="Married" data-bs-toggle="tooltip" data-bs-placement="top" onchange="pph()" class="form-control" id="user_married" name="user_married">
+                                                    <option value="" <?= ($user_tanggungan == "") ? "selected" : ""; ?>>Pilih Married</option>
+                                                    <?php $tanggungan = $this->db->table("tanggungan")->get();
+                                                    foreach ($tanggungan->getResult() as $tanggungan) { ?>
+                                                        <option value="<?= $tanggungan->tanggungan_jenis; ?>" data-ter="<?= $tanggungan->tanggungan_ter; ?>" <?= ($user_married == $tanggungan->tanggungan_jenis) ? "selected" : ""; ?>><?= $tanggungan->tanggungan_jenis; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-3 ">
+                                            <div class="col-12">
                                                 <select title="Status Tanggungan" data-bs-toggle="tooltip" data-bs-placement="top" onchange="pph()" class="form-control" id="user_tanggungan" name="user_tanggungan">
                                                     <option value="" <?= ($user_tanggungan == "") ? "selected" : ""; ?>>Pilih Status</option>
                                                     <?php $tanggungan = $this->db->table("tanggungan")->get();
@@ -706,7 +718,8 @@
                                         <th>Tgl.Masuk</th>
                                         <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                             <th>Tgl.Retire</th>
-                                            <th>Masa Kontrak</th>
+                                            <th>Kontrak Awal</th>
+                                            <th>Kontrak Akhir</th>
                                         <?php } ?>
                                         <th>KTP</th>
                                         <th>Kartu Keluarga</th>
@@ -721,6 +734,7 @@
                                         <th>Tempat Lahir</th>
                                         <th style="white-space: nowrap;">Tgl Lahir </th>
                                         <th>L/P</th>
+                                        <th>Status Married</th>
                                         <th>Alamat</th>
                                         <th>Email</th>
                                         <th>Tipe Penggajian</th>
@@ -954,6 +968,7 @@
                                             <td style="white-space: nowrap;"><?= $usr->user_masuk; ?></td>
                                             <?php if (session()->get("position_id") == "111" || session()->get("position_id") == "112" || session()->get("position_id") == "1") { ?>
                                                 <td style="white-space: nowrap;"><?= $usr->user_keluar; ?></td>
+                                                <td style="white-space: nowrap;"><?= $usr->kontrak_from; ?></td>
                                                 <td style="white-space: nowrap;"><?= $usr->kontrak_to; ?></td>
                                             <?php } ?>
                                             <td><?= $usr->user_ktp; ?></td>
@@ -969,6 +984,7 @@
                                             <td><?= $usr->user_borncity; ?></td>
                                             <td><?= $usr->user_borndate; ?></td>
                                             <td><?= $usr->user_gender; ?></td>
+                                            <td><?= $usr->user_married; ?></td>
                                             <td class="text-left"><?= str_replace(' ', '&nbsp;', $usr->user_address); ?></td>
                                             <td class="text-left"><?= $usr->user_email; ?></td>
                                             <td><?= $usr->user_payrolltype; ?></td>

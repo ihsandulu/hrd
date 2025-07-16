@@ -15,7 +15,7 @@
                             <h4 class="card-title"></h4>
                             <!-- <h6 class="card-subtitle">Export data to Copy, CSV, Excel, PDF & Print</h6> -->
                         </div>
-
+                       
                         <?php if (!isset($_POST['new']) && !isset($_POST['edit']) && !isset($_GET['report'])) { ?>
                             <?php if (isset($_GET["user_id"])) { ?>
                                 <form action="<?= base_url("user"); ?>" method="get" class="col-md-2">
@@ -24,26 +24,26 @@
                                     </h1>
                                 </form>
                             <?php } ?>
-                            <?php
+                            <?php 
                             if (
                                 (
-                                    isset(session()->get("position_administrator")[0][0])
+                                    isset(session()->get("position_administrator")[0][0]) 
                                     && (
-                                        session()->get("position_administrator") == "1"
+                                        session()->get("position_administrator") == "1" 
                                         || session()->get("position_administrator") == "2"
                                     )
                                 ) ||
                                 (
-                                    isset(session()->get("halaman")['49']['act_create'])
-                                    && session()->get("halaman")['49']['act_create'] == "1"
+                                    isset(session()->get("halaman")['102']['act_create']) 
+                                    && session()->get("halaman")['102']['act_create'] == "1"
                                 )
                             ) { ?>
-                                <form method="post" class="col-md-2">
-                                    <h1 class="page-header col-md-12">
-                                        <button name="new" class="btn btn-info btn-block btn-lg" value="OK" style="">New</button>
-                                        <input type="hidden" name="departemen_id" />
-                                    </h1>
-                                </form>
+                            <form method="post" class="col-md-2">
+                                <h1 class="page-header col-md-12">
+                                    <button name="new" class="btn btn-info btn-block btn-lg" value="OK" style="">New</button>
+                                    <input type="hidden" name="workplace_id" />
+                                </h1>
+                            </form>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -52,40 +52,27 @@
                         <div class="">
                             <?php if (isset($_POST['edit'])) {
                                 $namabutton = 'name="change"';
-                                $judul = "Update Departemen";
+                                $judul = "Update ".$title;
                             } else {
                                 $namabutton = 'name="create"';
-                                $judul = "Tambah Departemen";
+                                $judul = "Tambah ".$title;
                             } ?>
                             <div class="lead">
                                 <h3><?= $judul; ?></h3>
                             </div>
-                            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                            <form class="form-horizontal" method="post" enctype="multipart/form-data">                                                     
                                 <div class="form-group">
-                                    <label class="control-label col-sm-2" for="departemen_name">Nama Departemen:</label>
+                                    <label class="control-label col-sm-2" for="workplace_name">Nama workplace:</label>
                                     <div class="col-sm-10">
-                                        <select required type="text" autofocus class="form-control" id="departemen_name" name="departemen_name">
-                                            <option value="" <?= ($workplace_id == "") ? "selected" : ""; ?>>Pilih Workplace</option>
-                                            <?php $workplace = $this->db->table("workplace")->get();
-                                            foreach ($workplace->getResult() as $row) { ?>
-                                                <option value="<?= $row->workplace_id; ?>" <?= ($workplace_id == $row->workplace_id) ? "selected" : ""; ?>><?= $row->workplace_name; ?></option>
-                                            <?php } ?>
-                                        </select>
+                                        <input required type="text" autofocus class="form-control" id="workplace_name" name="workplace_name" placeholder="" value="<?= $workplace_name; ?>">
                                     </div>
-                                </div>
+                                </div>  
 
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="departemen_name">Nama Departemen:</label>
-                                    <div class="col-sm-10">
-                                        <input required type="text" class="form-control" id="departemen_name" name="departemen_name" placeholder="" value="<?= $departemen_name; ?>">
-                                    </div>
-                                </div>
-
-                                <input type="hidden" name="departemen_id" value="<?= $departemen_id; ?>" />
+                                <input type="hidden" name="workplace_id" value="<?= $workplace_id; ?>" />
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <button type="submit" id="submit" class="btn btn-primary col-md-5" <?= $namabutton; ?> value="OK">Submit</button>
-                                        <a class="btn btn-warning col-md-offset-1 col-md-5" href="<?= base_url("mdepartemen"); ?>">Back</a>
+                                        <a class="btn btn-warning col-md-offset-1 col-md-5" href="<?= base_url("mworkplace"); ?>">Back</a>
                                     </div>
                                 </div>
                             </form>
@@ -108,16 +95,13 @@
                                         <?php } ?>
                                         <!-- <th>No.</th> -->
                                         <th>Workplace</th>
-                                        <th>Departemen</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $usr = $this->db
-                                        ->table("departemen")
-                                        ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left")
+                                        ->table("workplace")
                                         ->orderBy("workplace_name", "ASC")
-                                        ->orderBy("departemen_name", "ASC")
                                         ->get();
                                     //echo $this->db->getLastquery();
                                     $no = 1;
@@ -125,50 +109,49 @@
                                         <tr>
                                             <?php if (!isset($_GET["report"])) { ?>
                                                 <td style="padding-left:0px; padding-right:0px;">
-                                                    <?php
+                                                    <?php 
                                                     if (
                                                         (
-                                                            isset(session()->get("position_administrator")[0][0])
+                                                            isset(session()->get("position_administrator")[0][0]) 
                                                             && (
-                                                                session()->get("position_administrator") == "1"
+                                                                session()->get("position_administrator") == "1" 
                                                                 || session()->get("position_administrator") == "2"
                                                             )
                                                         ) ||
                                                         (
-                                                            isset(session()->get("halaman")['49']['act_update'])
-                                                            && session()->get("halaman")['49']['act_update'] == "1"
+                                                            isset(session()->get("halaman")['102']['act_update']) 
+                                                            && session()->get("halaman")['102']['act_update'] == "1"
                                                         )
                                                     ) { ?>
-                                                        <form method="post" class="btn-action" style="">
-                                                            <button class="btn btn-sm btn-warning " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
-                                                            <input type="hidden" name="departemen_id" value="<?= $usr->departemen_id; ?>" />
-                                                        </form>
-                                                    <?php } ?>
-
-                                                    <?php
+                                                    <form method="post" class="btn-action" style="">
+                                                        <button class="btn btn-sm btn-warning " name="edit" value="OK"><span class="fa fa-edit" style="color:white;"></span> </button>
+                                                        <input type="hidden" name="workplace_id" value="<?= $usr->workplace_id; ?>" />
+                                                    </form>
+                                                    <?php }?>
+                                                    
+                                                    <?php 
                                                     if (
                                                         (
-                                                            isset(session()->get("position_administrator")[0][0])
+                                                            isset(session()->get("position_administrator")[0][0]) 
                                                             && (
-                                                                session()->get("position_administrator") == "1"
+                                                                session()->get("position_administrator") == "1" 
                                                                 || session()->get("position_administrator") == "2"
                                                             )
                                                         ) ||
                                                         (
-                                                            isset(session()->get("halaman")['49']['act_delete'])
-                                                            && session()->get("halaman")['49']['act_delete'] == "1"
+                                                            isset(session()->get("halaman")['102']['act_delete']) 
+                                                            && session()->get("halaman")['102']['act_delete'] == "1"
                                                         )
                                                     ) { ?>
-                                                        <form method="post" class="btn-action" style="">
-                                                            <button class="btn btn-sm btn-danger delete" onclick="return confirm(' you want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
-                                                            <input type="hidden" name="departemen_id" value="<?= $usr->departemen_id; ?>" />
-                                                        </form>
-                                                    <?php } ?>
+                                                    <form method="post" class="btn-action" style="">
+                                                        <button class="btn btn-sm btn-danger delete" onclick="return confirm(' you want to delete?');" name="delete" value="OK"><span class="fa fa-close" style="color:white;"></span> </button>
+                                                        <input type="hidden" name="workplace_id" value="<?= $usr->workplace_id; ?>" />
+                                                    </form>
+                                                    <?php }?>
                                                 </td>
                                             <?php } ?>
                                             <!-- <td><?= $no++; ?></td> -->
                                             <td class="text-left"><?= $usr->workplace_name; ?></td>
-                                            <td class="text-left"><?= $usr->departemen_name; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -182,7 +165,7 @@
 </div>
 <script>
     $('.select').select2();
-    var title = "Master Departemen";
+    var title = "<?=$title;?>";
     $("title").text(title);
     $(".card-title").text(title);
     $("#page-title").text(title);

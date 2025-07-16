@@ -189,6 +189,11 @@
                     <div class="accordion" id="faqAccordion">
                         <form method="post" action="<?= base_url("absen"); ?>">
                             <?php
+                            if (isset($_POST["workplace_id"])) {
+                                $iworkplace = $_POST["workplace_id"];
+                            } else {
+                                $iworkplace = "";
+                            }
                             if (isset($_POST["departemen_id"])) {
                                 $idepartemen = $_POST["departemen_id"];
                             } else {
@@ -216,6 +221,14 @@
                             }
                             ?>
                             <input type="date" class=" " id="tanggal" name="tanggal" value="<?= $itanggal; ?>">
+                            <select class=" " name="workplace_id">
+                                <option value="">Pilih Workplace</option>
+                                <option value="all">All</option>
+                                <?php $workplace = $this->db->table("workplace")->orderBy("workplace_name")->get();
+                                foreach ($workplace->getResult() as $workplace) { ?>
+                                    <option value="<?= $workplace->workplace_id; ?>" <?= ($iworkplace == $workplace->workplace_id) ? "selected" : ""; ?>><?= $workplace->workplace_name; ?></option>
+                                <?php } ?>
+                            </select>
                             <select class=" " name="departemen_id">
                                 <option value="">Pilih Dept.</option>
                                 <option value="all">All</option>
@@ -224,14 +237,14 @@
                                     <option value="<?= $departemen->departemen_id; ?>" <?= ($idepartemen == $departemen->departemen_id) ? "selected" : ""; ?>><?= $departemen->departemen_name; ?></option>
                                 <?php } ?>
                             </select>
-                            <select class=" " name="position_id">
+                            <!-- <select class=" " name="position_id">
                                 <option value="">Pilih Posisi</option>
                                 <option value="all">All</option>
                                 <?php $position = $this->db->table("position")->orderBy("position_name")->get();
                                 foreach ($position->getResult() as $position) { ?>
                                     <option value="<?= $position->position_id; ?>" <?= ($iposition == $position->position_id) ? "selected" : ""; ?>><?= $position->position_name; ?></option>
                                 <?php } ?>
-                            </select>
+                            </select> -->
                             <input type="text" class=" " style="width:150px;" name="user_nama" value="<?= $iuser_nama; ?>" placeholder="Nama">
                             <input type="text" class="" style="width:100px;" name="user_nik" value="<?= $iuser_nik; ?>" placeholder="NIK">
                             <button type="submit" name="submit" value="none" class="btn btn-sm btn-primary">None</button>
@@ -270,7 +283,8 @@
                                             $build = $this->db->table($table);
                                             $build->join("absen", "absen.user_id=$table.user_id AND absen.absen_date ='" . $_POST["tanggal"] . "'", "left")
                                                 ->join("position", "position.position_id=$table1.position_id", "left")
-                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left");
+                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left")
+                                                ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left");
                                             break;
                                         case "masuk":
                                             $table = "absen";
@@ -278,20 +292,21 @@
                                             $build = $this->db->table($table);
                                             $build->join("user", "user.user_id=$table.user_id", "left")
                                                 ->join("position", "position.position_id=$table1.position_id", "left")
-                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left");
+                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left")
+                                                ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left");
                                             $build->where("$table.absen_date", $_POST["tanggal"]);
                                             $build->where("TIME($table.absen_masuk) !=", "00:00:00");
                                             break;
                                         case "late":
                                             //cek ramdlan bukan
                                             $rm = $this->db->table("ramadlan")->where("ramadlan_date", $_POST["tanggal"])->get()->getNumRows();
-                                            
+
                                             //cari jadwal masuk
                                             $hari = date("w", strtotime($_POST["tanggal"]));
                                             $build = $this->db->table("jamkerja");
                                             if ($rm > 0) {
                                                 $build->where("jamkerja_ramadlan", 1);
-                                            }else{
+                                            } else {
                                                 $build->where("jamkerja_ramadlan", 0);
                                             }
                                             $jamkerja = $build->where("jamkerja_type", "normal")
@@ -308,7 +323,8 @@
                                             $build = $this->db->table($table);
                                             $build->join("user", "user.user_id=$table.user_id", "left")
                                                 ->join("position", "position.position_id=$table1.position_id", "left")
-                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left");
+                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left")
+                                                ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left");
                                             $build->where("$table.absen_date", $_POST["tanggal"]);
                                             $build->where("$table.absen_masuk >", $_POST["tanggal"] . " " . $jamkerja_awal);
                                             break;
@@ -319,6 +335,7 @@
                                             $build->join("absen", "absen.user_id=$table.user_id AND absen.absen_date ='" . $_POST["tanggal"] . "'", "left")
                                                 ->join("position", "position.position_id=$table1.position_id", "left")
                                                 ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left")
+                                                ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left")
                                                 ->groupStart()
                                                 ->groupStart()
                                                 ->where("TIME(absen.absen_masuk)", "00:00:00")
@@ -338,6 +355,7 @@
                                                 ->join("absen", "absen.user_id = $table.user_id AND absen.absen_date = '$tanggal'", "left")
                                                 ->join("position", "position.position_id = $table.position_id", "left")
                                                 ->join("departemen", "departemen.departemen_id = $table.departemen_id", "left")
+                                                ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left")
                                                 ->groupStart() // buka grup kondisi
                                                 ->where("TIME(absen.absen_masuk)", "00:00:00")
                                                 ->orWhere("absen.absen_masuk IS NULL")
@@ -350,8 +368,10 @@
                                             $build = $this->db->table($table);
                                             $build->join("user", "user.user_id=$table.user_id", "left")
                                                 ->join("position", "position.position_id=$table1.position_id", "left")
-                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left");
+                                                ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left")
+                                                ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left");
                                             $build->where("$table.absen_date", $_POST["tanggal"]);
+                                            $build->where("TIME(absen.absen_masuk) !=", "00:00:00");
                                             $build->where("TIME(absen.absen_keluar)", "00:00:00");
                                             $build->where("absen.absen_type", "Normal");
                                             break;
@@ -361,7 +381,8 @@
                                     $build = $this->db->table($table);
                                     $build->join("absen", "absen.user_id=$table.user_id AND absen.absen_date ='" . date("Y-m-d") . "'", "left")
                                         ->join("position", "position.position_id=$table1.position_id", "left")
-                                        ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left");
+                                        ->join("departemen", "departemen.departemen_id=$table1.departemen_id", "left")
+                                        ->join("workplace", "workplace.workplace_id=departemen.workplace_id", "left");
                                 }
 
                                 $build->where("$table1.user_id !=", "10");
@@ -369,6 +390,10 @@
                                 if (empty($_POST)) {
                                     $build->where("$table1.position_id", "0");
                                 } else {
+                                    if (isset($_POST["workplace_id"]) && $_POST["workplace_id"] != "" && $_POST["workplace_id"] != "all") {
+                                        $workplace_id = $_POST["workplace_id"];
+                                        $build->where("departemen.workplace_id", $workplace_id);
+                                    }
                                     if (isset($_POST["departemen_id"]) && $_POST["departemen_id"] != "" && $_POST["departemen_id"] != "all") {
                                         $departemen_id = $_POST["departemen_id"];
                                         $build->where("$table1.departemen_id", $departemen_id);
@@ -385,16 +410,18 @@
                                         $user_nik = $_POST["user_nik"];
                                         $build->like("$table1.user_nik", $user_nik, "both");
                                     }
-                                    if ((isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "") && (isset($_POST["user_nama"]) && $_POST["user_nama"] == "") && (isset($_POST["user_nik"]) && $_POST["user_nik"] == "")) {
+                                    if ((isset($_POST["workplace_id"]) && $_POST["workplace_id"] == "") && (isset($_POST["departemen_id"]) && $_POST["departemen_id"] == "") && (isset($_POST["position_id"]) && $_POST["position_id"] == "") && (isset($_POST["user_nama"]) && $_POST["user_nama"] == "") && (isset($_POST["user_nik"]) && $_POST["user_nik"] == "")) {
                                         $build->where("$table1.position_id", "0");
                                     }
                                 }
-
-                                $usr = $build->orderBy("departemen.departemen_name", "ASC")
+                                $build->where("user.user_status", "1");
+                                $usr = $build
+                                    ->orderBy("workplace.workplace_name", "ASC")
+                                    ->orderBy("departemen.departemen_name", "ASC")
                                     ->orderBy("position.position_name", "ASC")
                                     ->orderBy("user.user_nama", "ASC")
                                     ->get();
-                                // echo $this->db->getLastquery();
+                                echo $this->db->getLastquery();
                                 $no = 1;
                                 $aktif = ["Tidak Aktif", "Aktif"];
                                 $absen = ["Tidak", "Perjam", "Insentif"];
@@ -414,10 +441,10 @@
                                             </select>
                                         </td>
                                         <td class="w50">
-                                            <input id="absen_masuk<?= $usr->user_id; ?>" onchange="normal('<?= $usr->user_id; ?>',1)" type="time" class="w50 jam normal<?= $usr->user_id; ?>" placeholder="00:00" value="<?= !empty($usr->absen_masuk) ? date("H:i", strtotime($usr->absen_masuk)) : ''; ?>">
+                                            <input id="absen_masuk<?= $usr->user_id; ?>" onchange="normal('<?= $usr->user_id; ?>',1)" type="text" class="w50 jam1 normal<?= $usr->user_id; ?>" placeholder="00:00" value="<?= !empty($usr->absen_masuk) ? date("H:i", strtotime($usr->absen_masuk)) : ''; ?>">
                                         </td>
                                         <td class="w50">
-                                            <input id="absen_keluar<?= $usr->user_id; ?>" onchange="normal('<?= $usr->user_id; ?>',1)" type="time" class="w50 jam normal<?= $usr->user_id; ?>" placeholder="00:00" value="<?= !empty($usr->absen_keluar) ? date("H:i", strtotime($usr->absen_keluar)) : '-'; ?>">
+                                            <input id="absen_keluar<?= $usr->user_id; ?>" onchange="normal('<?= $usr->user_id; ?>',1)" type="text" class="w50 jam1 normal<?= $usr->user_id; ?>" placeholder="00:00" value="<?= !empty($usr->absen_keluar) ? date("H:i", strtotime($usr->absen_keluar)) : '-'; ?>">
                                         </td>
                                         <td class="w100">
                                             <select id="absen_skd<?= $usr->user_id; ?>" class="sakit<?= $usr->user_id; ?>" onchange="normal('<?= $usr->user_id; ?>',1)">
@@ -468,8 +495,8 @@
     function normal(id, notif) {
         let absen_type = $("#absen_type" + id).val();
         let absen_date = $("#tanggal").val();
-        let absen_masuk = $("#absen_masuk" + id).val();
-        let absen_keluar = $("#absen_keluar" + id).val();
+        let absen_masuk = $("#absen_masuk" + id).val() + ":00";
+        let absen_keluar = $("#absen_keluar" + id).val() + ":00";
         let absen_note = $("#izin" + id).val();
         let absen_skd = $("#absen_skd" + id).val();
         let cuti_id = $("#cuti_id" + id).val();
@@ -613,6 +640,17 @@
             ],
             ordering: false // Mencegah DataTables mengatur order by
         });
+    });
+    $('.jam1').on('input', function() {
+        let val = $(this).val().replace(/\D/g, '').slice(0, 4); // hanya angka, maksimal 4 digit
+        if (val.length === 4) {
+            $(this).val(val.slice(0, 2) + ':' + val.slice(2));
+        } else {
+            $(this).val(val); // tetap tampilkan angka mentah dulu
+        }
+    });
+    $('.jam1').on('focus click', function() {
+        $(this).select();
     });
 </script>
 

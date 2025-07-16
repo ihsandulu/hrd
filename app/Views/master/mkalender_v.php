@@ -91,9 +91,10 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $usr = $this->db
-                                    ->table("kalender")
-                                    ->orderBy("kalender_tgl ASC")
+                                $build = $this->db
+                                    ->table("kalender");
+                                $build->where("kalender_bulan", $kalender_bulan);
+                                $usr = $build->orderBy("kalender_tgl ASC")
                                     ->get();
                                 //echo $this->db->getLastquery();
                                 $no = 1;
@@ -135,7 +136,7 @@
                                                     <div class="col">
                                                         <input class="form-control" id="lk<?= $usr->kalender_id; ?>" type="text" value="<?= $usr->kalender_liburk; ?>" />
                                                     </div>
-                                                    <button type="button" class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>','<?= date("Y-".str_pad($usr->kalender_bulan,2,"0",STR_PAD_LEFT)."-".str_pad($usr->kalender_tgl,2,"0",STR_PAD_LEFT)); ?>','<?= $usr->kalender_nhari; ?>');"><i class="fa fa-check"></i></button>
+                                                    <button type="button" class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>','<?= date("Y-" . str_pad($usr->kalender_bulan, 2, "0", STR_PAD_LEFT) . "-" . str_pad($usr->kalender_tgl, 2, "0", STR_PAD_LEFT)); ?>','<?= $usr->kalender_nhari; ?>');"><i class="fa fa-check"></i></button>
                                                 </div>
                                             </form>
                                         </td>
