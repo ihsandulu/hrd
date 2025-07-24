@@ -540,7 +540,7 @@ class absen_m extends core_m
                     }
                 }
             }
- */
+            */
             //Sakit, Izin, Alpha, Cuti
             if ($user_payrolltype == "harian") {
                 //sakit

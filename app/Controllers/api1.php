@@ -444,11 +444,10 @@ class api extends BaseController
                 $input["user_payrolltype"] = $user->user_payrolltype;
                 $input["user_lembur"] = $user->user_lembur;
 
-                $hari_ke = date('w', strtotime($input["absen_date"]));
-                $lemburjam = 0;
+
                 //cari jml jam kerja
-                if ($input["absen_keluar"] != "" && $input["absen_keluar"] != "00:00:00") {
-                    if ($input["absen_masuk"] == "" || $input["absen_masuk"] == "00:00:00") {
+                if ($input["absen_keluar"] != "") {
+                    if ($input["absen_masuk"] == "") {
                         //cari absen masuk
                         $ww["absen_date"] = $input["absen_date"];
                         $ww["user_id"] = $input["user_id"];
@@ -468,34 +467,37 @@ class api extends BaseController
 
                     // Hitung total jam termasuk selisih hari
                     $total_jam = ($diff->days * 24) + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
-                    $input["absen_kerjajam"] = $total_jam; // dibulatkan 2 angka desimal
-
-                    //lembur
-                    //cek di jamkerja
-                    $jamkerja = $this->db->table("jamkerja")
-                        ->where("jamkerja_type", "normal")
-                        ->where("FIND_IN_SET($hari_ke,jamkerja_hari) >", 0)
-                        ->get();
-                    if ($jamkerja->getNumRows() > 0) {
-                        //hari kerja
-                        $jkerja = $jamkerja->getRow();
-                        $jamkerja_awal  = $jkerja->jamkerja_awal;
-                        $jamkerja_akhir = $jkerja->jamkerja_akhir;
-                        $tanggal        = $input["absen_date"];
-                        $awal  = new \DateTime($tanggal . ' ' . $jamkerja_awal);
-                        $akhir = new \DateTime($tanggal . ' ' . $jamkerja_akhir);
-                        $diff = $awal->diff($akhir);
-                        $totalMenit = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
-                        $jam_kerjalembur  = round($totalMenit / 60, 2);
-                        $lemburjam = $total_jam - $jam_kerjalembur;
-                    } else {
-                        //hari libur
-                        $lemburjam = $total_jam;
-                    }
-                    $input["absen_lemburjam"] = round($lemburjam, 1);
+                    $input["absen_kerjajam"] = round($total_jam, 2); // dibulatkan 2 angka desimal
                 }
+                /* echo $input["absen_kerjajam"]."---";
+                echo $input["absen_masuk"]."---";
+                echo $input["absen_keluar"];
+                die; */
+                //catatan: jam kerja berhubungan dengan berapa jam lembur, yg  menentukan lembur tidaknya adalah jadwal lembur.
 
+                //ambil lembur
+                $wlembur["lembur_date"] = $input["absen_date"];
+                $wlembur["user_id"] = $input["user_id"];
+                $lembur = $this->db->table("lembur")->where($wlembur)->get();
+                $lemburjam = 0;
+                foreach ($lembur->getResult() as $lembur) {
+                    // $lemburjam += $lembur->lembur_jam;
+                    $absen_date = $input["absen_date"];
+                    $day_number = date('N', strtotime($absen_date)); // 1 = Senin, ..., 7 = Minggu
 
+                    if ($day_number >= 1 && $day_number <= 4) {
+                        $kategori = 1; // Senin - Kamis
+                        $lemburjam = $input["absen_kerjajam"] - 9;
+                    } elseif ($day_number == 5) {
+                        $kategori = 2; // Jumat
+                        $lemburjam = $input["absen_kerjajam"] - 9.5;
+                    } else {
+                        $kategori = 3; // Sabtu - Minggu
+                        $lemburjam = $input["absen_kerjajam"];
+                    }
+                }
+                $input["absen_lemburjam"] = $lemburjam;
+                // print_r($input);die;
 
                 //libur tidak
                 $libur = $this->db->table("libur")
@@ -1148,6 +1150,7 @@ class api extends BaseController
             //delete jika sudah ada input
             $wd["user_id"] = $uid;
             $wd["absen_date"] = $input["absen_date"];
+            $wd["absen_type"] = $input["absen_type"];
             $this->db->table("absen")->where($wd)->delete();
 
             $user = $this->db->table("user")
@@ -1170,11 +1173,9 @@ class api extends BaseController
             }
 
 
-            $hari_ke = date('w', strtotime($input["absen_date"]));
-            $lemburjam = 0;
             //cari jml jam kerja
-            if ($input["absen_keluar"] != "" && $input["absen_keluar"] != "00:00:00") {
-                if ($input["absen_masuk"] == "" || $input["absen_masuk"] == "00:00:00") {
+            if ($input["absen_keluar"] != "") {
+                if ($input["absen_masuk"] == "") {
                     //cari absen masuk
                     $ww["absen_date"] = $input["absen_date"];
                     $ww["user_id"] = $input["user_id"];
@@ -1190,36 +1191,34 @@ class api extends BaseController
 
                 // Hitung total jam termasuk selisih hari
                 $total_jam = ($diff->days * 24) + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
-                $input["absen_kerjajam"] = $total_jam; // dibulatkan 1 angka desimal
-
-                //lembur
-                //cek di jamkerja
-                $jamkerja = $this->db->table("jamkerja")
-                    ->where("jamkerja_type", "normal")
-                    ->where("FIND_IN_SET($hari_ke,jamkerja_hari) >", 0)
-                    ->get();
-                if ($jamkerja->getNumRows() > 0) {
-                    //hari kerja
-                    $jkerja = $jamkerja->getRow();
-                    $jamkerja_awal  = $jkerja->jamkerja_awal;
-                    $jamkerja_akhir = $jkerja->jamkerja_akhir;
-                    $tanggal        = $input["absen_date"];
-                    $awal  = new \DateTime($tanggal . ' ' . $jamkerja_awal);
-                    $akhir = new \DateTime($tanggal . ' ' . $jamkerja_akhir);
-                    $diff = $awal->diff($akhir);
-                    $totalMenit = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
-                    $jam_kerjalembur  = round($totalMenit / 60, 2);
-                    $lemburjam = $total_jam - $jam_kerjalembur;
-                } else {
-                    //hari libur
-                    $lemburjam = $total_jam;
-                }
-                $input["absen_lemburjam"] = round($lemburjam, 1);
+                $input["absen_kerjajam"] = round($total_jam, 2); // dibulatkan 2 angka desimal
             }
+            
+            //catatan: jumlah jam kerja tidak berhubungan dengan berapa jam lembur, dikarenakan lebur sudah terjadwal di menu lembur.
 
+            //ambil lembur
+            $wlembur["lembur_date"] = $input["absen_date"];
+            $wlembur["user_id"] = $input["user_id"];
+            $lembur = $this->db->table("lembur")->where($wlembur)->get();
+            $lemburjam = 0;
+            foreach ($lembur->getResult() as $lembur) {
+                // $lemburjam += $lembur->lembur_jam;
+                $absen_date = $input["absen_date"];
+                $day_number = date('N', strtotime($absen_date)); // 1 = Senin, ..., 7 = Minggu
 
-
-
+                if ($day_number >= 1 && $day_number <= 4) {
+                    $kategori = 1; // Senin - Kamis
+                    $lemburjam = $input["absen_kerjajam"] - 9;
+                } elseif ($day_number == 5) {
+                    $kategori = 2; // Jumat
+                    $lemburjam = $input["absen_kerjajam"] - 9.5;
+                } else {
+                    $kategori = 3; // Sabtu - Minggu
+                    $lemburjam = $input["absen_kerjajam"];
+                }
+            }
+            $input["absen_lemburjam"] = $lemburjam;
+            // print_r($input);die;
 
             //libur tidak
             $libur = $this->db->table("libur")
@@ -1300,7 +1299,7 @@ class api extends BaseController
                     }
                     $no++;
                 }
-
+                
 
                 $input["absen_ot1jam"] = $OT1;
                 $input["absen_ot2jam"] = $OT2;
@@ -1430,7 +1429,7 @@ class api extends BaseController
             }
         }
         $input["absen_id"] = $absen_id ?? null;
-
+        
         return $this->response->setJSON($input);
     }
 
@@ -1446,11 +1445,11 @@ class api extends BaseController
         $hari_ke = date('w', strtotime($input["absen_date"]));
         //cari jml jam kerja
         $lemburjam = 0;
-        if ($input["absen_keluar"] != "" && $input["absen_keluar"] != "00:00:00") {
+        if ($input["absen_keluar"] != "" && $input["absen_keluar"] != $input["absen_date"]." 00:00:00") {
             $keluar = new \DateTime($input["absen_keluar"]);
             $diff = $masuk->diff($keluar);
-            $total_jam = ($diff->days * 24) + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
-            $input["absen_kerjajam"] = $total_jam;
+            $jml_jam = ($diff->days * 24) + $diff->h + ($diff->i / 60) + ($diff->s / 3600);
+            $input["absen_kerjajam"] = round($jml_jam, 1);
 
             //lembur
             //cek di jamkerja
@@ -1469,10 +1468,10 @@ class api extends BaseController
                 $diff = $awal->diff($akhir);
                 $totalMenit = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
                 $jam_kerjalembur  = round($totalMenit / 60, 2);
-                $lemburjam = $total_jam - $jam_kerjalembur;
+                $lemburjam = $jml_jam - $jam_kerjalembur;
             } else {
                 //hari libur
-                $lemburjam = $total_jam;
+                $lemburjam = $jml_jam;
             }
             $input["absen_lemburjam"] = round($lemburjam, 1);
         }

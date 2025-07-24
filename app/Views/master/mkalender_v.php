@@ -10,6 +10,18 @@
     tr.text-white>td {
         color: white !important;
     }
+
+    select,
+    input,
+    button {
+        border: rgba(123, 115, 115, 0.3) solid 1px;
+    }
+
+    table,
+    td,
+    th {
+        border: rgba(123, 115, 115, 0.3) solid 1px;
+    }
 </style>
 
 <div class='container-fluid'>
@@ -17,67 +29,51 @@
         <div class='col-12'>
             <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <?php if (!isset($_GET['user_id']) && !isset($_POST['new']) && !isset($_POST['edit'])) {
-                            $coltitle = "col-md-10";
-                        } else {
-                            $coltitle = "col-md-8";
-                        } ?>
-                        <div class="<?= $coltitle; ?>">
-                            <h4 class="card-title"></h4>
-                            <!-- <h6 class="card-subtitle">Export data to Copy, CSV, Excel, PDF & Print</h6> -->
-                        </div>
-                    </div>
                     <div class="row" id="dcari">
                         <form method="post">
-                            <div class="row">
-                                <?php
-                                $daftar_bulan = [
-                                    0 => 'Pilih Bulan',
-                                    1 => 'Januari',
-                                    2 => 'Februari',
-                                    3 => 'Maret',
-                                    4 => 'April',
-                                    5 => 'Mei',
-                                    6 => 'Juni',
-                                    7 => 'Juli',
-                                    8 => 'Agustus',
-                                    9 => 'September',
-                                    10 => 'Oktober',
-                                    11 => 'November',
-                                    12 => 'Desember',
-                                ];
-                                $kalender_bulan = 0;
-                                if (isset($_POST["kalender_bulan"])) {
-                                    $kalender_bulan = $_POST["kalender_bulan"];
-                                }
-                                ?>
-
-                                <div class="col">
-                                    <select class="form-control" name="kalender_bulan">
-                                        <?php foreach ($daftar_bulan as $id => $nama): ?>
-                                            <option value="<?= $id; ?>" <?= ($kalender_bulan == $id) ? "selected" : ""; ?>>
-                                                <?= $nama; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <button name="create" type="submit" class="btn btn-primary" value="OK"><span class="fa fa-search"></span> Submit</button>
-                            </div>
+                            <?php
+                            $daftar_bulan = [
+                                0 => 'Pilih Bulan',
+                                1 => 'Januari',
+                                2 => 'Februari',
+                                3 => 'Maret',
+                                4 => 'April',
+                                5 => 'Mei',
+                                6 => 'Juni',
+                                7 => 'Juli',
+                                8 => 'Agustus',
+                                9 => 'September',
+                                10 => 'Oktober',
+                                11 => 'November',
+                                12 => 'Desember',
+                            ];
+                            $kalender_bulan = 0;
+                            if (isset($_POST["kalender_bulan"])) {
+                                $kalender_bulan = $_POST["kalender_bulan"];
+                            }
+                            ?>
+                            <span class="card-title"></span> | 
+                            <select class="" name="kalender_bulan">
+                                <?php foreach ($daftar_bulan as $id => $nama): ?>
+                                    <option value="<?= $id; ?>" <?= ($kalender_bulan == $id) ? "selected" : ""; ?>>
+                                        <?= $nama; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <button name="create" type="submit" class="btn btn-xs btn-primary" value="OK"><span class="fa fa-search"></span> Submit</button>
                         </form>
                     </div>
 
 
                     <?php if ($message != "") { ?>
-                        <div class="alert alert-info alert-dismissable">
+                        <!-- <div class="alert alert-info alert-dismissable">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                             <strong><?= $message; ?></strong>
-                        </div>
+                        </div> -->
                     <?php } ?>
 
-                    <div class="table-responsive m-t-40">
-                        <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                    <div class="table-responsive">
+                        <table id="e23w" class="display nowrap " cellspacing="0" width="100%">
                             <!-- <table id="dataTable" class="table table-condensed table-hover w-auto dtable"> -->
                             <thead class="">
                                 <tr>
@@ -109,7 +105,7 @@
                                 ?>
                                     <tr id="tr<?= $usr->kalender_id; ?>" class="<?= $bg; ?> <?= $tx; ?>">
                                         <td class=""><?= $usr->kalender_tgl; ?></td>
-                                        <td class="text-left"><?= $usr->kalender_hari; ?></td>
+                                        <td class="text-left pl-2"><?= $usr->kalender_hari; ?></td>
                                         <td id="name<?= $usr->kalender_id; ?>" class=""><?= $usr->kalender_name; ?></td>
                                         <td class="">
                                             <?php if ($usr->kalender_libur == 0) {
@@ -120,7 +116,7 @@
                                             <input style="display:<?= $nonen; ?>;" id="rm<?= $usr->kalender_id; ?>" onclick="klibur('<?= $usr->kalender_year; ?>-<?= $usr->kalender_bulan; ?>-<?= $usr->kalender_tgl; ?>','<?= $usr->kalender_id; ?>','<?= $usr->kalender_nhari; ?>');" type="checkbox" value="1" <?= ($usr->kalender_romadlon == 1) ? "checked" : ""; ?> />
                                         </td>
                                         <td class="">
-                                            <select onchange="klibur('<?= $usr->kalender_year; ?>-<?= $usr->kalender_bulan; ?>-<?= $usr->kalender_tgl; ?>','<?= $usr->kalender_id; ?>','<?= $usr->kalender_nhari; ?>')" class="form-control" name="kalender_libur" id="kalender_libur<?= $usr->kalender_id; ?>">
+                                            <select onchange="klibur('<?= $usr->kalender_year; ?>-<?= $usr->kalender_bulan; ?>-<?= $usr->kalender_tgl; ?>','<?= $usr->kalender_id; ?>','<?= $usr->kalender_nhari; ?>')" class="" name="kalender_libur" id="kalender_libur<?= $usr->kalender_id; ?>">
                                                 <option value="0" <?= ($usr->kalender_libur == 0) ? "selected" : ""; ?>>Working Day</option>
                                                 <option value="1" <?= ($usr->kalender_libur == 1) ? "selected" : ""; ?>>Holiday</option>
                                             </select>
@@ -132,12 +128,8 @@
                                                 $none = "inline";
                                             } ?>
                                             <form class="" id="flk<?= $usr->kalender_id; ?>" style="display:<?= $none; ?>;">
-                                                <div class="row pr-3">
-                                                    <div class="col">
-                                                        <input class="form-control" id="lk<?= $usr->kalender_id; ?>" type="text" value="<?= $usr->kalender_liburk; ?>" />
-                                                    </div>
-                                                    <button type="button" class="btn btn-success" onclick="liburk('<?= $usr->kalender_id; ?>','<?= date("Y-" . str_pad($usr->kalender_bulan, 2, "0", STR_PAD_LEFT) . "-" . str_pad($usr->kalender_tgl, 2, "0", STR_PAD_LEFT)); ?>','<?= $usr->kalender_nhari; ?>');"><i class="fa fa-check"></i></button>
-                                                </div>
+                                                <input class="" id="lk<?= $usr->kalender_id; ?>" type="text" value="<?= $usr->kalender_liburk; ?>" />
+                                                <button type="button" class="" onclick="liburk('<?= $usr->kalender_id; ?>','<?= date("Y-" . str_pad($usr->kalender_bulan, 2, "0", STR_PAD_LEFT) . "-" . str_pad($usr->kalender_tgl, 2, "0", STR_PAD_LEFT)); ?>','<?= $usr->kalender_nhari; ?>');"><i class="fa fa-check"></i></button>
                                             </form>
                                         </td>
                                     </tr>
@@ -209,6 +201,48 @@
     $(".card-title").text(title);
     $("#page-title").text(title);
     $("#page-title-link").text(title);
+    $(document).ready(function() {
+        $('#e23').DataTable({
+            dom: 'Blfrtip',
+            autoWidth: false,
+            paging: false,
+            lengthMenu: [
+                [50, 100, -1],
+                [50, 100, "All"]
+            ],
+            buttons: [{
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':not(:first-child)'
+                    },
+                    customize: function(win) {
+                        // Tambahkan CSS langsung ke dokumen cetak
+                        var css = `
+                            .screen-only { display: none !important; }
+                            .print-only { display: inline !important; }
+                        `;
+                        $(win.document.head).append('<style>' + css + '</style>');
+                        $(win.document.body)
+                            .find('td.text-left')
+                            .css('text-align', 'left');
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: ':not(:first-child)'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: ':not(:first-child)'
+                    }
+                }
+            ],
+            ordering: false // Mencegah DataTables mengatur order by
+        });
+    });
 </script>
 
 <?php echo  $this->include("template/footer_v"); ?>
