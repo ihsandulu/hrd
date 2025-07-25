@@ -26,7 +26,10 @@
     .m-0 {
         margin: 0px !important;
     }
-    div{font-size: 10px;}
+
+    div {
+        font-size: 10px;
+    }
 </style>
 
 <div class="row">
@@ -50,19 +53,55 @@
     $gaji_id = $this->request->getGet("gaji_id");
     $build = $this->db
         ->table("gaji");
-    if (isset($_GET["gaji_id"])) {
+    if (isset($_GET["gaji_id"]) && $_GET["gaji_id"] > 0) {
         $build->where("gaji.gaji_id", $gaji_id);
+    } else {
+        $gaji_bulan = date("m");
+        $gaji_tahun = date("Y", strtotime("+1 years"));
+        $departemen_id = 0;
+        $position_id = 0;
+        $user_id = 0;
+        if (isset($_GET["gaji_bulan"])) {
+            $gaji_bulan = $_GET["gaji_bulan"];
+        }
+        if (isset($_GET["gaji_tahun"])) {
+            $gaji_tahun = $_GET["gaji_tahun"];
+        }
+        if (isset($_GET["departemen_id"])) {
+            $departemen_id = $_GET["departemen_id"];
+        }
+        if (isset($_GET["position_id"])) {
+            $position_id = $_GET["position_id"];
+        }
+        if (isset($_GET["user_id"])) {
+            $user_id = $_GET["user_id"];
+        }
+        if ($departemen_id > 0) {
+            $build->where("departemen_id", $departemen_id);
+        }
+        if ($position_id > 0) {
+            $build->where("position_id", $position_id);
+        }
+        if ($user_id > 0) {
+            $build->where("user_id", $user_id);
+        }
+        if ($gaji_bulan > 0) {
+            $build->where("gaji_bulan", $gaji_bulan);
+        }
+        if ($gaji_tahun > 0) {
+            $build->where("gaji_tahun", $gaji_tahun);
+        }
     }
     $usr = $build->orderBy("gaji_print", "ASC")
         ->orderBy("departemen_name", "ASC")
         ->orderBy("position_name", "ASC")
         ->orderBy("user_name", "ASC")
         ->get();
-    //echo $this->db->getLastquery();
+    // echo $this->db->getLastquery();
     $no = 1;
     foreach ($usr->getResult() as $usr) {
 
-    ?><div class="col-6 p-2">
+    ?><div class="col-4 p-2">
             <div class="row border m-2">
                 <div class="col-12 bold text-center"><?= strtoupper($this->session->get("identity_company")); ?></div>
                 <div class="col-12 border bold text-center">Salary Slip</div>
@@ -184,22 +223,25 @@
                 <div class="col-2 bold">: Rp </div>
                 <div class="col-6 text-right bold"><?= number_format($usr->gaji_thp, 0, ",", "."); ?></div>
 
-                <div class="col-12" style="font-size: 12px; font-style:italic;"><?=$this->session->get("identity_city");?>, <?=date("d F Y",strtotime($usr->gaji_date));?></div>
+                <div class="col-12" style="font-size: 12px; font-style:italic;"><?= $this->session->get("identity_city"); ?>, <?= date("d F Y", strtotime($usr->gaji_date)); ?></div>
 
                 <div class="col-6 bold" style="font-size: 12px; font-style:italic;"></div>
                 <div class="col-6 bold text-center" style="font-size: 12px; font-style:italic; margin-bottom:30px;">Diterima Oleh</div>
                 <div class="col-6 bold" style="font-size: 12px; font-style:italic;"></div>
-                <div class="col-6 bold text-center" style="font-size: 12px; font-style:italic;"><?=$usr->user_name;?></div>
+                <div class="col-6 bold text-center" style="font-size: 12px; font-style:italic;"><?= $usr->user_name; ?></div>
             </div>
         </div>
     <?php } ?>
     <script>
         $('.select').select2();
-        var title = "Potongan Inventaris";
+        var title = "Struk Gaji";
         $("title").text(title);
         $(".card-title").text(title);
         $("#page-title").text(title);
         $("#page-title-link").text(title);
+        window.onload = function() {
+            window.print();
+        };
     </script>
 </div>
 <?php echo  $this->include("template/footersaja_v"); ?>

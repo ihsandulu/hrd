@@ -610,7 +610,7 @@
                         </form>
                     </div>
                     <div class="table-responsive m-t-4 sim" id="tableisi">
-                        <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="exampl23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                             <!-- <table id="dataTable" class="table table-condensed table-hover w-auto dtable"> -->
                             <thead class="">
                                 <tr>
@@ -657,6 +657,18 @@
                                     ->where("SUBSTR(gaji_print,1,7)", $gaji_tahun . "-" . $gaji_bulan);
                                 if ($departemen_id > 0) {
                                     $build->where("departemen_id", $departemen_id);
+                                }
+                                if ($position_id > 0) {
+                                    $build->where("position_id", $position_id);
+                                }
+                                if ($user_id > 0) {
+                                    $build->where("user_id", $user_id);
+                                }
+                                if ($gaji_bulan > 0) {
+                                    $build->where("gaji_bulan", $gaji_bulan);
+                                }
+                                if ($gaji_tahun > 0) {
+                                    $build->where("gaji_tahun", $gaji_tahun);
                                 }
                                 $usr = $build->orderBy("gaji_print", "ASC")
                                     ->orderBy("departemen_name", "ASC")
@@ -856,6 +868,45 @@
                 var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
+            });
+
+            let departemen_id = "<?= $departemen_id; ?>";
+            let position_id = "<?= $position_id; ?>";
+            let user_id = "<?= $user_id; ?>";
+            let gaji_bulan = "<?= $gaji_bulan; ?>";
+            let gaji_tahun = "<?= $gaji_tahun; ?>";
+            $('#exampl23').DataTable({
+                dom: 'Blfrtip',
+                autoWidth: false,
+                lengthMenu: [
+                    [50, 100, -1],
+                    [50, 100, "All"]
+                ],
+                buttons: [{
+                        text: 'Print Struk Gaji',
+                        action: function(e, dt, node, config) {
+                            let url = '<?= base_url("gajiprint"); ?>?print=OK&gaji_id=0&departemen_id=' + departemen_id +
+                                '&position_id=' + position_id +
+                                '&user_id=' + user_id +
+                                '&gaji_bulan=' + gaji_bulan +
+                                '&gaji_tahun=' + gaji_tahun;
+                            window.open(url, '_blank');
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':not(:first-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:first-child)'
+                        }
+                    }
+                ],
+                ordering: false // Mencegah DataTables mengatur order by
             });
         });
     </script>

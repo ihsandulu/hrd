@@ -101,8 +101,14 @@ class absen_m extends core_m
             }
             // dd($_POST);
 
+            //hari dalam bulan ini
+            $tharibulan = $this->db->table("identity")->get()->getRow()->identity_tharibulan ?? 0;
+            if ($tharibulan == 0) {
+                $bulan = date('n'); // Bulan saat ini (1-12)
+                $tahun = date('Y'); // Tahun saat ini (4 digit)
 
-
+                $tharibulan = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+            }
             // print_r($input);die;
 
             $user_ids = $this->request->getPost('user_id');
@@ -296,7 +302,7 @@ class absen_m extends core_m
                     } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                         //Sakit, izin dan alpha
                         $input["absen_alpha"] = 1;
-                        $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                        $input["absen_alphanominal"] = ($gapok / $tharibulan) * 1;
                     }
                 } else {
                     if ($input["absen_type"] == "Normal") {
@@ -307,14 +313,14 @@ class absen_m extends core_m
                         $input["absen_pmakan"] = 0;
                     } else
                     if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
-                        $input["absen_ptransport"] = $user_ttransport / 30;
-                        $input["absen_phadir"] = $user_thadir / 30;
-                        $input["absen_pmakan"] = $user_tmakan / 30;
+                        $input["absen_ptransport"] = $user_ttransport / $tharibulan;
+                        $input["absen_phadir"] = $user_thadir / $tharibulan;
+                        $input["absen_pmakan"] = $user_tmakan / $tharibulan;
                         $input["absen_alpha"] = 0;
                         $input["absen_alphanominal"] = 0;
                     } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                         $input["absen_alpha"] = 1;
-                        $input["absen_alphanominal"] = $user_gakot / 30;
+                        $input["absen_alphanominal"] = $user_gakot / $tharibulan;
                         $input["absen_ptransport"] = 0;
                         $input["absen_phadir"] = 0;
                         $input["absen_pmakan"] = 0;
@@ -393,6 +399,16 @@ class absen_m extends core_m
                     $input[$e] = $this->request->getPost($e);
                 }
             }
+
+            //hari dalam bulan ini
+            $tharibulan = $this->db->table("identity")->get()->getRow()->identity_tharibulan ?? 0;
+            if ($tharibulan == 0) {
+                $bulan = date('n'); // Bulan saat ini (1-12)
+                $tahun = date('Y'); // Tahun saat ini (4 digit)
+
+                $tharibulan = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+            }
+
             //cari jml jam kerja
             if ($input["absen_keluar"] != "") {
                 $masuk = new \DateTime($input["absen_masuk"]);
@@ -527,16 +543,16 @@ class absen_m extends core_m
                         //ga dipotong
                     } else {
                         $input["absen_alpha"] = 1;
-                        $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                        $input["absen_alphanominal"] = ($gapok / $tharibulan) * 1;
                     }
                 } else {
                     if ($input["absen_skd"] == 1) {
-                        $input["absen_ptransport"] = $user_ttransport / 30;
-                        $input["absen_phadir"] = $user_thadir / 30;
-                        $input["absen_pmakan"] = $user_tmakan / 30;
+                        $input["absen_ptransport"] = $user_ttransport / $tharibulan;
+                        $input["absen_phadir"] = $user_thadir / $tharibulan;
+                        $input["absen_pmakan"] = $user_tmakan / $tharibulan;
                     } else {
                         $input["absen_alpha"] = 1;
-                        $input["absen_alphanominal"] = $user_gakot / 30;
+                        $input["absen_alphanominal"] = $user_gakot / $tharibulan;
                     }
                 }
             }
@@ -551,7 +567,7 @@ class absen_m extends core_m
                 } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                     //Sakit, izin dan alpha
                     $input["absen_alpha"] = 1;
-                    $input["absen_alphanominal"] = ($gapok / 30) * 1;
+                    $input["absen_alphanominal"] = ($gapok / $tharibulan) * 1;
                 }
             } else {
                 if ($input["absen_type"] == "Normal") {
@@ -562,14 +578,14 @@ class absen_m extends core_m
                     $input["absen_pmakan"] = 0;
                 } else
                 if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 1) || ($input["absen_type"] == "Cuti")) {
-                    $input["absen_ptransport"] = $user_ttransport / 30;
-                    $input["absen_phadir"] = $user_thadir / 30;
-                    $input["absen_pmakan"] = $user_tmakan / 30;
+                    $input["absen_ptransport"] = $user_ttransport / $tharibulan;
+                    $input["absen_phadir"] = $user_thadir / $tharibulan;
+                    $input["absen_pmakan"] = $user_tmakan / $tharibulan;
                     $input["absen_alpha"] = 0;
                     $input["absen_alphanominal"] = 0;
                 } else if (($input["absen_type"] == "Sakit" && $input["absen_skd"] == 0) || ($input["absen_type"] == "Izin") || ($input["absen_type"] == "Alpha")) {
                     $input["absen_alpha"] = 1;
-                    $input["absen_alphanominal"] = $user_gakot / 30;
+                    $input["absen_alphanominal"] = $user_gakot / $tharibulan;
                     $input["absen_ptransport"] = 0;
                     $input["absen_phadir"] = 0;
                     $input["absen_pmakan"] = 0;

@@ -84,6 +84,13 @@
                                     </div>
                                 </div>
 
+                                 <div class="form-group">
+                                    <label class="control-label col-sm-12" for="identity_tharibulan">Hari dalam 1 bulan:<br/> 0 = otomatis menghitung hari dalam bulan tersebut</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" autofocus class="form-control" id="identity_tharibulan" name="identity_tharibulan" placeholder="" value="<?= $identity_tharibulan; ?>">
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <label class="control-label col-sm-12" for="identity_tunjanganlain">Prosentase Tunjangan Lain-lain:<br />Diambil dari Total Gaji (%)</label>
                                     <div class="col-offset-sm-2 col-sm-10">
